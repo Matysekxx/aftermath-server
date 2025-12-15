@@ -5,8 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-@Deprecated()
-public class CommandData {
-    private String command;
-    private String[] args;
+public class InteractRequest {
+    private String type;
+    private String itemID;
 }

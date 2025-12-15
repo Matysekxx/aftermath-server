@@ -5,8 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-@Deprecated()
-public class CommandData {
-    private String command;
-    private String[] args;
+public class MoveRequest {
+    private String direction;
 }

@@ -1,12 +1,11 @@
 package cz.matysekxx.aftermathserver.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-@Deprecated()
-public class CommandData {
-    private String command;
-    private String[] args;
+public class AttackRequest {
+    private  String targetID;
 }
