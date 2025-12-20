@@ -1,12 +1,17 @@
 package cz.matysekxx.aftermathserver.handler;
 
 
+import cz.matysekxx.aftermathserver.core.GameEngine;
+import cz.matysekxx.aftermathserver.core.Player;
+import cz.matysekxx.aftermathserver.dto.MoveRequest;
+import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import tools.jackson.databind.ObjectMapper;
 
 import java.awt.*;
 import java.io.IOException;
@@ -22,14 +27,22 @@ public class GameHandler extends TextWebSocketHandler {
 
     private final Map<String, Point> playerPositions = new ConcurrentHashMap<>();
 
+    private final GameEngine gameEngine;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    public GameHandler(GameEngine gameEngine) {
+        this.gameEngine = gameEngine;
+    }
+
     @Override
-    public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) throws Exception {
+    public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) {
         sessions.remove(session);
         playerPositions.remove(session.getId());
     }
 
     @Override
-    public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(@NonNull WebSocketSession session) {
         sessions.add(session);
         playerPositions.put(session.getId(), new Point());
     }
@@ -48,9 +61,11 @@ public class GameHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
-        final String input = message.getPayload();
-        final Point playerPosition = playerPositions.get(session.getId());
-        //TODO: pridat moznost pohybu po svete pro hrace
-
+        final WebSocketRequest request = objectMapper.convertValue(message.getPayload(), WebSocketRequest.class);
+        switch (request.getType()) {
+            case "MOVE" -> {
+                final Player player = gameEngine.processMove(session.getId(), new MoveRequest(request.getPayload().get("direction").asString()));
+            }
+        }
     }
 }

@@ -1,15 +1,14 @@
 package cz.matysekxx.aftermathserver.dto;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import tools.jackson.databind.JsonNode;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class ChatRequest {
-    private String message;
+public class WebSocketRequest {
+    private String type;
+    private JsonNode payload;
 }
