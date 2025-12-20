@@ -45,7 +45,7 @@ public class GameEngine {
 
     }
 
-    public Point getCurrentPlayerPosition(String id) {
+    public final Point getCurrentPlayerPosition(String id) {
         Player player = players.get(id);
         if (player != null) {
             return new Point(player.getX(), player.getY());
