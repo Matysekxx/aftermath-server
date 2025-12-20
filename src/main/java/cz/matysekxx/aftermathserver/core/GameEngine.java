@@ -1,6 +1,6 @@
 package cz.matysekxx.aftermathserver.core;
 
-import cz.matysekxx.aftermathserver.dto.MoveRequest;
+import cz.matysekxx.aftermathserver.dto.GameDtos;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
@@ -21,11 +21,15 @@ public class GameEngine {
         players.put(session.getId(), newPlayer);
     }
 
+    public final Player getPlayer(WebSocketSession session) {
+        return players.get(session.getId());
+    }
+
     public void removePlayer(String sessionId) {
         players.remove(sessionId);
     }
 
-    public Player processMove(String playerId, MoveRequest moveRequest) {
+    public Player processMove(String playerId, GameDtos.MoveReq moveRequest) {
         final Player player = players.get(playerId);
         if (player != null) {
             switch (moveRequest.getDirection().toUpperCase()) {
@@ -42,11 +46,10 @@ public class GameEngine {
     @Scheduled(fixedRate = 100)
     public void gameLoop() {
         //TODO: udelat game loop
-
     }
 
     public final Point getCurrentPlayerPosition(String id) {
-        Player player = players.get(id);
+        final Player player = players.get(id);
         if (player != null) {
             return new Point(player.getX(), player.getY());
         }

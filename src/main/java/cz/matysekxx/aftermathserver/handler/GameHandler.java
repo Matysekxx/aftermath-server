@@ -3,8 +3,9 @@ package cz.matysekxx.aftermathserver.handler;
 
 import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.core.Player;
-import cz.matysekxx.aftermathserver.dto.MoveRequest;
+import cz.matysekxx.aftermathserver.dto.GameDtos;
 import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
+import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -29,7 +30,7 @@ public class GameHandler extends TextWebSocketHandler {
 
     private final GameEngine gameEngine;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public GameHandler(GameEngine gameEngine) {
         this.gameEngine = gameEngine;
@@ -47,24 +48,43 @@ public class GameHandler extends TextWebSocketHandler {
         playerPositions.put(session.getId(), new Point());
     }
 
-    private final void broadcast(String message) {
-        for (WebSocketSession session : sessions) {
-            if (session.isOpen()) {
+    private void broadcast(WebSocketResponse response) {
+        final String json = objectMapper.writeValueAsString(response);
+        final TextMessage msg = new TextMessage(json);
+        for (WebSocketSession s : sessions) {
+            if (s.isOpen()) {
                 try {
-                    session.sendMessage(new TextMessage(message));
+                    s.sendMessage(msg);
                 } catch (IOException e) {
-                    sessions.remove(session);
+                    throw new RuntimeException(e);
                 }
             }
         }
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
+    protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) {
         final WebSocketRequest request = objectMapper.convertValue(message.getPayload(), WebSocketRequest.class);
         switch (request.getType()) {
             case "MOVE" -> {
-                final Player player = gameEngine.processMove(session.getId(), new MoveRequest(request.getPayload().get("direction").asString()));
+                final String direction = String.valueOf(request.getPayload().get("direction"));
+                final Player player = gameEngine.processMove(session.getId(), new GameDtos.MoveReq(direction));
+                if (player != null) {
+                    final var response = new GameDtos.PlayerUpdatePayload(
+                            session.getId(),
+                            player.getX(),
+                            player.getY()
+                    );
+                    final String jsonResponse = objectMapper.writeValueAsString(response);
+                    broadcast(WebSocketResponse.of("PLAYER_MOVED",jsonResponse));
+                }
+            }
+            case "CHAT" -> {
+                final var chatData = objectMapper.convertValue(message.getPayload(), GameDtos.ChatReq.class);
+                broadcast(WebSocketResponse.of("CHAT_MSG",chatData));
+            }
+            case "ATTACK" -> {
+
             }
         }
     }
