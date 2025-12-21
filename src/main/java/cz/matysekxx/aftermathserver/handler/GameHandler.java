@@ -1,9 +1,10 @@
 package cz.matysekxx.aftermathserver.handler;
 
 
+import cz.matysekxx.aftermathserver.command.Action;
+import cz.matysekxx.aftermathserver.command.ChatAction;
+import cz.matysekxx.aftermathserver.command.MoveAction;
 import cz.matysekxx.aftermathserver.core.GameEngine;
-import cz.matysekxx.aftermathserver.core.Player;
-import cz.matysekxx.aftermathserver.dto.GameDtos;
 import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.jspecify.annotations.NonNull;
@@ -16,6 +17,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,8 +34,12 @@ public class GameHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private final Map<String, Action> actions = new HashMap<>();
+
     public GameHandler(GameEngine gameEngine) {
         this.gameEngine = gameEngine;
+        actions.put("MOVE", new MoveAction(gameEngine));
+        actions.put("CHAT", new ChatAction());
     }
 
     @Override
@@ -56,8 +62,20 @@ public class GameHandler extends TextWebSocketHandler {
                 try {
                     s.sendMessage(msg);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.err.println(e.getMessage());
                 }
+            }
+        }
+    }
+
+    private void  sendToSession(WebSocketResponse response, WebSocketSession session) {
+        if (session.isOpen()) {
+            final String json = objectMapper.writeValueAsString(response);
+            final TextMessage msg = new TextMessage(json);
+            try {
+                session.sendMessage(msg);
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
             }
         }
     }
@@ -65,26 +83,13 @@ public class GameHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) {
         final WebSocketRequest request = objectMapper.convertValue(message.getPayload(), WebSocketRequest.class);
-        switch (request.getType()) {
-            case "MOVE" -> {
-                final String direction = String.valueOf(request.getPayload().get("direction"));
-                final Player player = gameEngine.processMove(session.getId(), new GameDtos.MoveReq(direction));
-                if (player != null) {
-                    final var response = new GameDtos.PlayerUpdatePayload(
-                            session.getId(),
-                            player.getX(),
-                            player.getY()
-                    );
-                    final String jsonResponse = objectMapper.writeValueAsString(response);
-                    broadcast(WebSocketResponse.of("PLAYER_MOVED",jsonResponse));
-                }
-            }
-            case "CHAT" -> {
-                final var chatData = objectMapper.convertValue(message.getPayload(), GameDtos.ChatReq.class);
-                broadcast(WebSocketResponse.of("CHAT_MSG",chatData));
-            }
-            case "ATTACK" -> {
-
+        final Action action = actions.get(request.getType());
+        if (action != null) {
+            final WebSocketResponse response = action.execute(session, request.getPayload());
+            if (response.getType().equals("ACTION_FAILED")) {
+                sendToSession(response, session);
+            } else {
+                broadcast(response);
             }
         }
     }
