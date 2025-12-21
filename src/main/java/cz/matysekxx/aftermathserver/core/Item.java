@@ -20,4 +20,16 @@ public class Item {
     public double getTotalWeight() {
         return weight * quantity;
     }
+
+    public Item cloneWithQuantity(int quantity) {
+        return new Item(
+                this.id,
+                this.name,
+                this.description,
+                this.symbol,
+                quantity,
+                this.maxStack,
+                this.weight
+        );
+    }
 }

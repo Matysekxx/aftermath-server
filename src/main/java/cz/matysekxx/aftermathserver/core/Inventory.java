@@ -46,15 +46,7 @@ public class Inventory {
         if (amountRemaining > 0) {
             for (int i = 0; i < capacity; i++) {
                 if (!slots.containsKey(i)) {
-                    final Item newItem = new Item(
-                            itemToAdd.getId(),
-                            itemToAdd.getName(),
-                            itemToAdd.getDescription(),
-                            itemToAdd.getSymbol(),
-                            amountRemaining,
-                            itemToAdd.getMaxStack(),
-                            itemToAdd.getWeight()
-                    );
+                    final Item newItem = itemToAdd.cloneWithQuantity(amountRemaining);
                     slots.put(i, newItem);
                     return true;
                 }
@@ -70,15 +62,7 @@ public class Inventory {
 
         if (itemInSlot.getQuantity() > quantityToRemove) {
             itemInSlot.setQuantity(itemInSlot.getQuantity() - quantityToRemove);
-            return new Item(
-                    itemInSlot.getId(),
-                    itemInSlot.getName(),
-                    itemInSlot.getDescription(),
-                    itemInSlot.getSymbol(),
-                    quantityToRemove,
-                    itemInSlot.getMaxStack(),
-                    itemInSlot.getWeight()
-            );
+            return itemInSlot.cloneWithQuantity(quantityToRemove);
         } else {
             slots.remove(slotIndex);
             return itemInSlot;
