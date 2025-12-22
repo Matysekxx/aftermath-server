@@ -3,6 +3,7 @@ package cz.matysekxx.aftermathserver.handler;
 
 import cz.matysekxx.aftermathserver.command.Action;
 import cz.matysekxx.aftermathserver.command.ChatAction;
+import cz.matysekxx.aftermathserver.command.InteractAction;
 import cz.matysekxx.aftermathserver.command.MoveAction;
 import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
@@ -40,18 +41,19 @@ public class GameHandler extends TextWebSocketHandler {
         this.gameEngine = gameEngine;
         actions.put("MOVE", new MoveAction(gameEngine));
         actions.put("CHAT", new ChatAction());
+        actions.put("INTERACT", new InteractAction(gameEngine));
     }
 
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) {
         sessions.remove(session);
-        playerPositions.remove(session.getId());
+        gameEngine.removePlayer(session.getId());
     }
 
     @Override
     public void afterConnectionEstablished(@NonNull WebSocketSession session) {
         sessions.add(session);
-        playerPositions.put(session.getId(), new Point());
+        gameEngine.addPlayer(session);
     }
 
     private void broadcast(WebSocketResponse response) {

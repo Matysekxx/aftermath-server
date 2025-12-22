@@ -11,6 +11,7 @@ import org.springframework.web.socket.WebSocketSession;
 public class Player {
     private String id;
     private String username;
+    private String currentMapId;
     private int x, y;
 
     private Inventory inventory;

@@ -17,8 +17,8 @@ public class MoveAction extends Action {
 
     @Override
     public WebSocketResponse execute(WebSocketSession session, JsonNode payload) {
-        final WebSocketRequest request = objectMapper.convertValue(payload, WebSocketRequest.class);
-        final String direction = String.valueOf(request.getPayload().get("direction"));
+        final GameDtos.MoveReq request = objectMapper.convertValue(payload, GameDtos.MoveReq.class);
+        final String direction = request.getDirection();
         final Player player = gameEngine.processMove(session.getId(), new GameDtos.MoveReq(direction));
         if (player != null) {
             final var response = new GameDtos.PlayerUpdatePayload(

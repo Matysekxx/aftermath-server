@@ -1,9 +1,12 @@
 package cz.matysekxx.aftermathserver.dto;
 
+import cz.matysekxx.aftermathserver.core.world.Environment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 public class GameDtos {
 
@@ -48,5 +51,14 @@ public class GameDtos {
     public static class InventoryPayload {
         private int capacity;
         private int usedSlots;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class MapLoadPayload {
+        private String mapId;
+        private String mapName;
+        private List<String> levels;
+        private Environment environment;
     }
 }
