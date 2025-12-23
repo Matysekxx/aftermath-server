@@ -29,11 +29,9 @@ public class GameEngine {
     }
 
     public void addPlayer(WebSocketSession session) {
-        final Player newPlayer = new Player();
-        newPlayer.setId(session.getId());
-        newPlayer.setSession(session);
-        newPlayer.setX(10);
-        newPlayer.setY(10);
+        final Player newPlayer = new Player(
+                session.getId(), "", "hub_omega", 10, 10, new Inventory(10, 10f),100, 100, "", session
+        );
         players.put(session.getId(), newPlayer);
     }
 
