@@ -29,8 +29,11 @@ public class GameEngine {
     }
 
     public void addPlayer(WebSocketSession session) {
+        final GameMapData startingMap = worldManager.getStartingMap();
+        final String mapId = startingMap != null ? startingMap.getId() : "hub_omega";
+        
         final Player newPlayer = new Player(
-                session.getId(), "", "hub_omega", 10, 10, new Inventory(10, 10f),100, 100, "", session
+                session.getId(), "", mapId, 50, 15, 0, new Inventory(10, 10f), 100, 100, "", session
         );
         players.put(session.getId(), newPlayer);
     }
@@ -45,16 +48,36 @@ public class GameEngine {
 
     public Player processMove(String playerId, GameDtos.MoveReq moveRequest) {
         final Player player = players.get(playerId);
-        if (player != null) {
-            switch (moveRequest.getDirection().toUpperCase()) {
-                case "UP" -> player.setY(player.getY() + 1);
-                case "DOWN" -> player.setY(player.getY() - 1);
-                case "LEFT" -> player.setX(player.getX() - 1);
-                case "RIGHT" -> player.setX(player.getX() + 1);
-            }
-            return player;
+        if (player == null) {
+            return null;
         }
-        return null;
+
+        int targetX = player.getX();
+        int targetY = player.getY();
+        
+        switch (moveRequest.getDirection().toUpperCase()) {
+            case "UP" -> targetY = player.getY() - 1;
+            case "DOWN" -> targetY = player.getY() + 1;
+            case "LEFT" -> targetX = player.getX() - 1;
+            case "RIGHT" -> targetX = player.getX() + 1;
+        }
+
+        if (!canMoveTo(player, targetX, targetY)) {
+            return null;
+        }
+
+        player.setX(targetX);
+        player.setY(targetY);
+        return player;
+    }
+
+    public boolean canMoveTo(Player player, int targetX, int targetY) {
+        return worldManager.isWalkable(
+                player.getCurrentMapId(),
+                player.getCurrentLayer(),
+                targetX,
+                targetY
+        );
     }
 
     public WebSocketResponse processInteract(String id, String targetObjectId) {
@@ -80,7 +103,7 @@ public class GameEngine {
 
     @Scheduled(fixedRate = 100)
     public void gameLoop() {
-        //TODO: udelat game loop
+        // TODO: Implement game loop
     }
 
     public final Point getCurrentPlayerPosition(String id) {

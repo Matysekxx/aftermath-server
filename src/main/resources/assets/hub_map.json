@@ -1,0 +1,21 @@
+{
+  "id": "hub_omega",
+  "name": "Station Omega",
+  "type": "SAFE_ZONE",
+  "environment": {
+    "radiation": 0,
+    "oxygen_drain": false,
+    "darkness_level": 1
+  },
+  "layout": [
+    "map_hub_level0.txt",
+    "map_hub_level1.txt",
+    "map_surface_namesti.txt"
+  ],
+  "legend": {
+    "#": "WALL",
+    ".": "FLOOR",
+    "=": "DOOR",
+    "B": "BED"
+  }
+}

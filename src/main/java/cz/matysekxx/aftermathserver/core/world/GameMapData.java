@@ -2,6 +2,7 @@ package cz.matysekxx.aftermathserver.core.world;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,5 +16,19 @@ public class GameMapData {
     private Map<String, Coordinate> spawns;
     private List<MapObject> objects;
     private Map<String, String> legend;
+
+    private List<ParsedMapLayer> parsedLayers = new ArrayList<>();
+    
+
+    public ParsedMapLayer getLayer(int index) {
+        if (index < 0 || index >= parsedLayers.size()) {
+            return null;
+        }
+        return parsedLayers.get(index);
+    }
+
+    public int getLayerCount() {
+        return parsedLayers.size();
+    }
 }
 

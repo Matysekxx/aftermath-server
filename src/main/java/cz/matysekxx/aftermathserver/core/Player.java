@@ -13,7 +13,7 @@ public class Player {
     private String username;
     private String currentMapId;
     private int x, y;
-
+    private int currentLayer;
     private Inventory inventory;
 
     private int hp = 100;
@@ -27,5 +27,6 @@ public class Player {
         this.username = username;
         this.session = session;
         this.inventory = new Inventory(10, 20.0);
+        this.currentLayer = 0;
     }
 }

@@ -63,7 +63,7 @@ public abstract class InteractEvent {
             final GameMapData nextMap = worldManager.getMap(nextMapId);
 
             if (nextMap == null) {
-                return WebSocketResponse.of("ACTION_FAILED", "Cílová mapa neexistuje (chyba serveru).");
+                return WebSocketResponse.of("ACTION_FAILED", "Target map does not exist (server error).");
             }
 
             player.setCurrentMapId(nextMapId);
