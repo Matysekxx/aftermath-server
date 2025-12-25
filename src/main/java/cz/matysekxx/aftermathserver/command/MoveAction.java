@@ -26,8 +26,7 @@ public class MoveAction extends Action {
                     player.getX(),
                     player.getY()
             );
-            final String jsonResponse = objectMapper.writeValueAsString(response);
-            return WebSocketResponse.of(type, jsonResponse);
+            return WebSocketResponse.of(type, response);
         }
         return WebSocketResponse.of("ACTION_FAILED", "OBSTACLE");
     }

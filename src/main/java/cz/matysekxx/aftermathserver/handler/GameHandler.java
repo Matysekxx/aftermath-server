@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
@@ -33,6 +34,14 @@ public class GameHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final Map<String, Action> actions = new HashMap<>();
+
+
+    private static final Set<String> SELF_ONLY_RESPONSES = Set.of(
+            "ACTION_FAILED",
+            "NOTIFICATION",
+            "LOOT_SUCCESS",
+            "MAP_LOAD"
+    );
 
     public GameHandler(GameEngine gameEngine) {
         this.gameEngine = gameEngine;
@@ -53,13 +62,11 @@ public class GameHandler extends TextWebSocketHandler {
         gameEngine.addPlayer(session);
     }
 
-    private void broadcast(WebSocketResponse response) {
-        final String json = objectMapper.writeValueAsString(response);
-        final TextMessage msg = new TextMessage(json);
+    private void broadcast(TextMessage message) {
         for (WebSocketSession s : sessions) {
             if (s.isOpen()) {
                 try {
-                    s.sendMessage(msg);
+                    s.sendMessage(message);
                 } catch (IOException e) {
                     System.err.println(e.getMessage());
                 }
@@ -67,12 +74,10 @@ public class GameHandler extends TextWebSocketHandler {
         }
     }
 
-    private void  sendToSession(WebSocketResponse response, WebSocketSession session) {
+    private void sendToSession(WebSocketSession session, TextMessage message) {
         if (session.isOpen()) {
-            final String json = objectMapper.writeValueAsString(response);
-            final TextMessage msg = new TextMessage(json);
             try {
-                session.sendMessage(msg);
+                session.sendMessage(message);
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
@@ -81,14 +86,15 @@ public class GameHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) {
-        final WebSocketRequest request = objectMapper.convertValue(message.getPayload(), WebSocketRequest.class);
+        final WebSocketRequest request = objectMapper.readValue(message.getPayload(), WebSocketRequest.class);
         final Action action = actions.get(request.getType());
         if (action != null) {
             final WebSocketResponse response = action.execute(session, request.getPayload());
-            if (response.getType().equals("ACTION_FAILED")) {
-                sendToSession(response, session);
+            final TextMessage msg = new TextMessage(objectMapper.writeValueAsString(response));
+            if (SELF_ONLY_RESPONSES.contains(response.getType())) {
+                sendToSession(session, msg);
             } else {
-                broadcast(response);
+                broadcast(msg);
             }
         }
     }
