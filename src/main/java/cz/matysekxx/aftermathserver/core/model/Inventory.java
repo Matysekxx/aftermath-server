@@ -1,4 +1,4 @@
-package cz.matysekxx.aftermathserver.core;
+package cz.matysekxx.aftermathserver.core.model;
 
 import java.util.Collections;
 import java.util.HashMap;

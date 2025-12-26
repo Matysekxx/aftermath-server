@@ -1,4 +1,4 @@
-package cz.matysekxx.aftermathserver.command;
+package cz.matysekxx.aftermathserver.action;
 
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.springframework.web.socket.WebSocketSession;

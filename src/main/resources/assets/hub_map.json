@@ -4,7 +4,6 @@
   "type": "SAFE_ZONE",
   "environment": {
     "radiation": 0,
-    "oxygen_drain": false,
     "darkness_level": 1
   },
   "layout": [

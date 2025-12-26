@@ -1,9 +1,8 @@
-package cz.matysekxx.aftermathserver.command;
+package cz.matysekxx.aftermathserver.action;
 
 import cz.matysekxx.aftermathserver.core.GameEngine;
-import cz.matysekxx.aftermathserver.core.Player;
+import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.dto.GameDtos;
-import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.springframework.web.socket.WebSocketSession;
 import tools.jackson.databind.JsonNode;

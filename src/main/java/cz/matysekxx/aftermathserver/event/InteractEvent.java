@@ -1,7 +1,7 @@
 package cz.matysekxx.aftermathserver.event;
 
-import cz.matysekxx.aftermathserver.core.Item;
-import cz.matysekxx.aftermathserver.core.Player;
+import cz.matysekxx.aftermathserver.core.model.Item;
+import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;

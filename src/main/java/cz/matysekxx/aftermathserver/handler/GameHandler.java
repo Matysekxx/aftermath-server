@@ -1,10 +1,10 @@
 package cz.matysekxx.aftermathserver.handler;
 
 
-import cz.matysekxx.aftermathserver.command.Action;
-import cz.matysekxx.aftermathserver.command.ChatAction;
-import cz.matysekxx.aftermathserver.command.InteractAction;
-import cz.matysekxx.aftermathserver.command.MoveAction;
+import cz.matysekxx.aftermathserver.action.Action;
+import cz.matysekxx.aftermathserver.action.ChatAction;
+import cz.matysekxx.aftermathserver.action.InteractAction;
+import cz.matysekxx.aftermathserver.action.MoveAction;
 import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
@@ -16,7 +16,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import tools.jackson.databind.ObjectMapper;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;

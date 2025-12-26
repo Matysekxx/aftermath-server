@@ -1,4 +1,4 @@
-package cz.matysekxx.aftermathserver.command;
+package cz.matysekxx.aftermathserver.action;
 
 import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.dto.GameDtos;

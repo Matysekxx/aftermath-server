@@ -1,4 +1,4 @@
-package cz.matysekxx.aftermathserver.core;
+package cz.matysekxx.aftermathserver.core.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

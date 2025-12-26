@@ -10,7 +10,6 @@ import java.util.List;
 
 public class GameDtos {
 
-
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor
     public static class MoveReq {
         private String direction;
@@ -19,11 +18,6 @@ public class GameDtos {
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor
     public static class ChatReq {
         private String message;
-    }
-
-    @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-    public static class AttackReq {
-        private String targetId;
     }
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor
@@ -40,19 +34,6 @@ public class GameDtos {
         private int y;
     }
 
-    @Getter @AllArgsConstructor
-    public static class StatsPayload {
-        private int hp;
-        private int maxHp;
-        private int energy;
-    }
-
-    @Getter @AllArgsConstructor
-    public static class InventoryPayload {
-        private int capacity;
-        private int usedSlots;
-    }
-
     @Getter
     @AllArgsConstructor
     public static class MapLoadPayload {
@@ -60,5 +41,11 @@ public class GameDtos {
         private String mapName;
         private List<String> levels;
         private Environment environment;
+    }
+    @Getter @AllArgsConstructor
+    public static class StatsResponse {
+        private int hp;
+        private int maxHp;
+        private int rads;
     }
 }

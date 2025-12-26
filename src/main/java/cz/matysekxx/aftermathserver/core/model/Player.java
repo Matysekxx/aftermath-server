@@ -1,4 +1,4 @@
-package cz.matysekxx.aftermathserver.core;
+package cz.matysekxx.aftermathserver.core.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +20,9 @@ public class Player {
     private int maxHp = 100;
     private String role;
 
+    private int rads = 0;
+    private int radsLimit = 20;
+
     private WebSocketSession session;
 
     public Player(String id, String username, WebSocketSession session) {
@@ -28,5 +31,8 @@ public class Player {
         this.session = session;
         this.inventory = new Inventory(10, 20.0);
         this.currentLayer = 0;
+    }
+    public boolean isDead() {
+        return hp <= 0;
     }
 }
