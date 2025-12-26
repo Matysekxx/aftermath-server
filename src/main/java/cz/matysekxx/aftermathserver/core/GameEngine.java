@@ -1,6 +1,6 @@
 package cz.matysekxx.aftermathserver.core;
 
-import cz.matysekxx.aftermathserver.core.model.Inventory;
+import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.*;
 import cz.matysekxx.aftermathserver.event.InteractEvent;
@@ -8,12 +8,10 @@ import cz.matysekxx.aftermathserver.dto.GameDtos;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import tools.jackson.databind.ObjectMapper;
 
 import java.awt.Point;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,9 +21,11 @@ public class GameEngine {
     private final WorldManager worldManager;
     private final Map<String, InteractEvent> interactEvents = new HashMap<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final NetworkService networkService;
 
-    public GameEngine(WorldManager worldManager) {
+    public GameEngine(WorldManager worldManager, NetworkService networkService) {
         this.worldManager = worldManager;
+        this.networkService = networkService;
         interactEvents.put("READ", new InteractEvent.ReadEvent());
         interactEvents.put("LOOT", new InteractEvent.LootEvent());
         interactEvents.put("TRAVEL", new InteractEvent.TravelEvent(worldManager));
@@ -35,9 +35,7 @@ public class GameEngine {
         final GameMapData startingMap = worldManager.getStartingMap();
         final String mapId = startingMap != null ? startingMap.getId() : "hub_omega";
         
-        final Player newPlayer = new Player(
-                session.getId(), "", mapId, 50, 15, 0, new Inventory(10, 10f), 100, 100, "", 0, 20, session
-        );
+        final Player newPlayer = new Player(); //placeholder
         players.put(session.getId(), newPlayer);
     }
 
@@ -104,7 +102,7 @@ public class GameEngine {
         return WebSocketResponse.of("ACTION_FAILED", "Action not found");
     }
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 250)
     public void gameLoop() {
         updatePlayers();
     }
@@ -142,31 +140,37 @@ public class GameEngine {
             }
 
             if (player.getHp() <= 0) {
-                //TODO: pridat reseni smrti
+                handlePlayerDeath(player);
                 continue;
             }
 
             if (statsChanged || player.getRads() > 0) {
-                sendStatsToClient(player);
+                networkService.sendStatsToClient(player);
             }
         }
     }
 
-    private void sendStatsToClient(Player p) {
-        if (p.getSession().isOpen()) {
-            try {
-                final GameDtos.StatsResponse stats = new GameDtos.StatsResponse(
-                        p.getHp(),
-                        p.getMaxHp(),
-                        p.getRads()
-                );
+    private void handlePlayerDeath(Player player) {
+        if (player.isDead()) return;
+        player.setDead(true);
 
-                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("STATS_UPDATE", stats));
-                p.getSession().sendMessage(new TextMessage(json));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        final GameMapData map = worldManager.getMap(player.getCurrentMapId());
+        if (map == null) return;
+
+        final MapObject corpse = new MapObject();
+        corpse.setId("corpse_" + player.getUsername());
+        corpse.setType("CONTAINER");
+        corpse.setAction("LOOT");
+        corpse.setDescription("Dead body player " + player.getUsername());
+
+        corpse.setX(player.getX());
+        corpse.setY(player.getY());
+
+        final List<Item> droppedItems = new ArrayList<>(player.getInventory().getSlots().values());
+        corpse.setItems(new ArrayList<>(droppedItems));
+        map.getObjects().add(corpse);
+        player.getInventory().clear();
+        networkService.sendGameOver(player);
     }
 
     public final Point getCurrentPlayerPosition(String id) {

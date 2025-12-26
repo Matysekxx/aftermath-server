@@ -1,5 +1,6 @@
 package cz.matysekxx.aftermathserver.dto;
 
+import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.Environment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,5 +48,7 @@ public class GameDtos {
         private int hp;
         private int maxHp;
         private int rads;
+
+        public static StatsResponse of(Player player) { return new StatsResponse(player.getHp(), player.getMaxHp(), player.getRads()); }
     }
 }

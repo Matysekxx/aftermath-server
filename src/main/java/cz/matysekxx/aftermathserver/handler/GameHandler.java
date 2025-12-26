@@ -61,7 +61,7 @@ public class GameHandler extends TextWebSocketHandler {
         gameEngine.addPlayer(session);
     }
 
-    private void broadcast(TextMessage message) {
+    public void broadcast(TextMessage message) {
         for (WebSocketSession s : sessions) {
             if (s.isOpen()) {
                 try {

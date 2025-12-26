@@ -14,6 +14,10 @@ public class Inventory {
         this.maxWeight = maxWeight;
     }
 
+    public void clear() {
+        slots.clear();
+    }
+
     public Map<Integer, Item> getSlots() {
         return Collections.unmodifiableMap(slots);
     }
