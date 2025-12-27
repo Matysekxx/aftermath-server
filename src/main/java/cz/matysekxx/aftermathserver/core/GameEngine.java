@@ -1,6 +1,6 @@
 package cz.matysekxx.aftermathserver.core;
 
-import cz.matysekxx.aftermathserver.core.model.Item;
+import cz.matysekxx.aftermathserver.core.model.Player.State;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.*;
 import cz.matysekxx.aftermathserver.event.InteractEvent;
@@ -106,7 +106,7 @@ public class GameEngine {
 
     private void updatePlayers() {
         for (Player player : players.values()) {
-            if (player == null || player.isDead()) continue;
+            if (player == null || player.getState() == State.DEAD) continue;
 
             final GameMapData map = worldManager.getMap(player.getCurrentMapId());
             if (map == null) continue;
@@ -148,8 +148,8 @@ public class GameEngine {
     }
 
     private void handlePlayerDeath(Player player) {
-        if (player.isDead()) return;
-        player.setDead(true);
+        if (player.getState() == State.DEAD) return;
+        player.setState(State.DEAD);
 
         final GameMapData map = worldManager.getMap(player.getCurrentMapId());
         if (map == null) return;

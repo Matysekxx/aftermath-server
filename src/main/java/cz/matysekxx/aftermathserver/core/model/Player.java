@@ -20,12 +20,16 @@ public class Player {
     private int rads = 0;
     private int radsLimit = 20;
 
-    private boolean isDead = false;
+    private State state;
 
     public Player(String id, String username) {
         this.id = id;
         this.username = username;
         this.inventory = new Inventory(10, 20.0);
         this.currentLayer = 0;
+    }
+
+    public enum State{
+        ALIVE, DEAD, POISONED
     }
 }
