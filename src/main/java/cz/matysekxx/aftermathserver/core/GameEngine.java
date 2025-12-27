@@ -18,11 +18,13 @@ public class GameEngine {
     private final ConcurrentHashMap<String, Player> players = new ConcurrentHashMap<>();
     private final WorldManager worldManager;
     private final NetworkService networkService;
+    private final MapObjectFactory mapObjectFactory;
     private final Map<String, InteractEvent> interactEvents = new HashMap<>();
 
-    public GameEngine(WorldManager worldManager, NetworkService networkService) {
+    public GameEngine(WorldManager worldManager, NetworkService networkService, MapObjectFactory mapObjectFactory) {
         this.worldManager = worldManager;
         this.networkService = networkService;
+        this.mapObjectFactory = mapObjectFactory;
         interactEvents.put("READ", new InteractEvent.ReadEvent());
         interactEvents.put("LOOT", new InteractEvent.LootEvent());
         interactEvents.put("TRAVEL", new InteractEvent.TravelEvent(worldManager));
@@ -32,7 +34,7 @@ public class GameEngine {
         final GameMapData startingMap = worldManager.getStartingMap();
         final String mapId = startingMap != null ? startingMap.getId() : "hub_omega";
         
-        final Player newPlayer = new Player(); //placeholder
+        final Player newPlayer = new Player(sessionId, ""); //placeholder
         newPlayer.setId(sessionId);
         newPlayer.setCurrentMapId(mapId);
         players.put(sessionId, newPlayer);
@@ -151,18 +153,7 @@ public class GameEngine {
 
         final GameMapData map = worldManager.getMap(player.getCurrentMapId());
         if (map == null) return;
-
-        final MapObject corpse = new MapObject();
-        corpse.setId("corpse_" + player.getUsername());
-        corpse.setType("CONTAINER");
-        corpse.setAction("LOOT");
-        corpse.setDescription("Dead body player " + player.getUsername());
-
-        corpse.setX(player.getX());
-        corpse.setY(player.getY());
-
-        final List<Item> droppedItems = new ArrayList<>(player.getInventory().getSlots().values());
-        corpse.setItems(new ArrayList<>(droppedItems));
+        final MapObject corpse = mapObjectFactory.createPlayerCorpse(player);
         map.getObjects().add(corpse);
         player.getInventory().clear();
         networkService.sendGameOver(player);

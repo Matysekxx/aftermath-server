@@ -1,12 +1,10 @@
 package cz.matysekxx.aftermathserver.core.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@Builder
 public class Player {
     private String id;
     private String username;
