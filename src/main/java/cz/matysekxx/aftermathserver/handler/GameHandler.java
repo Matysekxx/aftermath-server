@@ -6,6 +6,7 @@ import cz.matysekxx.aftermathserver.action.ChatAction;
 import cz.matysekxx.aftermathserver.action.InteractAction;
 import cz.matysekxx.aftermathserver.action.MoveAction;
 import cz.matysekxx.aftermathserver.core.GameEngine;
+import cz.matysekxx.aftermathserver.core.NetworkService;
 import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.jspecify.annotations.NonNull;
@@ -18,17 +19,15 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
 public class GameHandler extends TextWebSocketHandler {
 
-    private final List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-
     private final GameEngine gameEngine;
+    
+    private final NetworkService networkService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -42,8 +41,9 @@ public class GameHandler extends TextWebSocketHandler {
             "MAP_LOAD"
     );
 
-    public GameHandler(GameEngine gameEngine) {
+    public GameHandler(GameEngine gameEngine, NetworkService networkService) {
         this.gameEngine = gameEngine;
+        this.networkService = networkService;
         actions.put("MOVE", new MoveAction(gameEngine));
         actions.put("CHAT", new ChatAction());
         actions.put("INTERACT", new InteractAction(gameEngine));
@@ -51,26 +51,18 @@ public class GameHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) {
-        sessions.remove(session);
+        networkService.removeSession(session.getId());
         gameEngine.removePlayer(session.getId());
     }
 
     @Override
     public void afterConnectionEstablished(@NonNull WebSocketSession session) {
-        sessions.add(session);
-        gameEngine.addPlayer(session);
+        networkService.addSession(session);
+        gameEngine.addPlayer(session.getId());
     }
 
     public void broadcast(TextMessage message) {
-        for (WebSocketSession s : sessions) {
-            if (s.isOpen()) {
-                try {
-                    s.sendMessage(message);
-                } catch (IOException e) {
-                    System.err.println(e.getMessage());
-                }
-            }
-        }
+        networkService.broadcast(message.getPayload());
     }
 
     private void sendToSession(WebSocketSession session, TextMessage message) {

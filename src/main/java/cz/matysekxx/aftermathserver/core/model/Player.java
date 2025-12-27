@@ -1,10 +1,8 @@
 package cz.matysekxx.aftermathserver.core.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.socket.WebSocketSession;
 
 @Getter
 @Setter
@@ -26,12 +24,9 @@ public class Player {
 
     private boolean isDead = false;
 
-    private WebSocketSession session;
-
-    public Player(String id, String username, WebSocketSession session) {
+    public Player(String id, String username) {
         this.id = id;
         this.username = username;
-        this.session = session;
         this.inventory = new Inventory(10, 20.0);
         this.currentLayer = 0;
     }

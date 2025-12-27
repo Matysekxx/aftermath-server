@@ -8,8 +8,6 @@ import cz.matysekxx.aftermathserver.dto.GameDtos;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.WebSocketSession;
-import tools.jackson.databind.ObjectMapper;
 
 import java.awt.Point;
 import java.util.*;
@@ -19,9 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GameEngine {
     private final ConcurrentHashMap<String, Player> players = new ConcurrentHashMap<>();
     private final WorldManager worldManager;
-    private final Map<String, InteractEvent> interactEvents = new HashMap<>();
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private final NetworkService networkService;
+    private final Map<String, InteractEvent> interactEvents = new HashMap<>();
 
     public GameEngine(WorldManager worldManager, NetworkService networkService) {
         this.worldManager = worldManager;
@@ -31,16 +28,14 @@ public class GameEngine {
         interactEvents.put("TRAVEL", new InteractEvent.TravelEvent(worldManager));
     }
 
-    public void addPlayer(WebSocketSession session) {
+    public void addPlayer(String sessionId) {
         final GameMapData startingMap = worldManager.getStartingMap();
         final String mapId = startingMap != null ? startingMap.getId() : "hub_omega";
         
         final Player newPlayer = new Player(); //placeholder
-        players.put(session.getId(), newPlayer);
-    }
-
-    public final Player getPlayer(WebSocketSession session) {
-        return players.get(session.getId());
+        newPlayer.setId(sessionId);
+        newPlayer.setCurrentMapId(mapId);
+        players.put(sessionId, newPlayer);
     }
 
     public void removePlayer(String sessionId) {
