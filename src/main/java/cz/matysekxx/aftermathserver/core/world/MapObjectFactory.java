@@ -30,4 +30,16 @@ public class MapObjectFactory {
         return corpse;
     }
 
+    public MapObject createLootBag(Item item, int x, int y) {
+        final MapObject bag = new MapObject();
+        bag.setId(generateId("loot"));
+        bag.setType("CONTAINER");
+        bag.setAction("LOOT");
+        bag.setDescription("Dropped items");
+        bag.setX(x);
+        bag.setY(y);
+        bag.getItems().add(item);
+        return bag;
+    }
+
 }

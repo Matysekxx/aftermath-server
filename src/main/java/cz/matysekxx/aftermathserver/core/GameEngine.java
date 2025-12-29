@@ -1,5 +1,6 @@
 package cz.matysekxx.aftermathserver.core;
 
+import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player.State;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.*;
@@ -38,6 +39,10 @@ public class GameEngine {
         newPlayer.setId(sessionId);
         newPlayer.setCurrentMapId(mapId);
         players.put(sessionId, newPlayer);
+
+        networkService.sendMapData(sessionId, worldManager.getMap(mapId));
+        networkService.sendStatsToClient(newPlayer);
+        networkService.sendInventory(newPlayer);
     }
 
     public void removePlayer(String sessionId) {
@@ -97,6 +102,22 @@ public class GameEngine {
             return interactEvent.eventIn(target, player);
         }
         return WebSocketResponse.of("ACTION_FAILED", "Action not found");
+    }
+
+    public WebSocketResponse dropItem(String playerId, int slotIndex, int amount) {
+        final Player player = players.get(playerId);
+        if (player == null) return WebSocketResponse.of("ERROR", "Player not found");
+
+        final Item droppedItem = player.getInventory().removeItem(slotIndex, amount);
+        if (droppedItem != null) {
+            final GameMapData map = worldManager.getMap(player.getCurrentMapId());
+            final MapObject lootBag = mapObjectFactory.createLootBag(droppedItem, player.getX(), player.getY());
+            map.getObjects().add(lootBag);
+            networkService.sendInventory(player);
+            networkService.broadcastMapObjects(map.getObjects());
+            return WebSocketResponse.of("DROP_SUCCESS", "Item dropped");
+        }
+        return WebSocketResponse.of("ACTION_FAILED", "Item not found or invalid amount");
     }
 
     @Scheduled(fixedRate = 250)

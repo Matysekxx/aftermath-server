@@ -4,7 +4,6 @@ import lombok.*;
 
 @Getter
 @Setter
-@Builder
 public class Player {
     private String id;
     private String username;

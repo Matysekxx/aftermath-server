@@ -10,6 +10,8 @@ import cz.matysekxx.aftermathserver.core.NetworkService;
 import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.jspecify.annotations.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -24,6 +26,8 @@ import java.util.Set;
 
 @Component
 public class GameHandler extends TextWebSocketHandler {
+
+    private final Logger logger = LoggerFactory.getLogger(GameHandler.class);
 
     private final GameEngine gameEngine;
     
@@ -77,16 +81,21 @@ public class GameHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) {
-        final WebSocketRequest request = objectMapper.readValue(message.getPayload(), WebSocketRequest.class);
-        final Action action = actions.get(request.getType());
-        if (action != null) {
-            final WebSocketResponse response = action.execute(session, request.getPayload());
-            final TextMessage msg = new TextMessage(objectMapper.writeValueAsString(response));
-            if (SELF_ONLY_RESPONSES.contains(response.getType())) {
-                sendToSession(session, msg);
-            } else {
-                broadcast(msg);
+        try {
+            final WebSocketRequest request = objectMapper.readValue(message.getPayload(), WebSocketRequest.class);
+            final Action action = actions.get(request.getType());
+            if (action != null) {
+                final WebSocketResponse response = action.execute(session, request.getPayload());
+                final TextMessage msg = new TextMessage(objectMapper.writeValueAsString(response));
+                if (SELF_ONLY_RESPONSES.contains(response.getType())) {
+                    sendToSession(session, msg);
+                } else {
+                    broadcast(msg);
+                }
             }
+        } catch (Exception e) {
+            logger.error("Error while handling WebSocket request", e);
+            sendToSession(session, new TextMessage("{\"type\":\"ERROR\",\"payload\":\"Invalid request format\"}"));
         }
     }
 }

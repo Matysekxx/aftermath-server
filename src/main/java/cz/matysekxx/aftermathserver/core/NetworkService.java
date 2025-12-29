@@ -1,6 +1,8 @@
 package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.core.model.Player;
+import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.dto.GameDtos;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,7 @@ import org.springframework.web.socket.WebSocketSession;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,5 +68,33 @@ public class NetworkService {
                 System.err.println(e.getMessage());
             }
         }
+    }
+
+    public void sendInventory(Player p) {
+        final WebSocketSession session = sessions.get(p.getId());
+        if (session != null && session.isOpen()) {
+            try {
+                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("INVENTORY_UPDATE", p.getInventory().getSlots()));
+                session.sendMessage(new TextMessage(json));
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
+
+    public void sendMapData(String sessionId, GameMapData map) {
+        final WebSocketSession session = sessions.get(sessionId);
+        if (session != null && session.isOpen()) {
+            try {
+                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("MAP_LOAD", map));
+                session.sendMessage(new TextMessage(json));
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
+
+    public void broadcastMapObjects(List<MapObject> objects) {
+        broadcast(objectMapper.writeValueAsString(WebSocketResponse.of("MAP_OBJECTS_UPDATE", objects)));
     }
 }
