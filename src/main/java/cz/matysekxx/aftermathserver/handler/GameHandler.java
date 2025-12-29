@@ -4,6 +4,7 @@ package cz.matysekxx.aftermathserver.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.action.Action;
 import cz.matysekxx.aftermathserver.action.ChatAction;
+import cz.matysekxx.aftermathserver.action.DropAction;
 import cz.matysekxx.aftermathserver.action.InteractAction;
 import cz.matysekxx.aftermathserver.action.MoveAction;
 import cz.matysekxx.aftermathserver.core.GameEngine;
@@ -51,6 +52,7 @@ public class GameHandler extends TextWebSocketHandler {
         actions.put("MOVE", new MoveAction(gameEngine));
         actions.put("CHAT", new ChatAction());
         actions.put("INTERACT", new InteractAction(gameEngine));
+        actions.put("DROP", new DropAction(gameEngine));
     }
 
     @Override
@@ -80,7 +82,7 @@ public class GameHandler extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) {
+    protected void handleTextMessage(@NonNull WebSocketSession session, @NonNull TextMessage message) {
         try {
             final WebSocketRequest request = objectMapper.readValue(message.getPayload(), WebSocketRequest.class);
             final Action action = actions.get(request.getType());
