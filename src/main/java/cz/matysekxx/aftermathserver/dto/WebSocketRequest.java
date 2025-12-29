@@ -1,9 +1,9 @@
 package cz.matysekxx.aftermathserver.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import tools.jackson.databind.JsonNode;
 
 @Getter
 @Setter

@@ -1,9 +1,9 @@
 package cz.matysekxx.aftermathserver.action;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import cz.matysekxx.aftermathserver.dto.GameDtos;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.springframework.web.socket.WebSocketSession;
-import tools.jackson.databind.JsonNode;
 
 public class ChatAction extends Action {
     public ChatAction() {

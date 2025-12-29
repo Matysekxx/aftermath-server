@@ -1,6 +1,7 @@
 package cz.matysekxx.aftermathserver.handler;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.action.Action;
 import cz.matysekxx.aftermathserver.action.ChatAction;
 import cz.matysekxx.aftermathserver.action.InteractAction;
@@ -9,7 +10,7 @@ import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.core.NetworkService;
 import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
-import org.jspecify.annotations.NonNull;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,6 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.HashMap;

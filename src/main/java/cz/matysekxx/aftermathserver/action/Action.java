@@ -1,9 +1,9 @@
 package cz.matysekxx.aftermathserver.action;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.springframework.web.socket.WebSocketSession;
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
 
 
 public abstract class Action {

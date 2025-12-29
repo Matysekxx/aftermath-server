@@ -1,5 +1,7 @@
 package cz.matysekxx.aftermathserver.core;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
@@ -8,7 +10,6 @@ import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.List;
@@ -95,6 +96,10 @@ public class NetworkService {
     }
 
     public void broadcastMapObjects(List<MapObject> objects) {
-        broadcast(objectMapper.writeValueAsString(WebSocketResponse.of("MAP_OBJECTS_UPDATE", objects)));
+        try {
+            broadcast(objectMapper.writeValueAsString(WebSocketResponse.of("MAP_OBJECTS_UPDATE", objects)));
+        } catch (JsonProcessingException e) {
+            System.err.println(e.getMessage());
+        }
     }
 }
