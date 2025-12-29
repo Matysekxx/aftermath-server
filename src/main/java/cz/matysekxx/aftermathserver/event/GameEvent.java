@@ -1,15 +1,7 @@
 package cz.matysekxx.aftermathserver.event;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
-
-@Getter
-@AllArgsConstructor
-@ToString
-public class GameEvent {
-    private final String type;
-    private final Object payload;
-    private final String targetSessionId;
-    private final boolean isBroadcast;
+public record GameEvent(EventType type, Object payload, String targetSessionId, boolean isBroadcast) {
+    public static GameEvent create(EventType type, Object payload, String targetSessionId, boolean isBroadcast) {
+        return new GameEvent(type, payload, targetSessionId, isBroadcast);
+    }
 }
