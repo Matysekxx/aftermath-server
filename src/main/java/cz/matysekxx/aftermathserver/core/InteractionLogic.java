@@ -1,4 +1,4 @@
-package cz.matysekxx.aftermathserver.event;
+package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player;
@@ -11,19 +11,19 @@ import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class InteractEvent {
-    public abstract WebSocketResponse eventIn(MapObject target, Player player);
+public abstract class InteractionLogic {
+    public abstract WebSocketResponse interact(MapObject target, Player player);
 
-    public static class ReadEvent extends InteractEvent {
+    public static class ReadLogic extends InteractionLogic {
         @Override
-        public WebSocketResponse eventIn(MapObject target, Player player) {
+        public WebSocketResponse interact(MapObject target, Player player) {
             return WebSocketResponse.of("NOTIFICATION", target.getDescription());
         }
     }
 
-    public static class LootEvent extends InteractEvent {
+    public static class LootLogic extends InteractionLogic {
         @Override
-        public WebSocketResponse eventIn(MapObject target, Player player) {
+        public WebSocketResponse interact(MapObject target, Player player) {
             synchronized (target) {
                 if (target.getItems().isEmpty())
                     return WebSocketResponse.of("NOTIFICATION", target.getDescription() + "It is empty");
@@ -50,15 +50,15 @@ public abstract class InteractEvent {
         }
     }
 
-    public static class TravelEvent extends InteractEvent {
+    public static class TravelLogic extends InteractionLogic {
         private final WorldManager worldManager;
 
-        public TravelEvent(WorldManager worldManager) {
+        public TravelLogic(WorldManager worldManager) {
             this.worldManager = worldManager;
         }
 
         @Override
-        public WebSocketResponse eventIn(MapObject target, Player player) {
+        public WebSocketResponse interact(MapObject target, Player player) {
             final String nextMapId = target.getTargetMapId();
             final GameMapData nextMap = worldManager.getMap(nextMapId);
 

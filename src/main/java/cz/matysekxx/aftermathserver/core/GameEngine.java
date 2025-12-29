@@ -4,7 +4,6 @@ import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player.State;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.*;
-import cz.matysekxx.aftermathserver.event.InteractEvent;
 import cz.matysekxx.aftermathserver.dto.GameDtos;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,15 +19,15 @@ public class GameEngine {
     private final WorldManager worldManager;
     private final NetworkService networkService;
     private final MapObjectFactory mapObjectFactory;
-    private final Map<String, InteractEvent> interactEvents = new HashMap<>();
+    private final Map<String, InteractionLogic> logicMap = new HashMap<>();
 
     public GameEngine(WorldManager worldManager, NetworkService networkService, MapObjectFactory mapObjectFactory) {
         this.worldManager = worldManager;
         this.networkService = networkService;
         this.mapObjectFactory = mapObjectFactory;
-        interactEvents.put("READ", new InteractEvent.ReadEvent());
-        interactEvents.put("LOOT", new InteractEvent.LootEvent());
-        interactEvents.put("TRAVEL", new InteractEvent.TravelEvent(worldManager));
+        logicMap.put("READ", new InteractionLogic.ReadLogic());
+        logicMap.put("LOOT", new InteractionLogic.LootLogic());
+        logicMap.put("TRAVEL", new InteractionLogic.TravelLogic(worldManager));
     }
 
     public void addPlayer(String sessionId) {
@@ -97,9 +96,9 @@ public class GameEngine {
             return WebSocketResponse.of("ACTION_FAILED", "You are too far away");
         }
 
-        final InteractEvent interactEvent = interactEvents.get(target.getAction());
-        if (interactEvent != null) {
-            return interactEvent.eventIn(target, player);
+        final InteractionLogic interactionLogic = logicMap.get(target.getAction());
+        if (interactionLogic != null) {
+            return interactionLogic.interact(target, player);
         }
         return WebSocketResponse.of("ACTION_FAILED", "Action not found");
     }
