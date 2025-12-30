@@ -42,7 +42,9 @@ public class TileRegistry {
 
     public void registerFromLegend(Map<String, String> legend) {
         if (legend == null) return;
-        legend.forEach((key, value) -> {
+        for (Map.Entry<String, String> entry : legend.entrySet()) {
+            final String key = entry.getKey();
+            final String value = entry.getValue();
             if (key.length() == 1) {
                 try {
                     register(key.charAt(0), TileType.valueOf(value.toUpperCase()));
@@ -50,7 +52,7 @@ public class TileRegistry {
                     register(key.charAt(0), TileType.UNKNOWN);
                 }
             }
-        });
+        }
     }
     
     public TileType getType(char c) {

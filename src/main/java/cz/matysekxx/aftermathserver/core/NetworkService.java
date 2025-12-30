@@ -7,6 +7,7 @@ import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.dto.GameDtos;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
+import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import org.slf4j.Logger;
@@ -16,11 +17,13 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 @Service
 public class NetworkService {
@@ -28,36 +31,42 @@ public class NetworkService {
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     private final Logger logger = LoggerFactory.getLogger(NetworkService.class);
 
+    private final Map<EventType, Consumer<GameEvent>> handlers = new HashMap<>();
+
+    private void initializeHandlers() {
+        handlers.put(EventType.SEND_INVENTORY, gameEvent -> {
+            if (gameEvent.payload() instanceof Player player) sendInventory(player);
+        });
+        handlers.put(EventType.SEND_STATS, gameEvent -> {
+            if (gameEvent.payload() instanceof Player player) sendStatsToClient(player);
+        });
+        handlers.put(EventType.SEND_GAME_OVER, gameEvent -> {
+           if (gameEvent.payload() instanceof Player player) sendGameOver(player);
+        });
+        handlers.put(EventType.SEND_MAP_OBJECTS, gameEvent -> {
+            if (gameEvent.payload() instanceof List<?> list) {
+                @SuppressWarnings("unchecked")
+                final List<MapObject> mapObjects = (List<MapObject>) list;
+                broadcastMapObjects(mapObjects);
+            }
+        });
+        handlers.put(EventType.SEND_MAP_DATA, gameEvent -> {
+            if (gameEvent.payload() instanceof GameMapData gameMapData) {
+                sendMapData(gameEvent.targetSessionId(), gameMapData);
+            }
+        });
+
+    }
+
     public NetworkService(GameEventQueue gameEventQueue) {
+        initializeHandlers();
         final Runnable runnable = () -> {
            while (true) {
                try {
                    final GameEvent gameEvent = gameEventQueue.take();
-
-                   switch (gameEvent.type()) {
-                       case SEND_INVENTORY -> {
-                           if (gameEvent.payload() instanceof Player player)
-                                sendInventory(player);
-                       }
-                       case SEND_STATS -> {
-                           if (gameEvent.payload() instanceof Player player)
-                                sendStatsToClient(player);
-                       }
-                       case SEND_MAP_DATA ->{
-                           if (gameEvent.payload() instanceof GameMapData gameMapData)
-                               sendMapData(gameEvent.targetSessionId(), gameMapData);
-                       }
-                       case SEND_GAME_OVER -> {
-                           if (gameEvent.payload() instanceof Player player)
-                                sendGameOver(player);
-                       }
-                       case SEND_MAP_OBJECTS -> {
-                           if (gameEvent.payload() instanceof List<?> list) {
-                               @SuppressWarnings("unchecked")
-                               List<MapObject> mapObjects = (List<MapObject>) list;
-                               broadcastMapObjects(mapObjects);
-                           }
-                       }
+                   if (handlers.containsKey(gameEvent.type())) {
+                       final Consumer<GameEvent> handler = handlers.get(gameEvent.type());
+                       handler.accept(gameEvent);
                    }
                } catch (InterruptedException e) {
                    Thread.currentThread().interrupt();

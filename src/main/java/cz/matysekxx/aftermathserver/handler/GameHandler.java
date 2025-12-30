@@ -97,7 +97,6 @@ public class GameHandler extends TextWebSocketHandler {
             }
         } catch (Exception e) {
             logger.error("Error while handling WebSocket request", e);
-            sendToSession(session, new TextMessage("{\"type\":\"ERROR\",\"payload\":\"Invalid request format\"}"));
         }
     }
 }
