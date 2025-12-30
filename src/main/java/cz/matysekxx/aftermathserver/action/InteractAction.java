@@ -16,6 +16,6 @@ public class InteractAction extends Action {
     @Override
     public WebSocketResponse execute(WebSocketSession session, JsonNode payload) {
         final GameDtos.InteractReq request = objectMapper.convertValue(payload, GameDtos.InteractReq.class);
-        return gameEngine.processInteract(session.getId(), request.getItemId());
+        return gameEngine.processInteract(session.getId(), request.getTarget());
     }
 }

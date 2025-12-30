@@ -37,7 +37,7 @@ public class GameEngine {
         final GameMapData startingMap = worldManager.getStartingMap();
         final String mapId = startingMap != null ? startingMap.getId() : "hub_omega";
         
-        final Player newPlayer = new Player(sessionId, ""); //placeholder
+        final Player newPlayer = new Player(sessionId, "", 10, 10);
         newPlayer.setId(sessionId);
         newPlayer.setCurrentMapId(mapId);
         players.put(sessionId, newPlayer);
@@ -88,11 +88,7 @@ public class GameEngine {
     public WebSocketResponse processInteract(String id, String targetObjectId) {
         final Player player = players.get(id);
         final GameMapData map = worldManager.getMap(player.getCurrentMapId());
-        final MapObject target = map.getObjects()
-                .stream()
-                .filter(obj -> obj.getId().equals(targetObjectId))
-                .findFirst()
-                .orElse(null);
+        final MapObject target = map.getObject(targetObjectId);
         if (target == null) return WebSocketResponse.of("ACTION_FAILED", "Object not found");
 
         if (Math.abs(player.getX() - target.getX()) > 1 || Math.abs(player.getY() - target.getY()) > 1) {
@@ -101,7 +97,11 @@ public class GameEngine {
 
         final InteractionLogic interactionLogic = logicMap.get(target.getAction());
         if (interactionLogic != null) {
-            return interactionLogic.interact(target, player);
+            final WebSocketResponse response = interactionLogic.interact(target, player);
+            if ("LOOT_SUCCESS".equals(response.getType())) {
+                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), false));
+            }
+            return response;
         }
         return WebSocketResponse.of("ACTION_FAILED", "Action not found");
     }
@@ -114,7 +114,7 @@ public class GameEngine {
         if (droppedItem != null) {
             final GameMapData map = worldManager.getMap(player.getCurrentMapId());
             final MapObject lootBag = mapObjectFactory.createLootBag(droppedItem, player.getX(), player.getY());
-            map.getObjects().add(lootBag);
+            map.addObject(lootBag);
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), false));
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, map.getObjects(), null, true));
             return WebSocketResponse.of("DROP_SUCCESS", "Item dropped");
@@ -177,7 +177,7 @@ public class GameEngine {
         final GameMapData map = worldManager.getMap(player.getCurrentMapId());
         if (map == null) return;
         final MapObject corpse = mapObjectFactory.createPlayerCorpse(player);
-        map.getObjects().add(corpse);
+        map.addObject(corpse);
         player.getInventory().clear();
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_GAME_OVER, player, player.getId(), false));
     }

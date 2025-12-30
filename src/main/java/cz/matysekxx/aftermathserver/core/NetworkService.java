@@ -11,7 +11,6 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.SmartLifecycle;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;

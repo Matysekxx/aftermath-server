@@ -21,11 +21,14 @@ public class Player {
 
     private State state;
 
-    public Player(String id, String username) {
+    public Player(String id, String username, int x, int y) {
         this.id = id;
         this.username = username;
         this.inventory = new Inventory(10, 20.0);
         this.currentLayer = 0;
+        this.x = x;
+        this.y = y;
+        this.state = State.ALIVE;
     }
 
     public enum State{

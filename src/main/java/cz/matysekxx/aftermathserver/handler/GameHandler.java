@@ -76,7 +76,7 @@ public class GameHandler extends TextWebSocketHandler {
             try {
                 session.sendMessage(message);
             } catch (IOException e) {
-                System.err.println(e.getMessage());
+                logger.error(e.getMessage());
             }
         }
     }

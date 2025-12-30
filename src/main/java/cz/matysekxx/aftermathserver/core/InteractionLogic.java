@@ -74,7 +74,8 @@ public abstract class InteractionLogic {
                     nextMap.getId(),
                     nextMap.getName(),
                     nextMap.getLayout(),
-                    nextMap.getEnvironment()
+                    nextMap.getEnvironment(),
+                    nextMap.getParsedLayers()
             );
             return WebSocketResponse.of("MAP_LOAD", mapPayload);
         }

@@ -2,6 +2,7 @@ package cz.matysekxx.aftermathserver.dto;
 
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.Environment;
+import cz.matysekxx.aftermathserver.core.world.ParsedMapLayer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,7 @@ public class GameDtos {
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor
     public static class InteractReq {
         private String type;
-        private String itemId;
+        private String target;
     }
 
 
@@ -42,6 +43,7 @@ public class GameDtos {
         private String mapName;
         private List<String> levels;
         private Environment environment;
+        private List<ParsedMapLayer> parsedLayers;
     }
     @Getter @AllArgsConstructor
     public static class StatsResponse {
