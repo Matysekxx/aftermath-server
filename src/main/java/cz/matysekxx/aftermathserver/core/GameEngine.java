@@ -6,6 +6,9 @@ import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.*;
 import cz.matysekxx.aftermathserver.dto.GameDtos;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
+import cz.matysekxx.aftermathserver.event.EventType;
+import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +20,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GameEngine {
     private final ConcurrentHashMap<String, Player> players = new ConcurrentHashMap<>();
     private final WorldManager worldManager;
-    private final NetworkService networkService;
+    private final GameEventQueue gameEventQueue;
     private final MapObjectFactory mapObjectFactory;
     private final Map<String, InteractionLogic> logicMap = new HashMap<>();
 
-    public GameEngine(WorldManager worldManager, NetworkService networkService, MapObjectFactory mapObjectFactory) {
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory) {
         this.worldManager = worldManager;
-        this.networkService = networkService;
+        this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
         logicMap.put("READ", new InteractionLogic.ReadLogic());
         logicMap.put("LOOT", new InteractionLogic.LootLogic());
@@ -39,9 +42,9 @@ public class GameEngine {
         newPlayer.setCurrentMapId(mapId);
         players.put(sessionId, newPlayer);
 
-        networkService.sendMapData(sessionId, worldManager.getMap(mapId));
-        networkService.sendStatsToClient(newPlayer);
-        networkService.sendInventory(newPlayer);
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, newPlayer, sessionId, false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, worldManager.getMap(mapId), sessionId, false));
     }
 
     public void removePlayer(String sessionId) {
@@ -112,8 +115,8 @@ public class GameEngine {
             final GameMapData map = worldManager.getMap(player.getCurrentMapId());
             final MapObject lootBag = mapObjectFactory.createLootBag(droppedItem, player.getX(), player.getY());
             map.getObjects().add(lootBag);
-            networkService.sendInventory(player);
-            networkService.broadcastMapObjects(map.getObjects());
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), false));
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, map.getObjects(), null, true));
             return WebSocketResponse.of("DROP_SUCCESS", "Item dropped");
         }
         return WebSocketResponse.of("ACTION_FAILED", "Item not found or invalid amount");
@@ -162,7 +165,7 @@ public class GameEngine {
             }
 
             if (statsChanged || player.getRads() > 0) {
-                networkService.sendStatsToClient(player);
+                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, player, player.getId(), false));
             }
         }
     }
@@ -176,7 +179,7 @@ public class GameEngine {
         final MapObject corpse = mapObjectFactory.createPlayerCorpse(player);
         map.getObjects().add(corpse);
         player.getInventory().clear();
-        networkService.sendGameOver(player);
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_GAME_OVER, player, player.getId(), false));
     }
 
     public final Point getCurrentPlayerPosition(String id) {
