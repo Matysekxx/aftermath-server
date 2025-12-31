@@ -11,6 +11,7 @@ import lombok.Setter;
 import java.util.List;
 
 public class GameDtos {
+    private GameDtos() {}
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor
     public static class MoveReq {

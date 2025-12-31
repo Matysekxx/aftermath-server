@@ -2,6 +2,7 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.core.model.Inventory;
 import cz.matysekxx.aftermathserver.core.model.Item;
+import cz.matysekxx.aftermathserver.core.model.ItemType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,15 +12,15 @@ class InventoryTest {
     @Test
     void testAddItemStacking() {
         final Inventory inventory = new Inventory(5, 10);
-        final Item something = new Item(
-                "something",
-                "something",
-                "...",
-                "s",
-                5,
-                10,
-                1.0
-        );
+        final Item something = Item.builder()
+                .id("something")
+                .name("something")
+                .description("something")
+                .symbol("s")
+                .type(ItemType.RESOURCE)
+                .quantity(5)
+                .maxStack(10).weight(1.0)
+                .build();
 
         boolean result = inventory.addItem(something);
         assertTrue(result);
@@ -33,7 +34,16 @@ class InventoryTest {
     @Test
     void testWeightLimit() {
         final Inventory inventory = new Inventory(5, 10.0);
-        final Item  heavySomething = new Item("heavy something", "heavy something", "...", "E", 1, 1, 11.0);
+        final Item  heavySomething = Item.builder()
+                .id("something")
+                .name("something")
+                .description("something")
+                .symbol("s")
+                .type(ItemType.RESOURCE)
+                .quantity(10)
+                .maxStack(10)
+                .weight(2.0)
+                .build();
         boolean result = inventory.addItem(heavySomething);
 
         assertFalse(result);

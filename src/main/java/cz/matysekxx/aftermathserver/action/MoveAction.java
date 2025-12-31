@@ -20,7 +20,7 @@ public class MoveAction extends Action {
         final String direction = request.getDirection();
         final Player player = gameEngine.processMove(session.getId(), new GameDtos.MoveReq(direction));
         if (player != null) {
-            final var response = new GameDtos.PlayerUpdatePayload(
+            final GameDtos.PlayerUpdatePayload response = new GameDtos.PlayerUpdatePayload(
                     session.getId(),
                     player.getX(),
                     player.getY()

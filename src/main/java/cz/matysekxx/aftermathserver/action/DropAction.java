@@ -16,9 +16,8 @@ public class DropAction extends Action {
 
     @Override
     public WebSocketResponse execute(WebSocketSession session, JsonNode payload) {
-        int slotIndex = payload.get("slotIndex").asInt();
-        int amount = payload.has("amount") ? payload.get("amount").asInt() : 1;
-
+        final int slotIndex = payload.get("slotIndex").asInt();
+        final int amount = payload.has("amount") ? payload.get("amount").asInt() : 1;
         return gameEngine.dropItem(session.getId(), slotIndex, amount);
     }
 }

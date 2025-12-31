@@ -1,12 +1,12 @@
 package cz.matysekxx.aftermathserver.core.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
 public class Item {
     private String id;
     private String name;
@@ -17,19 +17,16 @@ public class Item {
     private int maxStack;
     private double weight;
 
-    public double getTotalWeight() {
+    private ItemType type;
+    private Integer healAmount;
+    private Integer damage;
+    private Integer price;
+
+    public final double getTotalWeight() {
         return weight * quantity;
     }
 
     public Item cloneWithQuantity(int quantity) {
-        return new Item(
-                this.id,
-                this.name,
-                this.description,
-                this.symbol,
-                quantity,
-                this.maxStack,
-                this.weight
-        );
+        return this.toBuilder().quantity(quantity).build();
     }
 }
