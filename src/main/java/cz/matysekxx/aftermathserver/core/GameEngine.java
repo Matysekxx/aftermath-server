@@ -39,7 +39,7 @@ public class GameEngine {
         
         final Player newPlayer = new Player(sessionId, "", 10, 10);
         newPlayer.setId(sessionId);
-        newPlayer.setCurrentMapId(mapId);
+        newPlayer.getLocation().setMapId(mapId);
         players.put(sessionId, newPlayer);
 
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, false));
@@ -78,8 +78,8 @@ public class GameEngine {
 
     public boolean canMoveTo(Player player, int targetX, int targetY) {
         return worldManager.isWalkable(
-                player.getCurrentMapId(),
-                player.getCurrentLayer(),
+                player.getLocation().getMapId(),
+                player.getLocation().getLayerIndex(),
                 targetX,
                 targetY
         );
@@ -87,7 +87,7 @@ public class GameEngine {
 
     public WebSocketResponse processInteract(String id, String targetObjectId) {
         final Player player = players.get(id);
-        final GameMapData map = worldManager.getMap(player.getCurrentMapId());
+        final GameMapData map = worldManager.getMap(player.getLocation().getMapId());
         final MapObject target = map.getObject(targetObjectId);
         if (target == null) return WebSocketResponse.of("ACTION_FAILED", "Object not found");
 
@@ -112,7 +112,7 @@ public class GameEngine {
 
         final Item droppedItem = player.getInventory().removeItem(slotIndex, amount);
         if (droppedItem != null) {
-            final GameMapData map = worldManager.getMap(player.getCurrentMapId());
+            final GameMapData map = worldManager.getMap(player.getLocation().getMapId());
             final MapObject lootBag = mapObjectFactory.createLootBag(droppedItem, player.getX(), player.getY());
             map.addObject(lootBag);
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), false));
@@ -131,7 +131,7 @@ public class GameEngine {
         for (Player player : players.values()) {
             if (player == null || player.getState() == State.DEAD) continue;
 
-            final GameMapData map = worldManager.getMap(player.getCurrentMapId());
+            final GameMapData map = worldManager.getMap(player.getLocation().getMapId());
             if (map == null) continue;
 
             final Environment env = map.getEnvironment();
@@ -174,7 +174,7 @@ public class GameEngine {
         if (player.getState() == State.DEAD) return;
         player.setState(State.DEAD);
 
-        final GameMapData map = worldManager.getMap(player.getCurrentMapId());
+        final GameMapData map = worldManager.getMap(player.getLocation().getMapId());
         if (map == null) return;
         final MapObject corpse = mapObjectFactory.createPlayerCorpse(player);
         map.addObject(corpse);

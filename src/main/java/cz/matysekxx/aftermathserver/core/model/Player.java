@@ -37,4 +37,20 @@ public class Player {
     public void teleport(GameLocation destination) {
         this.location = destination;
     }
+
+    public int getX() {
+        return location.getPosition().x;
+    }
+
+    public int getY() {
+        return location.getPosition().y;
+    }
+
+    public void setX(int x) {
+        this.location.getPosition().x = x;
+    }
+
+    public void setY(int y) {
+        this.location.getPosition().y = y;
+    }
 }
