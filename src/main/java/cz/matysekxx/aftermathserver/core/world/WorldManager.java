@@ -1,8 +1,8 @@
 package cz.matysekxx.aftermathserver.core.world;
 
 import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
@@ -12,9 +12,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
+@Slf4j
 public class WorldManager {
-
-    private static final Logger log = LoggerFactory.getLogger(WorldManager.class);
     
     private final Map<String, GameMapData> maps = new ConcurrentHashMap<>();
     private final MapParser mapParser;
@@ -35,8 +34,7 @@ public class WorldManager {
             
             for (Resource resource : resources) {
                 try {
-                    String path = "assets/" + resource.getFilename();
-                    GameMapData map = mapParser.loadMap(path);
+                    final GameMapData map = mapParser.loadMap("assets/" + resource.getFilename());
                     maps.put(map.getId(), map);
                     
                     if (defaultMapId == null) {

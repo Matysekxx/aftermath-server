@@ -7,14 +7,38 @@
     "darkness_level": 1
   },
   "layout": [
-    "map_hub_level0.txt",
-    "map_hub_level1.txt",
-    "map_surface_namesti.txt"
+    "map_nemocnice_motol.txt"
   ],
-  "legend": {
-    "#": "WALL",
-    ".": "FLOOR",
-    "=": "DOOR",
-    "B": "BED"
-  }
+  "objects": [
+    {
+      "id": "loot_bag_01",
+      "type": "CONTAINER",
+      "x": 55,
+      "y": 7,
+      "width": 1,
+      "height": 1,
+      "action": "LOOT",
+      "description": "Zaprášený batoh",
+      "items": [
+        {
+          "id": "scrap_metal",
+          "name": "Scrap Metal",
+          "quantity": 3,
+          "type": "RESOURCE",
+          "weight": 0.2
+        }
+      ]
+    },
+    {
+      "id": "travel_point_01",
+      "type": "EXIT",
+      "x": 60,
+      "y": 8,
+      "action": "TRAVEL",
+      "description": "Cesta do podzemí",
+      "targetMapId": "map_petriny",
+      "targetX": 50,
+      "targetY": 10
+    }
+  ]
 }

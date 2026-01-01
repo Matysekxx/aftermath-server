@@ -1,0 +1,42 @@
+{
+  "id": "map_petriny",
+  "name": "Stanice Petřiny",
+  "type": "HAZARD_ZONE",
+  "environment": {
+    "radiation": 5,
+    "darkness_level": 2
+  },
+  "layout": [
+    "map_petriny.txt"
+  ],
+  "objects": [
+    {
+      "id": "exit_to_hub",
+      "type": "EXIT",
+      "x": 52,
+      "y": 10,
+      "action": "TRAVEL",
+      "description": "Zpět do Hubu",
+      "targetMapId": "hub_omega",
+      "targetX": 60,
+      "targetY": 8
+    },
+    {
+      "id": "loot_chest_petriny",
+      "type": "CONTAINER",
+      "x": 55,
+      "y": 12,
+      "action": "LOOT",
+      "description": "Ztracená bedna",
+      "items": [
+        {
+          "id": "scrap_metal",
+          "name": "Scrap Metal",
+          "quantity": 10,
+          "type": "RESOURCE",
+          "weight": 0.1
+        }
+      ]
+    }
+  ]
+}

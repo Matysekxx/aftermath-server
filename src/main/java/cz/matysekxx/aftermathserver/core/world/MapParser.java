@@ -20,15 +20,13 @@ public class MapParser {
         this.tileRegistry = tileRegistry;
     }
 
-    public GameMapData loadMap(String jsonPath) throws IOException {
+    public GameMapData  loadMap(String jsonPath) throws IOException {
         ClassPathResource resource = new ClassPathResource(jsonPath);
         
         try (InputStream is = resource.getInputStream()) {
-            GameMapData mapData = objectMapper.readValue(is, GameMapData.class);
+            final GameMapData mapData = objectMapper.readValue(is, GameMapData.class);
 
-            tileRegistry.registerFromLegend(mapData.getLegend());
-
-            List<ParsedMapLayer> layers = new ArrayList<>();
+            final List<ParsedMapLayer> layers = new ArrayList<>();
             if (mapData.getLayout() != null) {
                 for (String file : mapData.getLayout()) {
                     layers.add(parseFile("assets/" + file));

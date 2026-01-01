@@ -12,7 +12,6 @@ import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.awt.Point;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -39,12 +38,13 @@ public class GameEngine {
         
         final Player newPlayer = new Player(sessionId, "", 10, 10);
         newPlayer.setId(sessionId);
-        newPlayer.getLocation().setMapId(mapId);
+        newPlayer.setMapId(mapId);
         players.put(sessionId, newPlayer);
 
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, newPlayer, sessionId, false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, worldManager.getMap(mapId), sessionId, false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(mapId).getObjects(), sessionId, false));
     }
 
     public void removePlayer(String sessionId) {
@@ -78,8 +78,8 @@ public class GameEngine {
 
     public boolean canMoveTo(Player player, int targetX, int targetY) {
         return worldManager.isWalkable(
-                player.getLocation().getMapId(),
-                player.getLocation().getLayerIndex(),
+                player.getMapId(),
+                player.getLayerIndex(),
                 targetX,
                 targetY
         );
@@ -87,7 +87,7 @@ public class GameEngine {
 
     public WebSocketResponse processInteract(String id, String targetObjectId) {
         final Player player = players.get(id);
-        final GameMapData map = worldManager.getMap(player.getLocation().getMapId());
+        final GameMapData map = worldManager.getMap(player.getMapId());
         final MapObject target = map.getObject(targetObjectId);
         if (target == null) return WebSocketResponse.of("ACTION_FAILED", "Object not found");
 
@@ -101,6 +101,10 @@ public class GameEngine {
             if ("LOOT_SUCCESS".equals(response.getType())) {
                 gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), false));
             }
+            if ("MAP_LOAD".equals(response.getType())) {
+                final GameMapData newMap = worldManager.getMap(player.getMapId());
+                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, newMap.getObjects(), player.getId(), false));
+            }
             return response;
         }
         return WebSocketResponse.of("ACTION_FAILED", "Action not found");
@@ -112,7 +116,7 @@ public class GameEngine {
 
         final Item droppedItem = player.getInventory().removeItem(slotIndex, amount);
         if (droppedItem != null) {
-            final GameMapData map = worldManager.getMap(player.getLocation().getMapId());
+            final GameMapData map = worldManager.getMap(player.getMapId());
             final MapObject lootBag = mapObjectFactory.createLootBag(droppedItem, player.getX(), player.getY());
             map.addObject(lootBag);
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), false));
@@ -131,7 +135,7 @@ public class GameEngine {
         for (Player player : players.values()) {
             if (player == null || player.getState() == State.DEAD) continue;
 
-            final GameMapData map = worldManager.getMap(player.getLocation().getMapId());
+            final GameMapData map = worldManager.getMap(player.getMapId());
             if (map == null) continue;
 
             final Environment env = map.getEnvironment();
@@ -174,19 +178,11 @@ public class GameEngine {
         if (player.getState() == State.DEAD) return;
         player.setState(State.DEAD);
 
-        final GameMapData map = worldManager.getMap(player.getLocation().getMapId());
+        final GameMapData map = worldManager.getMap(player.getMapId());
         if (map == null) return;
         final MapObject corpse = mapObjectFactory.createPlayerCorpse(player);
         map.addObject(corpse);
         player.getInventory().clear();
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_GAME_OVER, player, player.getId(), false));
-    }
-
-    public final Point getCurrentPlayerPosition(String id) {
-        final Player player = players.get(id);
-        if (player != null) {
-            return new Point(player.getX(), player.getY());
-        }
-        return null;
     }
 }
