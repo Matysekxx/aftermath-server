@@ -20,7 +20,16 @@ public class TileRegistry {
         register('|', TileType.WALL);
         register('/', TileType.WALL);
         register('\\', TileType.WALL);
-        register('-', TileType.WALL);
+        register('─', TileType.WALL);
+
+        register('│', TileType.WALL);
+        register('─',  TileType.WALL);
+        register('┌', TileType.WALL);
+        register('└', TileType.WALL);
+        register('┐', TileType.WALL);
+        register('┘', TileType.WALL);
+
+
 
         register('=', TileType.DOOR);
         register('B', TileType.BED);
