@@ -5,8 +5,10 @@ import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.dto.GameDtos;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+@Component("MOVE")
 public class MoveAction extends Action {
     private final GameEngine gameEngine;
     public MoveAction(GameEngine gameEngine) {

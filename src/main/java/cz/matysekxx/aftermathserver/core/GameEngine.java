@@ -21,21 +21,19 @@ public class GameEngine {
     private final WorldManager worldManager;
     private final GameEventQueue gameEventQueue;
     private final MapObjectFactory mapObjectFactory;
-    private final Map<String, InteractionLogic> logicMap = new HashMap<>();
+    private final Map<String, InteractionLogic> logicMap;
 
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory) {
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
-        logicMap.put("READ", new InteractionLogic.ReadLogic());
-        logicMap.put("LOOT", new InteractionLogic.LootLogic());
-        logicMap.put("TRAVEL", new InteractionLogic.TravelLogic(worldManager));
+        this.logicMap = logicMap;
     }
 
     public void addPlayer(String sessionId) {
         final GameMapData startingMap = worldManager.getStartingMap();
         final String mapId = startingMap != null ? startingMap.getId() : "hub_omega";
-        
+
         final Player newPlayer = new Player(sessionId, "", 10, 10);
         newPlayer.setId(sessionId);
         newPlayer.setMapId(mapId);

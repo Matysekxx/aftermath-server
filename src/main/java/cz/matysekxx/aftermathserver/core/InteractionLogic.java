@@ -7,6 +7,7 @@ import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.dto.GameDtos;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 public abstract class InteractionLogic {
     public abstract WebSocketResponse interact(MapObject target, Player player);
 
+    @Component("READ")
     public static class ReadLogic extends InteractionLogic {
         @Override
         public WebSocketResponse interact(MapObject target, Player player) {
@@ -21,6 +23,7 @@ public abstract class InteractionLogic {
         }
     }
 
+    @Component("LOOT")
     public static class LootLogic extends InteractionLogic {
         @Override
         public WebSocketResponse interact(MapObject target, Player player) {
@@ -50,6 +53,7 @@ public abstract class InteractionLogic {
         }
     }
 
+    @Component("TRAVEL")
     public static class TravelLogic extends InteractionLogic {
         private final WorldManager worldManager;
 

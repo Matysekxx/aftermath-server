@@ -36,7 +36,7 @@ public class GameHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final Map<String, Action> actions = new HashMap<>();
+    private final Map<String, Action> actions;
 
 
     private static final Set<String> SELF_ONLY_RESPONSES = Set.of(
@@ -46,13 +46,10 @@ public class GameHandler extends TextWebSocketHandler {
             "MAP_LOAD"
     );
 
-    public GameHandler(GameEngine gameEngine, NetworkService networkService) {
+    public GameHandler(GameEngine gameEngine, NetworkService networkService, Map<String, Action> actions) {
         this.gameEngine = gameEngine;
         this.networkService = networkService;
-        actions.put("MOVE", new MoveAction(gameEngine));
-        actions.put("CHAT", new ChatAction());
-        actions.put("INTERACT", new InteractAction(gameEngine));
-        actions.put("DROP", new DropAction(gameEngine));
+        this.actions = actions;
     }
 
     @Override
