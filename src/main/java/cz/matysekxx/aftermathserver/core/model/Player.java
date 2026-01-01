@@ -1,15 +1,16 @@
 package cz.matysekxx.aftermathserver.core.model;
 
+import cz.matysekxx.aftermathserver.core.world.GameLocation;
 import lombok.*;
+
+import java.awt.*;
 
 @Getter
 @Setter
 public class Player {
     private String id;
     private String username;
-    private String currentMapId;
-    private int x, y;
-    private int currentLayer;
+    private GameLocation location;
     private Inventory inventory;
 
     private int hp = 100;
@@ -25,13 +26,15 @@ public class Player {
         this.id = id;
         this.username = username;
         this.inventory = new Inventory(10, 20.0);
-        this.currentLayer = 0;
-        this.x = x;
-        this.y = y;
+        this.location = new GameLocation(null, 0, new Point(x,y));
         this.state = State.ALIVE;
     }
 
     public enum State{
         ALIVE, DEAD, POISONED
+    }
+
+    public void teleport(GameLocation destination) {
+        this.location = destination;
     }
 }

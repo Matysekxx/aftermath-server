@@ -5,12 +5,14 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 @Data
 public class GameMapData {
@@ -19,7 +21,8 @@ public class GameMapData {
     private MapType type;
     private Environment environment;
     private List<String> layout = new ArrayList<>();
-    private Map<String, Coordinate> spawns = new HashMap<>();
+    private Map<String, Point> spawns = new HashMap<>();
+    private List<Exit> exits = new ArrayList<>();
 
     private List<MapObject> objects = new CopyOnWriteArrayList<>();
 
@@ -37,6 +40,13 @@ public class GameMapData {
 
     public int getLayerCount() {
         return parsedLayers.size();
+    }
+
+    public List<Exit> getExitsForLayer(int layerIndex) {
+        if (exits == null || exits.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return exits.stream().filter(e -> e.getSourceLayerIndex() == layerIndex).collect(Collectors.toList());
     }
 
     @JsonIgnore

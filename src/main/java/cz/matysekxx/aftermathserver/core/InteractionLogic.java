@@ -2,6 +2,7 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player;
+import cz.matysekxx.aftermathserver.core.world.GameLocation;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
@@ -10,6 +11,7 @@ import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.Point;
 
 public abstract class InteractionLogic {
     public abstract WebSocketResponse interact(MapObject target, Player player);
@@ -66,9 +68,9 @@ public abstract class InteractionLogic {
                 return WebSocketResponse.of("ACTION_FAILED", "Target map does not exist (server error).");
             }
 
-            player.setCurrentMapId(nextMapId);
-            player.setX(target.getTargetX());
-            player.setY(target.getTargetY());
+            int targetLayer = 0; //placeholder
+            final GameLocation destination = new GameLocation(nextMapId, targetLayer, new Point(target.getTargetX(), target.getTargetY()));
+            player.setLocation(destination);
 
             final GameDtos.MapLoadPayload mapPayload = new GameDtos.MapLoadPayload(
                     nextMap.getId(),
