@@ -14,14 +14,21 @@ class MapParserTest {
     
     private TileRegistry registry;
     private MapParser parser;
-    
+
     @BeforeEach
     void setUp() {
         registry = new TileRegistry();
-        registry.init();
+        Map<Character, TileType> testMapping = new HashMap<>();
+        testMapping.put('#', TileType.WALL);
+        testMapping.put('.', TileType.FLOOR);
+        testMapping.put(' ', TileType.EMPTY);
+        testMapping.put('=', TileType.DOOR);
+        testMapping.put('B', TileType.BED);
+        testMapping.put('V', TileType.ELEVATOR);
+        registry.setMapping(testMapping);
         parser = new MapParser(registry);
     }
-    
+
     @Test
     void shouldMapDefaultChars() {
         assertEquals(TileType.WALL, registry.getType('#'));
