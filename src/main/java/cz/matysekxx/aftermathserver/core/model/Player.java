@@ -12,19 +12,22 @@ public class Player {
     private int layerIndex;
     private int x,y;
 
-    private int hp = 100;
-    private int maxHp = 100;
+    private int hp;
+    private int maxHp;
     private String role;
 
     private int rads = 0;
-    private int radsLimit = 20;
+    private int radsLimit;
 
     private State state;
 
-    public Player(String id, String username, int x, int y) {
+    public Player(String id, String username, int x, int y, int maxHp, int inventoryCapacity, double maxWeight, int radsLimit) {
         this.id = id;
         this.username = username;
-        this.inventory = new Inventory(10, 20.0);
+        this.maxHp = maxHp;
+        this.hp = maxHp;
+        this.radsLimit = radsLimit;
+        this.inventory = new Inventory(inventoryCapacity, maxWeight);
         this.state = State.ALIVE;
     }
 

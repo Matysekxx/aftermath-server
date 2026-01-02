@@ -1,5 +1,6 @@
 package cz.matysekxx.aftermathserver.core;
 
+import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.core.logic.InteractionLogic;
 import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player.State;
@@ -23,21 +24,32 @@ public class GameEngine {
     private final GameEventQueue gameEventQueue;
     private final MapObjectFactory mapObjectFactory;
     private final Map<String, InteractionLogic> logicMap;
+    private final GameSettings settings;
 
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap) {
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap, GameSettings settings) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
         this.logicMap = logicMap;
+        this.settings = settings;
     }
 
     public void addPlayer(String sessionId) {
-        final GameMapData startingMap = worldManager.getStartingMap();
-        final String mapId = startingMap != null ? startingMap.getId() : "hub_omega";
+        final String mapId = settings.getStartingMapId() != null ? settings.getStartingMapId() : "hub_omega";
 
-        final Player newPlayer = new Player(sessionId, "", 10, 10);
+        final String className = settings.getDefaultClass(); //placeholder
+        final GameSettings.PlayerClassConfig classConfig = settings.getClasses().get(className);
+
+        final Player newPlayer = new Player(sessionId, "", settings.getSpawn().getX(), settings.getSpawn().getY(),
+                classConfig.getMaxHp(),
+                classConfig.getInventoryCapacity(),
+                classConfig.getMaxWeight(),
+                classConfig.getRadsLimit()
+        );
+        
         newPlayer.setId(sessionId);
         newPlayer.setMapId(mapId);
+        newPlayer.setRole(className);
         players.put(sessionId, newPlayer);
 
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, false));

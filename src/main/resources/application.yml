@@ -2,5 +2,12 @@ spring:
   config:
     import:
     -  "classpath:tiles.yml"
+    - "classpath:player_classes.yml"
 game:
   tick-rate: 250
+  #placeholder
+  spawn:
+    x: 10
+    y: 10
+  starting-map-id: "hub_omega"
+

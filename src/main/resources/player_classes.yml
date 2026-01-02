@@ -1,0 +1,23 @@
+game:
+  classes:
+    scavenger:
+      max-hp: 80
+      inventory-capacity: 20
+      max-weight: 40.0
+      rads-limit: 15
+    soldier:
+      max-hp: 120
+      inventory-capacity: 10
+      max-weight: 30.0
+      rads-limit: 20
+    stalker:
+      max-hp: 100
+      inventory-capacity: 12
+      max-weight: 30.0
+      rads-limit: 50
+    tank:
+      max-hp: 150
+      inventory-capacity: 8
+      max-weight: 50.0
+      rads-limit: 10
+  default-class: "scavenger"
