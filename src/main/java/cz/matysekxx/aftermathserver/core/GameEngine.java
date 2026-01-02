@@ -52,14 +52,20 @@ public class GameEngine {
         newPlayer.setRole(className);
         players.put(sessionId, newPlayer);
 
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, false));
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, newPlayer, sessionId, false));
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, worldManager.getMap(mapId), sessionId, false));
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(mapId).getObjects(), sessionId, false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, mapId,false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, newPlayer, sessionId, mapId,false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, worldManager.getMap(mapId), sessionId, mapId,false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(mapId).getObjects(), sessionId, mapId,false));
     }
 
     public void removePlayer(String sessionId) {
         players.remove(sessionId);
+    }
+
+    public String getPlayerMapId(String playerId) {
+        final Player player = players.get(playerId);
+        if (player == null) return null;
+        return player.getMapId();
     }
 
     public Player processMove(String playerId, MoveRequest moveRequest) {
@@ -110,11 +116,11 @@ public class GameEngine {
         if (interactionLogic != null) {
             final WebSocketResponse response = interactionLogic.interact(target, player);
             if ("LOOT_SUCCESS".equals(response.getType())) {
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), false));
+                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(),false));
             }
             if ("MAP_LOAD".equals(response.getType())) {
                 final GameMapData newMap = worldManager.getMap(player.getMapId());
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, newMap.getObjects(), player.getId(), false));
+                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, newMap.getObjects(), player.getId(), player.getMapId(), false));
             }
             return response;
         }
@@ -130,8 +136,8 @@ public class GameEngine {
             final GameMapData map = worldManager.getMap(player.getMapId());
             final MapObject lootBag = mapObjectFactory.createLootBag(droppedItem, player.getX(), player.getY());
             map.addObject(lootBag);
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), false));
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, map.getObjects(), null, true));
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, map.getObjects(), null, player.getMapId(), true));
             return WebSocketResponse.of("DROP_SUCCESS", "Item dropped");
         }
         return WebSocketResponse.of("ACTION_FAILED", "Item not found or invalid amount");
@@ -180,7 +186,7 @@ public class GameEngine {
             }
 
             if (statsChanged || player.getRads() > 0) {
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, player, player.getId(), false));
+                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, player, player.getId(), player.getMapId(), false));
             }
         }
     }
@@ -194,6 +200,6 @@ public class GameEngine {
         final MapObject corpse = mapObjectFactory.createPlayerCorpse(player);
         map.addObject(corpse);
         player.getInventory().clear();
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_GAME_OVER, player, player.getId(), false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_GAME_OVER, player, player.getId(), player.getMapId(), false));
     }
 }

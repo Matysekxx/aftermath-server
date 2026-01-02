@@ -9,8 +9,6 @@ import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -53,10 +51,11 @@ public class GameHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(@NonNull WebSocketSession session) {
         networkService.addSession(session);
         gameEngine.addPlayer(session.getId());
+        networkService.updatePlayerLocation(session.getId(), gameEngine.getPlayerMapId(session.getId()));
     }
 
-    public void broadcast(TextMessage message) {
-        networkService.broadcast(message.getPayload());
+    public void broadcast(TextMessage message, String mapId) {
+        networkService.broadcastToMap(message.getPayload(), mapId);
     }
 
     private void sendToSession(WebSocketSession session, TextMessage message) {
@@ -76,11 +75,15 @@ public class GameHandler extends TextWebSocketHandler {
             final Action action = actions.get(request.getType());
             if (action != null) {
                 final WebSocketResponse response = action.execute(session, request.getPayload());
+
+                final String mapId = gameEngine.getPlayerMapId(session.getId());
+                networkService.updatePlayerLocation(session.getId(), mapId);
+
                 final TextMessage msg = new TextMessage(objectMapper.writeValueAsString(response));
                 if (privateResponseTypes.contains(response.getType())) {
                     sendToSession(session, msg);
-                } else {
-                    broadcast(msg);
+                } else if (mapId != null) {
+                    broadcast(msg, mapId);
                 }
             }
         } catch (Exception e) {

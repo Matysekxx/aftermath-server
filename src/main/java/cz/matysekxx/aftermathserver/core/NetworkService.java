@@ -12,8 +12,7 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.handler.GameEventHandler;
 import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -24,12 +23,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 
 @Service
+@Slf4j
 public class NetworkService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
-    private final Logger logger = LoggerFactory.getLogger(NetworkService.class);
-
     private final Map<EventType, GameEventHandler> handlers = new EnumMap<>(EventType.class);
+    private final Map<String, String> sessionToMap = new ConcurrentHashMap<>();
     private final GameEventQueue gameEventQueue;
 
     public NetworkService(GameEventQueue gameEventQueue, List<GameEventHandler> gameEventHandlers) {
@@ -50,10 +49,10 @@ public class NetworkService {
                    }
                } catch (InterruptedException e) {
                    Thread.currentThread().interrupt();
-                   logger.error("Network thread interrupted", e);
+                   log.error("Network thread interrupted", e);
                    break;
                } catch (Exception e) {
-                   logger.error("Error processing event", e);
+                   log.error("Error processing event", e);
                }
            }
         };
@@ -66,19 +65,24 @@ public class NetworkService {
 
     public void removeSession(String sessionId) {
         sessions.remove(sessionId);
+        sessionToMap.remove(sessionId);
     }
 
-    public void broadcast(String payload) {
+    public void updatePlayerLocation(String sessionId, String mapId) {
+        sessionToMap.put(sessionId, mapId);
+    }
+
+    public void broadcastToMap(String payload, String mapId) {
         final TextMessage message = new TextMessage(payload);
-        for (WebSocketSession session : sessions.values()) {
-            if (session.isOpen()) {
-                try {
-                    session.sendMessage(message);
-                } catch (IOException e) {
-                    logger.error(e.getMessage());
-                }
+        sessions.values().stream().filter(WebSocketSession::isOpen).forEach(session -> {
+            final String currentMap = sessionToMap.get(session.getId());
+            if (currentMap == null || !currentMap.equals(mapId)) return;
+            try {
+                session.sendMessage(message);
+            } catch (IOException e) {
+                log.error(e.getMessage());
             }
-        }
+        });
     }
 
     public void sendGameOver(Player p) {
@@ -91,7 +95,7 @@ public class NetworkService {
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of("GAME_OVER", gameOverData));
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {
-                logger.error(e.getMessage());
+                log.error(e.getMessage());
             }
         }
     }
@@ -104,7 +108,7 @@ public class NetworkService {
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of("STATS_UPDATE", stats));
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {
-                logger.error(e.getMessage());
+                log.error(e.getMessage());
             }
         }
     }
@@ -116,7 +120,7 @@ public class NetworkService {
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of("INVENTORY_UPDATE", p.getInventory().getSlots()));
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {
-                logger.error(e.getMessage());
+                log.error(e.getMessage());
             }
         }
     }
@@ -128,16 +132,16 @@ public class NetworkService {
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of("MAP_LOAD", map));
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {
-                logger.error(e.getMessage());
+                log.error(e.getMessage());
             }
         }
     }
 
-    public void broadcastMapObjects(List<MapObject> objects) {
+    public void broadcastMapObjects(List<MapObject> objects, String mapId) {
         try {
-            broadcast(objectMapper.writeValueAsString(WebSocketResponse.of("MAP_OBJECTS_UPDATE", objects)));
+            broadcastToMap(objectMapper.writeValueAsString(WebSocketResponse.of("MAP_OBJECTS_UPDATE", objects)), mapId);
         } catch (JsonProcessingException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 }
