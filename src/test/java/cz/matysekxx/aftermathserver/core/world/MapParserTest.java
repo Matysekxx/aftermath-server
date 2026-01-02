@@ -38,18 +38,6 @@ class MapParserTest {
     }
     
     @Test
-    void shouldRegisterLegend() {
-        Map<String, String> legend = new HashMap<>();
-        legend.put("X", "WALL");
-        legend.put("o", "FLOOR");
-        
-        registry.registerFromLegend(legend);
-        
-        assertEquals(TileType.WALL, registry.getType('X'));
-        assertEquals(TileType.FLOOR, registry.getType('o'));
-    }
-    
-    @Test
     void shouldParseAsciiMap() {
         String map = "####\n#..#\n####";
         ParsedMapLayer layer = parser.parseString(map);

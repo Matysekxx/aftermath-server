@@ -1,0 +1,25 @@
+package cz.matysekxx.aftermathserver.handler;
+
+import cz.matysekxx.aftermathserver.core.NetworkService;
+import cz.matysekxx.aftermathserver.core.model.Player;
+import cz.matysekxx.aftermathserver.event.EventType;
+import cz.matysekxx.aftermathserver.event.GameEvent;
+import org.springframework.stereotype.Component;
+
+@Component
+public class InventoryEventHandler extends GameEventHandler {
+
+    public InventoryEventHandler(NetworkService networkService) {
+        super(networkService);
+    }
+
+    @Override
+    public EventType getType() {
+        return EventType.SEND_INVENTORY;
+    }
+
+    @Override
+    public void handleEvent(GameEvent event) {
+        if (event.payload() instanceof Player player) networkService.sendInventory(player);
+    }
+}

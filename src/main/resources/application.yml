@@ -1,0 +1,6 @@
+spring:
+  config:
+    import:
+    -  "classpath:tiles.yml"
+game:
+  tick-rate: 250

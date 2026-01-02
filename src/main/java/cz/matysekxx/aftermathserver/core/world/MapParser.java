@@ -20,7 +20,7 @@ public class MapParser {
         this.tileRegistry = tileRegistry;
     }
 
-    public GameMapData  loadMap(String jsonPath) throws IOException {
+    public GameMapData loadMap(String jsonPath) throws IOException {
         ClassPathResource resource = new ClassPathResource(jsonPath);
         
         try (InputStream is = resource.getInputStream()) {

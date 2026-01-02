@@ -1,0 +1,30 @@
+game:
+  tiles:
+    mapping:
+      '#': WALL
+      '.': FLOOR
+      ' ': EMPTY
+      '|': WALL
+      '/': WALL
+      '\\': WALL
+      '─': WALL
+      '│': WALL
+      '┌': WALL
+      '└': WALL
+      '┐': WALL
+      '┘': WALL
+      '├': WALL
+      '┤': WALL
+      '┴': WALL
+      '┬': WALL
+      '┼': WALL
+      '=': DOOR
+      'B': BED
+      'V': ELEVATOR
+      'C': COMPUTER
+      'R': RADIO
+      'S': SERVER
+      'A': ARMORY
+      'W': WEAPON
+      'F': FOOD
+      'O': OVEN

@@ -1,5 +1,6 @@
 package cz.matysekxx.aftermathserver.core;
 
+import cz.matysekxx.aftermathserver.core.logic.InteractionLogic;
 import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player.State;
 import cz.matysekxx.aftermathserver.core.model.Player;
@@ -124,7 +125,7 @@ public class GameEngine {
         return WebSocketResponse.of("ACTION_FAILED", "Item not found or invalid amount");
     }
 
-    @Scheduled(fixedRate = 250)
+    @Scheduled(fixedRateString = "${game.tick-rate}")
     public void gameLoop() {
         updatePlayers();
     }

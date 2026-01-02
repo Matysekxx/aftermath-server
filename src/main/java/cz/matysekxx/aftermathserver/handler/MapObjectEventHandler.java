@@ -1,0 +1,31 @@
+package cz.matysekxx.aftermathserver.handler;
+
+import cz.matysekxx.aftermathserver.core.NetworkService;
+import cz.matysekxx.aftermathserver.core.world.MapObject;
+import cz.matysekxx.aftermathserver.event.EventType;
+import cz.matysekxx.aftermathserver.event.GameEvent;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+public class MapObjectEventHandler extends GameEventHandler {
+
+    public MapObjectEventHandler(NetworkService networkService) {
+        super(networkService);
+    }
+
+    @Override
+    public EventType getType() {
+        return EventType.SEND_MAP_OBJECTS;
+    }
+
+    @Override
+    public void handleEvent(GameEvent event) {
+        if (event.payload() instanceof List<?> list) {
+            @SuppressWarnings("unchecked")
+            final List<MapObject> mapObjects = (List<MapObject>) list;
+            networkService.broadcastMapObjects(mapObjects);
+        }
+    }
+}

@@ -10,6 +10,8 @@ import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
+import cz.matysekxx.aftermathserver.handler.GameEventHandler;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,13 +19,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
 
 @Service
 public class NetworkService {
@@ -31,42 +29,24 @@ public class NetworkService {
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     private final Logger logger = LoggerFactory.getLogger(NetworkService.class);
 
-    private final Map<EventType, Consumer<GameEvent>> handlers = new HashMap<>();
+    private final Map<EventType, GameEventHandler> handlers = new EnumMap<>(EventType.class);
+    private final GameEventQueue gameEventQueue;
 
-    private void initializeHandlers() {
-        handlers.put(EventType.SEND_INVENTORY, gameEvent -> {
-            if (gameEvent.payload() instanceof Player player) sendInventory(player);
-        });
-        handlers.put(EventType.SEND_STATS, gameEvent -> {
-            if (gameEvent.payload() instanceof Player player) sendStatsToClient(player);
-        });
-        handlers.put(EventType.SEND_GAME_OVER, gameEvent -> {
-           if (gameEvent.payload() instanceof Player player) sendGameOver(player);
-        });
-        handlers.put(EventType.SEND_MAP_OBJECTS, gameEvent -> {
-            if (gameEvent.payload() instanceof List<?> list) {
-                @SuppressWarnings("unchecked")
-                final List<MapObject> mapObjects = (List<MapObject>) list;
-                broadcastMapObjects(mapObjects);
-            }
-        });
-        handlers.put(EventType.SEND_MAP_DATA, gameEvent -> {
-            if (gameEvent.payload() instanceof GameMapData gameMapData) {
-                sendMapData(gameEvent.targetSessionId(), gameMapData);
-            }
-        });
-
+    public NetworkService(GameEventQueue gameEventQueue, List<GameEventHandler> gameEventHandlers) {
+        this.gameEventQueue = gameEventQueue;
+        for (GameEventHandler gameEventHandler : gameEventHandlers) {
+            handlers.put(gameEventHandler.getType(), gameEventHandler);
+        }
     }
 
-    public NetworkService(GameEventQueue gameEventQueue) {
-        initializeHandlers();
+    @PostConstruct
+    public void startEventLoop() {
         final Runnable runnable = () -> {
            while (true) {
                try {
                    final GameEvent gameEvent = gameEventQueue.take();
                    if (handlers.containsKey(gameEvent.type())) {
-                       final Consumer<GameEvent> handler = handlers.get(gameEvent.type());
-                       handler.accept(gameEvent);
+                       handlers.get(gameEvent.type()).handleEvent(gameEvent);
                    }
                } catch (InterruptedException e) {
                    Thread.currentThread().interrupt();

@@ -1,0 +1,26 @@
+package cz.matysekxx.aftermathserver.handler;
+
+import cz.matysekxx.aftermathserver.core.NetworkService;
+import cz.matysekxx.aftermathserver.core.model.Player;
+import cz.matysekxx.aftermathserver.event.EventType;
+import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.handler.GameEventHandler;
+import org.springframework.stereotype.Component;
+
+@Component
+public class StatsEventHandler extends GameEventHandler {
+
+    public StatsEventHandler(NetworkService networkService) {
+        super(networkService);
+    }
+
+    @Override
+    public EventType getType() {
+        return EventType.SEND_STATS;
+    }
+
+    @Override
+    public void handleEvent(GameEvent event) {
+        if (event.payload() instanceof Player player) networkService.sendStatsToClient(player);
+    }
+}
