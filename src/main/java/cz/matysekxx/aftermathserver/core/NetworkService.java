@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
-import cz.matysekxx.aftermathserver.dto.GameDtos;
+import cz.matysekxx.aftermathserver.dto.StatsResponse;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
@@ -100,7 +100,7 @@ public class NetworkService {
         final WebSocketSession session = sessions.get(p.getId());
         if (session != null && session.isOpen()) {
             try {
-                final GameDtos.StatsResponse stats = GameDtos.StatsResponse.of(p);
+                final StatsResponse stats = StatsResponse.of(p);
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of("STATS_UPDATE", stats));
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {

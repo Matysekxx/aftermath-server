@@ -1,7 +1,7 @@
 package cz.matysekxx.aftermathserver.action;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cz.matysekxx.aftermathserver.dto.GameDtos;
+import cz.matysekxx.aftermathserver.dto.ChatRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -14,7 +14,7 @@ public class ChatAction extends Action {
 
     @Override
     public WebSocketResponse execute(WebSocketSession session, JsonNode payload) {
-        final var chatData = objectMapper.convertValue(payload, GameDtos.ChatReq.class);
+        final var chatData = objectMapper.convertValue(payload, ChatRequest.class);
         return WebSocketResponse.of(type,chatData);
     }
 }

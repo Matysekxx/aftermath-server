@@ -4,7 +4,7 @@ import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
-import cz.matysekxx.aftermathserver.dto.GameDtos;
+import cz.matysekxx.aftermathserver.dto.MapLoadPayload;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +30,7 @@ public class TravelLogic implements InteractionLogic {
         player.setX(target.getTargetX());
         player.setY(target.getTargetY());
 
-        final GameDtos.MapLoadPayload mapPayload = new GameDtos.MapLoadPayload(
+        final MapLoadPayload mapPayload = new MapLoadPayload(
                 nextMap.getId(),
                 nextMap.getName(),
                 nextMap.getLayout(),

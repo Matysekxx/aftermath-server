@@ -3,7 +3,8 @@ package cz.matysekxx.aftermathserver.action;
 import com.fasterxml.jackson.databind.JsonNode;
 import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.core.model.Player;
-import cz.matysekxx.aftermathserver.dto.GameDtos;
+import cz.matysekxx.aftermathserver.dto.MoveRequest;
+import cz.matysekxx.aftermathserver.dto.PlayerUpdatePayload;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -18,11 +19,11 @@ public class MoveAction extends Action {
 
     @Override
     public WebSocketResponse execute(WebSocketSession session, JsonNode payload) {
-        final GameDtos.MoveReq request = objectMapper.convertValue(payload, GameDtos.MoveReq.class);
+        final MoveRequest request = objectMapper.convertValue(payload, MoveRequest.class);
         final String direction = request.getDirection();
-        final Player player = gameEngine.processMove(session.getId(), new GameDtos.MoveReq(direction));
+        final Player player = gameEngine.processMove(session.getId(), new MoveRequest(direction));
         if (player != null) {
-            final GameDtos.PlayerUpdatePayload response = new GameDtos.PlayerUpdatePayload(
+            final PlayerUpdatePayload response = new PlayerUpdatePayload(
                     session.getId(),
                     player.getX(),
                     player.getY()

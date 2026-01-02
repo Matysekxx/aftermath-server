@@ -10,4 +10,7 @@ game:
     x: 10
     y: 10
   starting-map-id: "hub_omega"
+messaging:
+  private-response-types: "MAP_LOAD,LOOT_SUCCESS,NOTIFICATION,ACTION_FAILED"
+
 

@@ -6,7 +6,7 @@ import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player.State;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.*;
-import cz.matysekxx.aftermathserver.dto.GameDtos;
+import cz.matysekxx.aftermathserver.dto.MoveRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
@@ -62,7 +62,7 @@ public class GameEngine {
         players.remove(sessionId);
     }
 
-    public Player processMove(String playerId, GameDtos.MoveReq moveRequest) {
+    public Player processMove(String playerId, MoveRequest moveRequest) {
         final Player player = players.get(playerId);
         if (player == null) {
             return null;

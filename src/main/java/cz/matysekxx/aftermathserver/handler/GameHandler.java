@@ -3,17 +3,15 @@ package cz.matysekxx.aftermathserver.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.action.Action;
-import cz.matysekxx.aftermathserver.action.ChatAction;
-import cz.matysekxx.aftermathserver.action.DropAction;
-import cz.matysekxx.aftermathserver.action.InteractAction;
-import cz.matysekxx.aftermathserver.action.MoveAction;
 import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.core.NetworkService;
 import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -21,14 +19,12 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 @Component
+@Slf4j
 public class GameHandler extends TextWebSocketHandler {
-
-    private final Logger logger = LoggerFactory.getLogger(GameHandler.class);
 
     private final GameEngine gameEngine;
     
@@ -38,13 +34,8 @@ public class GameHandler extends TextWebSocketHandler {
 
     private final Map<String, Action> actions;
 
-
-    private static final Set<String> SELF_ONLY_RESPONSES = Set.of(
-            "ACTION_FAILED",
-            "NOTIFICATION",
-            "LOOT_SUCCESS",
-            "MAP_LOAD"
-    );
+    @Value("#{'${messaging.private-response-types}'.split(',')}")
+    private Set<String> privateResponseTypes;
 
     public GameHandler(GameEngine gameEngine, NetworkService networkService, Map<String, Action> actions) {
         this.gameEngine = gameEngine;
@@ -73,7 +64,7 @@ public class GameHandler extends TextWebSocketHandler {
             try {
                 session.sendMessage(message);
             } catch (IOException e) {
-                logger.error(e.getMessage());
+                log.error(e.getMessage());
             }
         }
     }
@@ -86,14 +77,14 @@ public class GameHandler extends TextWebSocketHandler {
             if (action != null) {
                 final WebSocketResponse response = action.execute(session, request.getPayload());
                 final TextMessage msg = new TextMessage(objectMapper.writeValueAsString(response));
-                if (SELF_ONLY_RESPONSES.contains(response.getType())) {
+                if (privateResponseTypes.contains(response.getType())) {
                     sendToSession(session, msg);
                 } else {
                     broadcast(msg);
                 }
             }
         } catch (Exception e) {
-            logger.error("Error while handling WebSocket request", e);
+            log.error("Error while handling WebSocket request", e);
         }
     }
 }
