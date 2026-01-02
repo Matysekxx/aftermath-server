@@ -29,6 +29,9 @@ public class Player {
         this.radsLimit = radsLimit;
         this.inventory = new Inventory(inventoryCapacity, maxWeight);
         this.state = State.ALIVE;
+        this.x = x;
+        this.y = y;
+
     }
 
     public enum State{

@@ -11,7 +11,6 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "game.tiles")
 public class TileRegistry {
     private Map<Character, TileType> mapping;
-    
     public TileType getType(char c) {
         return mapping.getOrDefault(c, TileType.UNKNOWN);
     }

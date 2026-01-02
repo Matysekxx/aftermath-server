@@ -38,19 +38,6 @@ public class GameMapData {
     @Getter(AccessLevel.NONE)
     private final Map<String, MapObject> objectCache = new ConcurrentHashMap<>();
 
-    public void setObjects(List<MapObject> objects) {
-        if (objects != null) {
-            this.objects = new CopyOnWriteArrayList<>(objects);
-            this.objectCache.clear();
-            for (MapObject obj : objects) {
-                this.objectCache.put(obj.getId(), obj);
-            }
-        } else {
-            this.objects = new CopyOnWriteArrayList<>();
-            this.objectCache.clear();
-        }
-    }
-
     public void addObject(MapObject object) {
         objects.add(object);
         objectCache.put(object.getId(), object);

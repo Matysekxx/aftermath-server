@@ -29,8 +29,8 @@ public class ParsedMapLayer {
     }
 
     public static ParsedMapLayer parse(String content, TileRegistry registry) {
-        String[] lines = content.split("\r?\n");
-        List<String> layerData = Arrays.asList(lines);
+        final String[] lines = content.split("\r?\n");
+        final List<String> layerData = Arrays.asList(lines);
         int maxWidth = 0;
         for (String line : lines) {
             maxWidth = Math.max(maxWidth, line.length());

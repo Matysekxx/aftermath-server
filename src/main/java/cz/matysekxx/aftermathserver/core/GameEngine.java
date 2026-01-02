@@ -115,12 +115,11 @@ public class GameEngine {
         final InteractionLogic interactionLogic = logicMap.get(target.getAction());
         if (interactionLogic != null) {
             final WebSocketResponse response = interactionLogic.interact(target, player);
-            if ("LOOT_SUCCESS".equals(response.getType())) {
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(),false));
-            }
-            if ("MAP_LOAD".equals(response.getType())) {
-                final GameMapData newMap = worldManager.getMap(player.getMapId());
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, newMap.getObjects(), player.getId(), player.getMapId(), false));
+            switch (response.getType()) {
+                case "LOOT_SUCCESS" -> gameEventQueue.enqueue(
+                        GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
+                case "MAP_LOAD" -> gameEventQueue.enqueue(
+                        GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(player.getMapId()).getObjects(), player.getId(), player.getMapId(), false));
             }
             return response;
         }

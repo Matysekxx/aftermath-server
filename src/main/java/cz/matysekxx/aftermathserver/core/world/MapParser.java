@@ -21,9 +21,8 @@ public class MapParser {
     }
 
     public GameMapData loadMap(String jsonPath) throws IOException {
-        ClassPathResource resource = new ClassPathResource(jsonPath);
-        
-        try (InputStream is = resource.getInputStream()) {
+        final ClassPathResource resource = new ClassPathResource(jsonPath);
+        try (final InputStream is = resource.getInputStream()) {
             final GameMapData mapData = objectMapper.readValue(is, GameMapData.class);
 
             final List<ParsedMapLayer> layers = new ArrayList<>();
@@ -39,9 +38,9 @@ public class MapParser {
     }
 
     public ParsedMapLayer parseFile(String path) throws IOException {
-        ClassPathResource resource = new ClassPathResource(path);
-        try (InputStream is = resource.getInputStream()) {
-            String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        final ClassPathResource resource = new ClassPathResource(path);
+        try (final InputStream is = resource.getInputStream()) {
+            final String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             return ParsedMapLayer.parse(content, tileRegistry);
         }
     }

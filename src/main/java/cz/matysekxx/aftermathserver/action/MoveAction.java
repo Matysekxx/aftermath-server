@@ -19,7 +19,7 @@ public class MoveAction extends Action {
 
     @Override
     public WebSocketResponse execute(WebSocketSession session, JsonNode payload) {
-        final MoveRequest request = objectMapper.convertValue(payload, MoveRequest.class);
+        final var request = objectMapper.convertValue(payload, MoveRequest.class);
         final String direction = request.getDirection();
         final Player player = gameEngine.processMove(session.getId(), new MoveRequest(direction));
         if (player != null) {
