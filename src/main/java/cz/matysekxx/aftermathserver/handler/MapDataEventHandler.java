@@ -5,12 +5,13 @@ import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.handler.GameEventHandler;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MapDataEventHandler extends GameEventHandler {
 
-    public MapDataEventHandler(NetworkService networkService) {
+    public MapDataEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }
 

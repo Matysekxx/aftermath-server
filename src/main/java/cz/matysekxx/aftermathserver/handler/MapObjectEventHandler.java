@@ -4,6 +4,7 @@ import cz.matysekxx.aftermathserver.core.NetworkService;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 @Component
 public class MapObjectEventHandler extends GameEventHandler {
 
-    public MapObjectEventHandler(NetworkService networkService) {
+    public MapObjectEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }
 

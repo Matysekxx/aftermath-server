@@ -5,12 +5,13 @@ import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.handler.GameEventHandler;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
 public class StatsEventHandler extends GameEventHandler {
 
-    public StatsEventHandler(NetworkService networkService) {
+    public StatsEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }
 

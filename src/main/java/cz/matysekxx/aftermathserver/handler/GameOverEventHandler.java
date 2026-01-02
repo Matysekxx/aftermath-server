@@ -4,12 +4,13 @@ import cz.matysekxx.aftermathserver.core.NetworkService;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameOverEventHandler extends GameEventHandler {
 
-    public GameOverEventHandler(NetworkService networkService) {
+    public GameOverEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }
 
