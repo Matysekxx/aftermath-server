@@ -1,0 +1,22 @@
+game:
+  items:
+    weapon-items:
+      - id: "pistol_9mm"
+        name: "9mm Pistol"
+        description: "A standard semi-automatic sidearm. Reliable but weak."
+        symbol: "p"
+        type: WEAPON
+        damage: 15
+        maxStack: 1
+        weight: 1.2
+        price: 250
+
+      - id: "crowbar"
+        name: "Crowbar"
+        description: "Heavy iron tool. Good for opening crates and skulls."
+        symbol: "/"
+        type: WEAPON
+        damage: 12
+        maxStack: 1
+        weight: 2.5
+        price: 45

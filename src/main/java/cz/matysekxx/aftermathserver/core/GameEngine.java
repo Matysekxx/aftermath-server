@@ -11,12 +11,14 @@ import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Service
 public class GameEngine {
     private final ConcurrentHashMap<String, Player> players = new ConcurrentHashMap<>();
@@ -39,7 +41,6 @@ public class GameEngine {
 
         final String className = settings.getDefaultClass(); //placeholder
         final GameSettings.PlayerClassConfig classConfig = settings.getClasses().get(className);
-
         final Player newPlayer = new Player(sessionId, "", settings.getSpawn().getX(), settings.getSpawn().getY(),
                 classConfig.getMaxHp(),
                 classConfig.getInventoryCapacity(),
@@ -130,10 +131,10 @@ public class GameEngine {
         final Player player = players.get(playerId);
         if (player == null) return WebSocketResponse.of("ERROR", "Player not found");
 
-        final Item droppedItem = player.getInventory().removeItem(slotIndex, amount);
-        if (droppedItem != null) {
+        final String droppedItemId = player.getInventory().removeItem(slotIndex, amount).getId();
+        if (droppedItemId != null) {
             final GameMapData map = worldManager.getMap(player.getMapId());
-            final MapObject lootBag = mapObjectFactory.createLootBag(droppedItem, player.getX(), player.getY());
+            final MapObject lootBag = mapObjectFactory.createLootBag(droppedItemId, amount, player.getX(), player.getY());
             map.addObject(lootBag);
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, map.getObjects(), null, player.getMapId(), true));

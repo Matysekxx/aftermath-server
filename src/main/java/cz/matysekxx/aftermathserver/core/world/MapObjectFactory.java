@@ -1,6 +1,7 @@
 package cz.matysekxx.aftermathserver.core.world;
 
 import cz.matysekxx.aftermathserver.core.model.Item;
+import cz.matysekxx.aftermathserver.core.model.ItemFactory;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,12 @@ import java.util.UUID;
 
 @Service
 public class MapObjectFactory {
+
+    private final ItemFactory itemFactory;
+
+    public MapObjectFactory(ItemFactory itemFactory) {
+        this.itemFactory = itemFactory;
+    }
 
     private String generateId(String prefix) {
         return prefix + "_" + UUID.randomUUID().toString().substring(0, 8);
@@ -30,7 +37,7 @@ public class MapObjectFactory {
         return corpse;
     }
 
-    public MapObject createLootBag(Item item, int x, int y) {
+    public MapObject createLootBag(String itemId,int quantity ,int x, int y) {
         final MapObject bag = new MapObject();
         bag.setId(generateId("loot"));
         bag.setType("CONTAINER");
@@ -38,7 +45,7 @@ public class MapObjectFactory {
         bag.setDescription("Dropped items");
         bag.setX(x);
         bag.setY(y);
-        bag.getItems().add(item);
+        bag.getItems().add(itemFactory.createItem(itemId, quantity));
         return bag;
     }
 

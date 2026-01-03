@@ -1,16 +1,16 @@
 spring:
   config:
     import:
-    -  "classpath:tiles.yml"
+    - "classpath:tiles.yml"
     - "classpath:player_classes.yml"
+    - "classpath:items-consumables.yml"
+    - "classpath:items-weapons.yml"
+    - "classpath:items-resources.yml"
 game:
   tick-rate: 250
-  #placeholder
   spawn:
-    x: 10
-    y: 10
+    x: 50
+    y: 50
   starting-map-id: "hub_omega"
 messaging:
   private-response-types: "MAP_LOAD,LOOT_SUCCESS,NOTIFICATION,ACTION_FAILED"
-
-

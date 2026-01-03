@@ -46,4 +46,11 @@ public class GameMapData {
     public MapObject getObject(String id) {
         return objectCache.get(id);
     }
+
+    public void initializeCache() {
+        objectCache.clear();
+        for (MapObject obj : objects) {
+            objectCache.put(obj.getId(), obj);
+        }
+    }
 }

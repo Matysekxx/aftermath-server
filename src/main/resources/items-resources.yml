@@ -1,0 +1,20 @@
+game:
+  items:
+    resource-items:
+      - id: "scrap_metal"
+        name: "Scrap Metal"
+        description: "Rusty pieces of metal. Can be used for crafting."
+        symbol: "x"
+        type: RESOURCE
+        maxStack: 50
+        weight: 0.1
+        price: 5
+
+      - id: "electronic_parts"
+        name: "Electronic Parts"
+        description: "Wires, capacitors and circuit boards."
+        symbol: "*"
+        type: RESOURCE
+        maxStack: 20
+        weight: 0.05
+        price: 30

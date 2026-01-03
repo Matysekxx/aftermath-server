@@ -1,6 +1,8 @@
 package cz.matysekxx.aftermathserver.core.world;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.matysekxx.aftermathserver.core.model.Item;
+import cz.matysekxx.aftermathserver.core.model.ItemFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +18,30 @@ public class MapParser {
     private final TileRegistry tileRegistry;
     private final ObjectMapper objectMapper = new ObjectMapper();
     
-    public MapParser(TileRegistry tileRegistry) {
+    private final ItemFactory itemFactory;
+    
+    public MapParser(TileRegistry tileRegistry, ItemFactory itemFactory) {
         this.tileRegistry = tileRegistry;
+        this.itemFactory = itemFactory;
     }
 
     public GameMapData loadMap(String jsonPath) throws IOException {
         final ClassPathResource resource = new ClassPathResource(jsonPath);
         try (final InputStream is = resource.getInputStream()) {
             final GameMapData mapData = objectMapper.readValue(is, GameMapData.class);
+            if (mapData.getObjects() != null) {
+                for (MapObject object : mapData.getObjects()) {
+                    if (object.getItems() != null && !object.getItems().isEmpty()) {
+                        final List<Item> fullItems = new ArrayList<>();
+                        for (Item thinItem : object.getItems()) {
+                            fullItems.add(itemFactory.createItem(thinItem.getId(), thinItem.getQuantity()));
+                        }
+                        object.setItems(fullItems);
+                    }
+                    
+                }
+            }
+            mapData.initializeCache();
 
             final List<ParsedMapLayer> layers = new ArrayList<>();
             if (mapData.getLayout() != null) {
