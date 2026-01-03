@@ -11,7 +11,6 @@ public class Item {
     private String id;
     private String name;
     private String description;
-    private String symbol;
 
     private int quantity;
     private int maxStack;

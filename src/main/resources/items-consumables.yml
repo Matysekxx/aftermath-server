@@ -4,7 +4,6 @@ game:
       - id: "medkit_basic"
         name: "Basic Medkit"
         description: "A small first aid kit with bandages and antiseptic."
-        symbol: "+"
         type: CONSUMABLE
         healAmount: 30
         maxStack: 5
@@ -14,7 +13,6 @@ game:
       - id: "water_bottle"
         name: "Purified Water"
         description: "Clean water in a plastic bottle."
-        symbol: "w"
         type: CONSUMABLE
         healAmount: 10
         maxStack: 10

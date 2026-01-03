@@ -31,10 +31,7 @@
       "items": [
         {
           "id": "scrap_metal",
-          "name": "Scrap Metal",
-          "quantity": 10,
-          "type": "RESOURCE",
-          "weight": 0.1
+          "quantity": 10
         }
       ]
     }
