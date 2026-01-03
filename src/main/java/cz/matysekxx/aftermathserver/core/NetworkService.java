@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
+import cz.matysekxx.aftermathserver.dto.MapLoadPayload;
+import cz.matysekxx.aftermathserver.dto.PlayerUpdatePayload;
 import cz.matysekxx.aftermathserver.dto.StatsResponse;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import cz.matysekxx.aftermathserver.event.EventType;
@@ -12,6 +14,7 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.handler.GameEventHandler;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -20,6 +23,7 @@ import org.springframework.web.socket.WebSocketSession;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
@@ -30,6 +34,7 @@ public class NetworkService {
     private final Map<EventType, GameEventHandler> handlers = new EnumMap<>(EventType.class);
     private final Map<String, String> sessionToMap = new ConcurrentHashMap<>();
     private final GameEventQueue gameEventQueue;
+    private ExecutorService eventLoopExecutor;
 
     public NetworkService(GameEventQueue gameEventQueue, List<GameEventHandler> gameEventHandlers) {
         this.gameEventQueue = gameEventQueue;
@@ -56,7 +61,16 @@ public class NetworkService {
                }
            }
         };
-        Executors.newSingleThreadExecutor().execute(runnable);
+        eventLoopExecutor = Executors.newSingleThreadExecutor();
+        eventLoopExecutor.execute(runnable);
+    }
+
+    @PreDestroy
+    public void stopEventLoop() {
+        if (eventLoopExecutor != null && !eventLoopExecutor.isShutdown()) {
+            log.info("Stopping network event loop...");
+            eventLoopExecutor.shutdownNow();
+        }
     }
 
     public void addSession(WebSocketSession session) {
@@ -129,7 +143,14 @@ public class NetworkService {
         final WebSocketSession session = sessions.get(sessionId);
         if (session != null && session.isOpen()) {
             try {
-                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("MAP_LOAD", map));
+                final MapLoadPayload payload = new MapLoadPayload(
+                        map.getId(),
+                        map.getName(),
+                        map.getLayout(),
+                        map.getEnvironment(),
+                        map.getParsedLayers()
+                );
+                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("MAP_LOAD", payload));
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {
                 log.error(e.getMessage());
@@ -142,6 +163,19 @@ public class NetworkService {
             broadcastToMap(objectMapper.writeValueAsString(WebSocketResponse.of("MAP_OBJECTS_UPDATE", objects)), mapId);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
+        }
+    }
+
+    public void sendPosition(Player p) {
+        final WebSocketSession session = sessions.get(p.getId());
+        if (session != null && session.isOpen()) {
+            try {
+                final PlayerUpdatePayload payload = new PlayerUpdatePayload(p.getId(), p.getX(), p.getY());
+                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("PLAYER_MOVED", payload));
+                session.sendMessage(new TextMessage(json));
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
         }
     }
 }

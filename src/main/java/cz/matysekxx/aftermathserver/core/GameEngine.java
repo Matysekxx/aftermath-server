@@ -55,6 +55,7 @@ public class GameEngine {
 
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, mapId,false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, newPlayer, sessionId, mapId,false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, newPlayer, sessionId, mapId,false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, worldManager.getMap(mapId), sessionId, mapId,false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(mapId).getObjects(), sessionId, mapId,false));
     }
@@ -77,7 +78,7 @@ public class GameEngine {
 
         int targetX = player.getX();
         int targetY = player.getY();
-        
+
         switch (moveRequest.getDirection().toUpperCase()) {
             case "UP" -> targetY = player.getY() - 1;
             case "DOWN" -> targetY = player.getY() + 1;
@@ -119,8 +120,11 @@ public class GameEngine {
             switch (response.getType()) {
                 case "LOOT_SUCCESS" -> gameEventQueue.enqueue(
                         GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
-                case "MAP_LOAD" -> gameEventQueue.enqueue(
+                case "MAP_LOAD" -> {
+                    gameEventQueue.enqueue(
                         GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(player.getMapId()).getObjects(), player.getId(), player.getMapId(), false));
+                    gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), player.getMapId(), false));
+                }
             }
             return response;
         }
