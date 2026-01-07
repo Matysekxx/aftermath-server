@@ -3,6 +3,7 @@ package cz.matysekxx.aftermathserver.core.world;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.ItemFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class MapParser {
-    
     private final TileRegistry tileRegistry;
     private final ObjectMapper objectMapper = new ObjectMapper();
     
