@@ -35,6 +35,6 @@ public class Player {
     }
 
     public enum State{
-        ALIVE, DEAD, POISONED
+        ALIVE, DEAD, TRAVELLING, POISONED
     }
 }

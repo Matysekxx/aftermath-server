@@ -4,19 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
 public class ParsedMapLayer {
     @JsonIgnore
     private final TileType[][] tiles;
-    private final List<String> layerData;
+    private final char[][] symbols;
     private final int width;
     private final int height;
     
-    public ParsedMapLayer(TileType[][] tiles, List<String> layerData) {
+    public ParsedMapLayer(TileType[][] tiles, char[][] symbols) {
         this.tiles = tiles;
-        this.layerData = layerData;
+        this.symbols = symbols;
         this.height = tiles.length;
         this.width = height > 0 ? tiles[0].length : 0;
     }
@@ -28,28 +29,37 @@ public class ParsedMapLayer {
         return tiles[y][x];
     }
 
-    public static ParsedMapLayer parse(String content, TileRegistry registry) {
-        final String[] lines = content.split("\r?\n");
-        final List<String> layerData = Arrays.asList(lines);
-        int maxWidth = 0;
-        for (String line : lines) {
-            maxWidth = Math.max(maxWidth, line.length());
+    public char getSymbolAt(int x, int y) {
+        if (x < 0 || x >= width || y < 0 || y >= height) {
+            return ' ';
         }
+        return symbols[y][x];
+    }
+
+    public static ParsedMapLayer parse(String content, TileRegistry registry) {
+        final String[] lines = content.split("\\R");
+        final int height = lines.length;
+        final int width = Arrays.stream(lines).mapToInt(String::length).max().orElse(0);
         
-        final TileType[][] tiles = new TileType[lines.length][maxWidth];
-        for (int y = 0; y < lines.length; y++) {
-            final String line = lines[y];
+        final TileType[][] tiles = new TileType[height][width];
+        final char[][] symbols = new char[height][width];
+
+        for (int y = 0; y < height; y++) {
+            String line = lines[y];
             boolean inQuotes = false;
-            for (int x = 0; x < maxWidth; x++) {
-                char c = x < line.length() ? line.charAt(x) : ' ';
+
+            for (int x = 0; x < width; x++) {
+                final char c = x < line.length() ? line.charAt(x) : ' ';
+                symbols[y][x] = c;
+
                 if (c == '"') {
                     inQuotes = !inQuotes;
                     tiles[y][x] = TileType.FLOOR;
-                } else {
-                    tiles[y][x] = inQuotes ? TileType.FLOOR : registry.getType(c);
+                    continue;
                 }
+                tiles[y][x] = inQuotes ? TileType.FLOOR : registry.getType(c);
             }
         }
-        return new ParsedMapLayer(tiles, layerData);
+        return new ParsedMapLayer(tiles, symbols);
     }
 }

@@ -7,7 +7,7 @@
     "darkness_level": 2
   },
   "layout": [
-    "maps_a/map_petriny.txt"
+    "assets/maps_a/map_petriny.txt"
   ],
   "objects": [
     {

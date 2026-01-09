@@ -23,6 +23,7 @@ public enum TileType {
     FOOD(false, true, "LOOT"),
     OVEN(false, true, "LOOT"),
 
+    METRO_TRACK(true, false, null),
     UNKNOWN(false, false, null);
     
     private final boolean walkable;

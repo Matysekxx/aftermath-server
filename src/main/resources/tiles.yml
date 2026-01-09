@@ -55,3 +55,7 @@ game:
         type: FOOD
       - symbol: 'O'
         type: OVEN
+      - symbol: '-'
+        type: METRO_TRACK
+      - symbol: '~'
+        type: METRO_TRACK

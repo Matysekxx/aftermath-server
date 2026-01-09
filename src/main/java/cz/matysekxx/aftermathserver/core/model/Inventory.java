@@ -43,20 +43,20 @@ public class Inventory {
                 existingItem.setQuantity(existingItem.getQuantity() + amountToTransfer);
                 amountRemaining -= amountToTransfer;
 
-                if (amountRemaining == 0) return true;
+                if (amountRemaining <= 0) return true;
             }
         }
 
-        if (amountRemaining > 0) {
-            for (int i = 0; i < capacity; i++) {
-                if (!slots.containsKey(i)) {
-                    final Item newItem = itemToAdd.cloneWithQuantity(amountRemaining);
-                    slots.put(i, newItem);
-                    return true;
-                }
+        for (int i = 0; i < capacity && amountRemaining > 0; i++) {
+            if (!slots.containsKey(i)) {
+                final Item newItem = itemToAdd.cloneWithQuantity(amountRemaining);
+                slots.put(i, newItem);
+                amountRemaining = 0;
+                break;
             }
         }
-        return amountRemaining == 0;
+
+        return amountRemaining <= 0;
     }
 
     public Item removeItem(int slotIndex, int quantityToRemove) {

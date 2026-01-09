@@ -89,12 +89,30 @@ public class GameEngine {
         if (!canMoveTo(player, targetX, targetY)) {
             return null;
         }
-
         player.setX(targetX);
         player.setY(targetY);
+
+        final GameMapData currentMap = worldManager.getMap(player.getMapId());
+        final char symbolChar = currentMap.getLayer(player.getLayerIndex()).getSymbolAt(targetX, targetY);
+        final String symbol = String.valueOf(symbolChar);
+
+        if (currentMap.tileTriggerContains(symbol)) {
+            TileTrigger trigger = currentMap.getTileTrigger(symbol);
+            handleTileTrigger(player, trigger);
+        }
+        
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), player.getMapId(), false));
         return player;
     }
 
+    private void handleTileTrigger(Player player, TileTrigger trigger) {
+        switch (trigger.getType()) {
+            case "METRO_TRAVEL" -> log.info("Player {} triggered metro travel with attribute {}", player.getId(), trigger.getAttribute());
+            case "TELEPORT" -> {
+                //TODO: implementovat teleport
+            }
+        }
+    }
     public boolean canMoveTo(Player player, int targetX, int targetY) {
         return worldManager.isWalkable(
                 player.getMapId(),

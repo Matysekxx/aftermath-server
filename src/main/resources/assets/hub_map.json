@@ -7,7 +7,7 @@
     "darkness_level": 1
   },
   "layout": [
-    "maps_a/map_nemocnice_motol0.txt"
+    "assets/maps_a/map_nemocnice_motol0.txt"
   ],
   "objects": [
     {
@@ -37,5 +37,8 @@
       "targetX": 50,
       "targetY": 10
     }
-  ]
+  ],
+  "tileTriggers": {
+    "-": {"type": "METRO_TRAVEL", "attribute": "line_a"}
+  }
 }

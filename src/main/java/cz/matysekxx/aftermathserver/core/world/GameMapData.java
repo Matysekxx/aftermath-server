@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,11 +24,20 @@ public class GameMapData {
 
     private List<ParsedMapLayer> parsedLayers = new ArrayList<>();
 
+    private Map<String, TileTrigger> tileTriggers = new HashMap<>();
     public ParsedMapLayer getLayer(int index) {
         if (index < 0 || index >= parsedLayers.size()) {
             return null;
         }
         return parsedLayers.get(index);
+    }
+
+    public TileTrigger getTileTrigger(String id) {
+        return tileTriggers.get(id);
+    }
+    
+    public boolean tileTriggerContains(String id) {
+        return tileTriggers.containsKey(id);
     }
 
     public int getLayerCount() {
