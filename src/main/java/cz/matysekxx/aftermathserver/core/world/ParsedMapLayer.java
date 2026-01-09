@@ -1,15 +1,11 @@
 package cz.matysekxx.aftermathserver.core.world;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Getter
 public class ParsedMapLayer {
-    @JsonIgnore
     private final TileType[][] tiles;
     private final char[][] symbols;
     private final int width;

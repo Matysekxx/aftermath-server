@@ -1,4 +1,4 @@
-package cz.matysekxx.aftermathserver.core;
+package cz.matysekxx.aftermathserver.network;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,7 +12,6 @@ import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
-import cz.matysekxx.aftermathserver.handler.GameEventHandler;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +43,7 @@ public class NetworkService {
     }
 
     @PostConstruct
-    public void startEventLoop() {
+    private void startEventLoop() {
         final Runnable runnable = () -> {
            while (true) {
                try {
@@ -66,7 +65,7 @@ public class NetworkService {
     }
 
     @PreDestroy
-    public void stopEventLoop() {
+    private void stopEventLoop() {
         if (eventLoopExecutor != null && !eventLoopExecutor.isShutdown()) {
             log.info("Stopping network event loop...");
             eventLoopExecutor.shutdownNow();
@@ -86,7 +85,7 @@ public class NetworkService {
         sessionToMap.put(sessionId, mapId);
     }
 
-    public void broadcastToMap(String payload, String mapId) {
+    void broadcastToMap(String payload, String mapId) {
         final TextMessage message = new TextMessage(payload);
         sessions.values().stream().filter(WebSocketSession::isOpen).forEach(session -> {
             final String currentMap = sessionToMap.get(session.getId());
@@ -99,7 +98,7 @@ public class NetworkService {
         });
     }
 
-    public void sendGameOver(Player p) {
+    void sendGameOver(Player p) {
         final WebSocketSession session = sessions.get(p.getId());
         if (session != null && session.isOpen()) {
             final TreeMap<String, Object> gameOverData = new TreeMap<>();
@@ -114,7 +113,7 @@ public class NetworkService {
         }
     }
 
-    public void sendStatsToClient(Player p) {
+    void sendStatsToClient(Player p) {
         final WebSocketSession session = sessions.get(p.getId());
         if (session != null && session.isOpen()) {
             try {
@@ -127,7 +126,7 @@ public class NetworkService {
         }
     }
 
-    public void sendInventory(Player p) {
+    void sendInventory(Player p) {
         final WebSocketSession session = sessions.get(p.getId());
         if (session != null && session.isOpen()) {
             try {
@@ -139,7 +138,7 @@ public class NetworkService {
         }
     }
 
-    public void sendMapData(String sessionId, GameMapData map) {
+    void sendMapData(String sessionId, GameMapData map) {
         final WebSocketSession session = sessions.get(sessionId);
         if (session != null && session.isOpen()) {
             try {
@@ -158,7 +157,7 @@ public class NetworkService {
         }
     }
 
-    public void broadcastMapObjects(List<MapObject> objects, String mapId) {
+    void broadcastMapObjects(List<MapObject> objects, String mapId) {
         try {
             broadcastToMap(objectMapper.writeValueAsString(WebSocketResponse.of("MAP_OBJECTS_UPDATE", objects)), mapId);
         } catch (JsonProcessingException e) {
@@ -166,7 +165,7 @@ public class NetworkService {
         }
     }
 
-    public void sendPosition(Player p) {
+    void sendPosition(Player p) {
         final WebSocketSession session = sessions.get(p.getId());
         if (session != null && session.isOpen()) {
             try {

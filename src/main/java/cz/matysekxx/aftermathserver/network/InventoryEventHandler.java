@@ -1,27 +1,25 @@
-package cz.matysekxx.aftermathserver.handler;
+package cz.matysekxx.aftermathserver.network;
 
-import cz.matysekxx.aftermathserver.core.NetworkService;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
-import cz.matysekxx.aftermathserver.handler.GameEventHandler;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StatsEventHandler extends GameEventHandler {
+public class InventoryEventHandler extends GameEventHandler {
 
-    public StatsEventHandler(@Lazy NetworkService networkService) {
+    public InventoryEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }
 
     @Override
     public EventType getType() {
-        return EventType.SEND_STATS;
+        return EventType.SEND_INVENTORY;
     }
 
     @Override
     public void handleEvent(GameEvent event) {
-        if (event.payload() instanceof Player player) networkService.sendStatsToClient(player);
+        if (event.payload() instanceof Player player) networkService.sendInventory(player);
     }
 }

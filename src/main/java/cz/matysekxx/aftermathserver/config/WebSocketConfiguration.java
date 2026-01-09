@@ -1,6 +1,6 @@
 package cz.matysekxx.aftermathserver.config;
 
-import cz.matysekxx.aftermathserver.handler.GameHandler;
+import cz.matysekxx.aftermathserver.websocket.GameHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;

@@ -1,6 +1,5 @@
-package cz.matysekxx.aftermathserver.handler;
+package cz.matysekxx.aftermathserver.network;
 
-import cz.matysekxx.aftermathserver.core.NetworkService;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
@@ -8,19 +7,21 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GameOverEventHandler extends GameEventHandler {
+public class PositionEventHandler extends GameEventHandler {
 
-    public GameOverEventHandler(@Lazy NetworkService networkService) {
+    public PositionEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }
 
     @Override
     public EventType getType() {
-        return EventType.SEND_GAME_OVER;
+        return EventType.SEND_PLAYER_POSITION;
     }
 
     @Override
     public void handleEvent(GameEvent event) {
-        if (event.payload() instanceof Player player) networkService.sendGameOver(player);
+        if (event.payload() instanceof Player player) {
+            networkService.sendPosition(player);
+        }
     }
 }

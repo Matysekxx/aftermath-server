@@ -1,6 +1,5 @@
-package cz.matysekxx.aftermathserver.handler;
+package cz.matysekxx.aftermathserver.network;
 
-import cz.matysekxx.aftermathserver.core.NetworkService;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;

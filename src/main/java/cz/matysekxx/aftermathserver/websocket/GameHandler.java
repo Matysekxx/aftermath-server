@@ -1,12 +1,15 @@
-package cz.matysekxx.aftermathserver.handler;
+package cz.matysekxx.aftermathserver.websocket;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.action.Action;
 import cz.matysekxx.aftermathserver.core.GameEngine;
-import cz.matysekxx.aftermathserver.core.NetworkService;
+import cz.matysekxx.aftermathserver.network.NetworkService;
 import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
+import cz.matysekxx.aftermathserver.event.EventType;
+import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +19,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,6 +30,7 @@ public class GameHandler extends TextWebSocketHandler {
     
     private final NetworkService networkService;
 
+    private final GameEventQueue gameEventQueue;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final Map<String, Action> actions;
@@ -35,9 +38,10 @@ public class GameHandler extends TextWebSocketHandler {
     @Value("#{'${messaging.private-response-types}'.split(',')}")
     private Set<String> privateResponseTypes;
 
-    public GameHandler(GameEngine gameEngine, NetworkService networkService, Map<String, Action> actions) {
+    public GameHandler(GameEngine gameEngine, NetworkService networkService, GameEventQueue gameEventQueue, Map<String, Action> actions) {
         this.gameEngine = gameEngine;
         this.networkService = networkService;
+        this.gameEventQueue = gameEventQueue;
         this.actions = actions;
     }
 
@@ -55,16 +59,12 @@ public class GameHandler extends TextWebSocketHandler {
     }
 
     public void broadcast(TextMessage message, String mapId) {
-        networkService.broadcastToMap(message.getPayload(), mapId);
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MESSAGE, message, null, mapId, true));
     }
 
     private void sendToSession(WebSocketSession session, TextMessage message) {
         if (session.isOpen()) {
-            try {
-                session.sendMessage(message);
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MESSAGE, message, session.getId(), null, false));
         }
     }
 

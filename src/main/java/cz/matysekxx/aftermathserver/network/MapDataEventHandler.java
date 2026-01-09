@@ -1,10 +1,8 @@
-package cz.matysekxx.aftermathserver.handler;
+package cz.matysekxx.aftermathserver.network;
 
-import cz.matysekxx.aftermathserver.core.NetworkService;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
-import cz.matysekxx.aftermathserver.handler.GameEventHandler;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
