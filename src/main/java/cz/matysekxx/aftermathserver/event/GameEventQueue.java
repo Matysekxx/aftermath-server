@@ -8,10 +8,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class GameEventQueue {
     private final LinkedBlockingDeque<GameEvent> queue = new LinkedBlockingDeque<>();
 
-    public GameEvent poll() {
-        return queue.poll();
-    }
-
     public void enqueue(GameEvent gameEvent) {
         queue.add(gameEvent);
     }

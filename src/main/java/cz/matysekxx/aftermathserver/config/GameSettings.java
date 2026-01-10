@@ -13,7 +13,7 @@ public class GameSettings {
     private String startingMapId;
     private int tickRate;
     private SpawnSettings spawn;
-    
+
     private String defaultClass;
     private Map<String, PlayerClassConfig> classes;
 

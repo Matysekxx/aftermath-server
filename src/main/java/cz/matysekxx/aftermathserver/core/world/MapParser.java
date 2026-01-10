@@ -19,9 +19,9 @@ import java.util.List;
 public class MapParser {
     private final TileRegistry tileRegistry;
     private final ObjectMapper objectMapper = new ObjectMapper();
-    
+
     private final ItemFactory itemFactory;
-    
+
     public MapParser(TileRegistry tileRegistry, ItemFactory itemFactory) {
         this.tileRegistry = tileRegistry;
         this.itemFactory = itemFactory;

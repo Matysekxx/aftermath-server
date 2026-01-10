@@ -25,11 +25,11 @@ public enum TileType {
 
     METRO_TRACK(true, false, null),
     UNKNOWN(false, false, null);
-    
+
     private final boolean walkable;
     private final boolean interactable;
     private final String defaultAction;
-    
+
     TileType(boolean walkable, boolean interactable, String defaultAction) {
         this.walkable = walkable;
         this.interactable = interactable;

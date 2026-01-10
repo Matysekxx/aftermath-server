@@ -9,7 +9,6 @@ import org.springframework.web.socket.TextMessage;
 @Component
 public class SendMessageEventHandler extends GameEventHandler {
 
-
     protected SendMessageEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }

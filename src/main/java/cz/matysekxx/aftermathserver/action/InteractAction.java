@@ -10,6 +10,7 @@ import org.springframework.web.socket.WebSocketSession;
 @Component("INTERACT")
 public class InteractAction extends Action {
     private final GameEngine gameEngine;
+
     public InteractAction(GameEngine gameEngine) {
         super("INTERACT_RESULT");
         this.gameEngine = gameEngine;

@@ -12,6 +12,7 @@ import org.springframework.web.socket.WebSocketSession;
 @Component("MOVE")
 public class MoveAction extends Action {
     private final GameEngine gameEngine;
+
     public MoveAction(GameEngine gameEngine) {
         super("PLAYER_MOVED");
         this.gameEngine = gameEngine;

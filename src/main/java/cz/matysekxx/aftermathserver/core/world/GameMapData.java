@@ -14,17 +14,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Data
 public class GameMapData {
+    @JsonIgnore
+    @Getter(AccessLevel.NONE)
+    private final Map<String, MapObject> objectCache = new ConcurrentHashMap<>();
     private String id;
     private String name;
     private MapType type;
     private Environment environment;
     private List<String> layout = new ArrayList<>();
-
     private List<MapObject> objects = new CopyOnWriteArrayList<>();
-
     private List<ParsedMapLayer> parsedLayers = new ArrayList<>();
-
     private Map<String, TileTrigger> tileTriggers = new HashMap<>();
+
     public ParsedMapLayer getLayer(int index) {
         if (index < 0 || index >= parsedLayers.size()) {
             return null;
@@ -35,7 +36,7 @@ public class GameMapData {
     public TileTrigger getTileTrigger(String id) {
         return tileTriggers.get(id);
     }
-    
+
     public boolean tileTriggerContains(String id) {
         return tileTriggers.containsKey(id);
     }
@@ -43,10 +44,6 @@ public class GameMapData {
     public int getLayerCount() {
         return parsedLayers.size();
     }
-
-    @JsonIgnore
-    @Getter(AccessLevel.NONE)
-    private final Map<String, MapObject> objectCache = new ConcurrentHashMap<>();
 
     public void addObject(MapObject object) {
         objects.add(object);

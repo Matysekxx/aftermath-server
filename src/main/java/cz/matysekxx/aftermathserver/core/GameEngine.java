@@ -2,9 +2,8 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.core.logic.InteractionLogic;
-import cz.matysekxx.aftermathserver.core.model.Item;
-import cz.matysekxx.aftermathserver.core.model.Player.State;
 import cz.matysekxx.aftermathserver.core.model.Player;
+import cz.matysekxx.aftermathserver.core.model.Player.State;
 import cz.matysekxx.aftermathserver.core.world.*;
 import cz.matysekxx.aftermathserver.dto.MoveRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
@@ -15,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -47,17 +46,17 @@ public class GameEngine {
                 classConfig.getMaxWeight(),
                 classConfig.getRadsLimit()
         );
-        
+
         newPlayer.setId(sessionId);
         newPlayer.setMapId(mapId);
         newPlayer.setRole(className);
         players.put(sessionId, newPlayer);
 
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, mapId,false));
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, newPlayer, sessionId, mapId,false));
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, newPlayer, sessionId, mapId,false));
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, worldManager.getMap(mapId), sessionId, mapId,false));
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(mapId).getObjects(), sessionId, mapId,false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, mapId, false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, newPlayer, sessionId, mapId, false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, newPlayer, sessionId, mapId, false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, worldManager.getMap(mapId), sessionId, mapId, false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(mapId).getObjects(), sessionId, mapId, false));
     }
 
     public void removePlayer(String sessionId) {
@@ -100,19 +99,21 @@ public class GameEngine {
             TileTrigger trigger = currentMap.getTileTrigger(symbol);
             handleTileTrigger(player, trigger);
         }
-        
+
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), player.getMapId(), false));
         return player;
     }
 
     private void handleTileTrigger(Player player, TileTrigger trigger) {
         switch (trigger.getType()) {
-            case "METRO_TRAVEL" -> log.info("Player {} triggered metro travel with attribute {}", player.getId(), trigger.getAttribute());
+            case "METRO_TRAVEL" ->
+                    log.info("Player {} triggered metro travel with attribute {}", player.getId(), trigger.getAttribute());
             case "TELEPORT" -> {
                 //TODO: implementovat teleport
             }
         }
     }
+
     public boolean canMoveTo(Player player, int targetX, int targetY) {
         return worldManager.isWalkable(
                 player.getMapId(),
@@ -140,7 +141,7 @@ public class GameEngine {
                         GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
                 case "MAP_LOAD" -> {
                     gameEventQueue.enqueue(
-                        GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(player.getMapId()).getObjects(), player.getId(), player.getMapId(), false));
+                            GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(player.getMapId()).getObjects(), player.getId(), player.getMapId(), false));
                     gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), player.getMapId(), false));
                 }
             }

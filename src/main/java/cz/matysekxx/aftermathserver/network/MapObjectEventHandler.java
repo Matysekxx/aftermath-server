@@ -23,8 +23,7 @@ public class MapObjectEventHandler extends GameEventHandler {
     @Override
     public void handleEvent(GameEvent event) {
         if (event.payload() instanceof List<?> list) {
-            @SuppressWarnings("unchecked")
-            final List<MapObject> mapObjects = (List<MapObject>) list;
+            @SuppressWarnings("unchecked") final List<MapObject> mapObjects = (List<MapObject>) list;
             networkService.broadcastMapObjects(mapObjects, event.mapId());
         }
     }

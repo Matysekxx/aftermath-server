@@ -20,7 +20,10 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,20 +48,20 @@ public class NetworkService {
     @PostConstruct
     private void startEventLoop() {
         final Runnable runnable = () -> {
-           while (true) {
-               try {
-                   final GameEvent gameEvent = gameEventQueue.take();
-                   if (handlers.containsKey(gameEvent.type())) {
-                       handlers.get(gameEvent.type()).handleEvent(gameEvent);
-                   }
-               } catch (InterruptedException e) {
-                   Thread.currentThread().interrupt();
-                   log.error("Network thread interrupted", e);
-                   break;
-               } catch (Exception e) {
-                   log.error("Error processing event", e);
-               }
-           }
+            while (true) {
+                try {
+                    final GameEvent gameEvent = gameEventQueue.take();
+                    if (handlers.containsKey(gameEvent.type())) {
+                        handlers.get(gameEvent.type()).handleEvent(gameEvent);
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    log.error("Network thread interrupted", e);
+                    break;
+                } catch (Exception e) {
+                    log.error("Error processing event", e);
+                }
+            }
         };
         eventLoopExecutor = Executors.newSingleThreadExecutor();
         eventLoopExecutor.execute(runnable);

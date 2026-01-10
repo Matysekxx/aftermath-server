@@ -1,6 +1,7 @@
 package cz.matysekxx.aftermathserver.core.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -10,7 +11,7 @@ public class Player {
     private Inventory inventory;
     private String mapId;
     private int layerIndex;
-    private int x,y;
+    private int x, y;
 
     private int hp;
     private int maxHp;
@@ -34,7 +35,7 @@ public class Player {
 
     }
 
-    public enum State{
+    public enum State {
         ALIVE, DEAD, TRAVELLING, POISONED
     }
 }

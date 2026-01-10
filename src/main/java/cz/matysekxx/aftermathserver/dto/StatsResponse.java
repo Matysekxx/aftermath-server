@@ -11,5 +11,7 @@ public class StatsResponse {
     private int maxHp;
     private int rads;
 
-    public static StatsResponse of(Player player) { return new StatsResponse(player.getHp(), player.getMaxHp(), player.getRads()); }
+    public static StatsResponse of(Player player) {
+        return new StatsResponse(player.getHp(), player.getMaxHp(), player.getRads());
+    }
 }

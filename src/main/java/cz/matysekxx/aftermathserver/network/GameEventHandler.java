@@ -12,5 +12,6 @@ public abstract class GameEventHandler {
     }
 
     public abstract EventType getType();
+
     public abstract void handleEvent(GameEvent event);
 }

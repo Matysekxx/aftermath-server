@@ -4,12 +4,12 @@ package cz.matysekxx.aftermathserver.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.action.Action;
 import cz.matysekxx.aftermathserver.core.GameEngine;
-import cz.matysekxx.aftermathserver.network.NetworkService;
 import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
+import cz.matysekxx.aftermathserver.network.NetworkService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,7 @@ import java.util.Set;
 public class GameHandler extends TextWebSocketHandler {
 
     private final GameEngine gameEngine;
-    
+
     private final NetworkService networkService;
 
     private final GameEventQueue gameEventQueue;

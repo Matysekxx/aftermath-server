@@ -15,6 +15,6 @@ public class ChatAction extends Action {
     @Override
     public WebSocketResponse execute(WebSocketSession session, JsonNode payload) {
         final var chatData = objectMapper.convertValue(payload, ChatRequest.class);
-        return WebSocketResponse.of(type,chatData);
+        return WebSocketResponse.of(type, chatData);
     }
 }

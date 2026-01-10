@@ -37,7 +37,7 @@ public class MapObjectFactory {
         return corpse;
     }
 
-    public MapObject createLootBag(String itemId,int quantity ,int x, int y) {
+    public MapObject createLootBag(String itemId, int quantity, int x, int y) {
         final MapObject bag = new MapObject();
         bag.setId(generateId("loot"));
         bag.setType("CONTAINER");

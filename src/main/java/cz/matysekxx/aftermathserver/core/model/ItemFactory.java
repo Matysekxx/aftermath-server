@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ItemFactory {
     private final ItemTable itemTable;
+
     public ItemFactory(ItemTable itemTable) {
         this.itemTable = itemTable;
     }
