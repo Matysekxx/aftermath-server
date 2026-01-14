@@ -2,6 +2,7 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.core.logic.interactions.InteractionLogic;
+import cz.matysekxx.aftermathserver.core.model.Direction;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.model.Player.State;
 import cz.matysekxx.aftermathserver.core.world.*;
@@ -78,12 +79,9 @@ public class GameEngine {
         int targetX = player.getX();
         int targetY = player.getY();
 
-        switch (moveRequest.getDirection().toUpperCase()) {
-            case "UP" -> targetY = player.getY() - 1;
-            case "DOWN" -> targetY = player.getY() + 1;
-            case "LEFT" -> targetX = player.getX() - 1;
-            case "RIGHT" -> targetX = player.getX() + 1;
-        }
+        final var dir = Direction.valueOf(moveRequest.getDirection().toUpperCase());
+        targetX += dir.getDx();
+        targetY += dir.getDy();
 
         if (!canMoveTo(player, targetX, targetY)) {
             return null;
