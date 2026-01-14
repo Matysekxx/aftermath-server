@@ -35,7 +35,7 @@ public class GameHandler extends TextWebSocketHandler {
 
     private final Map<String, Action> actions;
 
-    @Value("#{'${messaging.private-response-types}'.split(',')}")
+    @Value("#{'${messaging.private-response-types}'.split(',')}") 
     private Set<String> privateResponseTypes;
 
     public GameHandler(GameEngine gameEngine, NetworkService networkService, GameEventQueue gameEventQueue, Map<String, Action> actions) {

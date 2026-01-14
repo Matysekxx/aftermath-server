@@ -13,13 +13,7 @@ public class MapObject {
     private String id;
     private String type;
     private int x, y;
-    private int width, height;
     private String action;
     private String description;
     private List<Item> items = new ArrayList<>();
-
-    private String targetMapId;
-    private int targetX;
-    private int targetY;
-    private int layerIndex;
 }

@@ -28,4 +28,8 @@ public class Item {
     public Item cloneWithQuantity(int quantity) {
         return this.toBuilder().quantity(quantity).build();
     }
+
+    public void use(Player player) {
+        //TODO: implementovat logiku pouziti itemu
+    }
 }

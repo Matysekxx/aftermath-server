@@ -20,6 +20,6 @@ public class GameOverEventHandler extends GameEventHandler {
 
     @Override
     public void handleEvent(GameEvent event) {
-        if (event.payload() instanceof Player player) networkService.sendGameOver(player);
+        if (event.payload() instanceof Player player) networkService.sendGameOver(player.getId());
     }
 }

@@ -11,17 +11,6 @@
   ],
   "objects": [
     {
-      "id": "exit_to_hub",
-      "type": "EXIT",
-      "x": 52,
-      "y": 10,
-      "action": "TRAVEL",
-      "description": "Zpět do Hubu",
-      "targetMapId": "hub_omega",
-      "targetX": 60,
-      "targetY": 8
-    },
-    {
       "id": "loot_chest_petriny",
       "type": "CONTAINER",
       "x": 55,

@@ -1,4 +1,4 @@
-package cz.matysekxx.aftermathserver.core.logic;
+package cz.matysekxx.aftermathserver.core.logic.interactions;
 
 import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player;

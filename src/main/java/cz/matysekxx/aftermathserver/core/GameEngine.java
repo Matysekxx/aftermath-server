@@ -1,7 +1,7 @@
 package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
-import cz.matysekxx.aftermathserver.core.logic.InteractionLogic;
+import cz.matysekxx.aftermathserver.core.logic.interactions.InteractionLogic;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.model.Player.State;
 import cz.matysekxx.aftermathserver.core.world.*;
@@ -106,8 +106,10 @@ public class GameEngine {
 
     private void handleTileTrigger(Player player, TileTrigger trigger) {
         switch (trigger.getType()) {
-            case "METRO_TRAVEL" ->
+            case "METRO_TRAVEL" -> {
                     log.info("Player {} triggered metro travel with attribute {}", player.getId(), trigger.getAttribute());
+                    //TODO: implementovat metro travel
+            }
             case "TELEPORT" -> {
                 //TODO: implementovat teleport
             }

@@ -38,4 +38,7 @@ public class Player {
     public enum State {
         ALIVE, DEAD, TRAVELLING, POISONED
     }
+    public void addRads(int amount) {
+
+    }
 }

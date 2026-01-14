@@ -101,8 +101,8 @@ public class NetworkService {
         });
     }
 
-    void sendGameOver(Player p) {
-        final WebSocketSession session = sessions.get(p.getId());
+    void sendGameOver(String sessionId) {
+        final WebSocketSession session = sessions.get(sessionId);
         if (session != null && session.isOpen()) {
             final TreeMap<String, Object> gameOverData = new TreeMap<>();
             gameOverData.put("message", "YOU DIED");
