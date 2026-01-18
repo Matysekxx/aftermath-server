@@ -56,6 +56,10 @@ game:
       - symbol: 'O'
         type: OVEN
       - symbol: '-'
-        type: METRO_TRACK
+        type: FLOOR
       - symbol: '~'
-        type: METRO_TRACK
+        type: FLOOR
+      - symbol: '►'
+        type: FLOOR
+      - symbol: '◄'
+        type: FLOOR

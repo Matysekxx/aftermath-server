@@ -1,5 +1,5 @@
 {
-  "id": "map_petriny",
+  "id": "petriny",
   "name": "Petřiny",
   "type": "HAZARD_ZONE",
   "environment": {
@@ -26,6 +26,6 @@
     }
   ],
   "tileTriggers": {
-    "-": {"type": "METRO_TRAVEL", "attribute": "line_a"}
+    "-": {"type": "METRO_TRAVEL", "lineId": "line_a"}
   }
 }

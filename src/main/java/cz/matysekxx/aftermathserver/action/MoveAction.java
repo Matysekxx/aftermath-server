@@ -27,7 +27,8 @@ public class MoveAction extends Action {
             final PlayerUpdatePayload response = new PlayerUpdatePayload(
                     session.getId(),
                     player.getX(),
-                    player.getY()
+                    player.getY(),
+                    player.getLayerIndex()
             );
             return WebSocketResponse.of(type, response);
         }

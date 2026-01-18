@@ -9,4 +9,5 @@ public class PlayerUpdatePayload {
     private String playerId;
     private int x;
     private int y;
+    private int z;
 }

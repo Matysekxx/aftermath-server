@@ -21,6 +21,7 @@ public class GameSettings {
     public static class SpawnSettings {
         private int x;
         private int y;
+        private int layer;
     }
 
     @Data

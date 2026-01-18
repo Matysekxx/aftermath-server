@@ -5,6 +5,7 @@ import cz.matysekxx.aftermathserver.core.logic.interactions.InteractionLogic;
 import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerHandler;
 import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerRegistry;
 import cz.matysekxx.aftermathserver.core.model.Direction;
+import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.model.Player.State;
 import cz.matysekxx.aftermathserver.core.world.*;
@@ -44,7 +45,7 @@ public class GameEngine {
     }
 
     public void addPlayer(String sessionId) {
-        final String mapId = settings.getStartingMapId() != null ? settings.getStartingMapId() : "hub_omega";
+        final String mapId = settings.getStartingMapId() != null ? settings.getStartingMapId() : "nemocnice_motol";
 
         final String className = settings.getDefaultClass(); //placeholder
         final GameSettings.PlayerClassConfig classConfig = settings.getClasses().get(className);
@@ -54,17 +55,17 @@ public class GameEngine {
                 classConfig.getMaxWeight(),
                 classConfig.getRadsLimit()
         );
-
+        newPlayer.setLayerIndex(settings.getSpawn().getLayer());
         newPlayer.setId(sessionId);
         newPlayer.setMapId(mapId);
         newPlayer.setRole(className);
         players.put(sessionId, newPlayer);
 
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, worldManager.getMap(mapId), sessionId, mapId, false));
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(mapId).getObjects(), sessionId, mapId, false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, mapId, false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, newPlayer, sessionId, mapId, false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, newPlayer, sessionId, mapId, false));
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, worldManager.getMap(mapId), sessionId, mapId, false));
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(mapId).getObjects(), sessionId, mapId, false));
     }
 
     public void removePlayer(String sessionId) {
@@ -151,10 +152,10 @@ public class GameEngine {
         final Player player = players.get(playerId);
         if (player == null) return WebSocketResponse.of("ERROR", "Player not found");
 
-        final String droppedItemId = player.getInventory().removeItem(slotIndex, amount).getId();
-        if (droppedItemId != null) {
+        final Optional<Item> droppedItem = player.getInventory().removeItem(slotIndex, amount);
+        if (droppedItem.isPresent()) {
             final GameMapData map = worldManager.getMap(player.getMapId());
-            final MapObject lootBag = mapObjectFactory.createLootBag(droppedItemId, amount, player.getX(), player.getY());
+            final MapObject lootBag = mapObjectFactory.createLootBag(droppedItem.get().getId(), amount, player.getX(), player.getY());
             map.addObject(lootBag);
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, map.getObjects(), null, player.getMapId(), true));

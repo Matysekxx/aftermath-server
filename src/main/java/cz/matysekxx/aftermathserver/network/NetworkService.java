@@ -172,7 +172,7 @@ public class NetworkService {
         final WebSocketSession session = sessions.get(p.getId());
         if (session != null && session.isOpen()) {
             try {
-                final PlayerUpdatePayload payload = new PlayerUpdatePayload(p.getId(), p.getX(), p.getY());
+                final PlayerUpdatePayload payload = new PlayerUpdatePayload(p.getId(), p.getX(), p.getY(), p.getLayerIndex());
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of("PLAYER_MOVED", payload));
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {

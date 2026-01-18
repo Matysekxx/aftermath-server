@@ -9,8 +9,9 @@ spring:
 game:
   tick-rate: 250
   spawn:
-    x: 50
-    y: 50
-  starting-map-id: "hub_omega"
+    x: 42
+    y: 2
+    layer: 1
+  starting-map-id: "nadrazi_veleslavin"
 messaging:
   private-response-types: "MAP_LOAD,LOOT_SUCCESS,NOTIFICATION,ACTION_FAILED"

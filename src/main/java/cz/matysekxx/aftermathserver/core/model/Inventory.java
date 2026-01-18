@@ -3,6 +3,7 @@ package cz.matysekxx.aftermathserver.core.model;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class Inventory {
     private final int capacity;
@@ -59,17 +60,17 @@ public class Inventory {
         return amountRemaining <= 0;
     }
 
-    public Item removeItem(int slotIndex, int quantityToRemove) {
-        if (!slots.containsKey(slotIndex)) return null;
+    public Optional<Item> removeItem(int slotIndex, int quantityToRemove) {
+        if (!slots.containsKey(slotIndex)) return Optional.empty();
 
         final Item itemInSlot = slots.get(slotIndex);
 
         if (itemInSlot.getQuantity() > quantityToRemove) {
             itemInSlot.setQuantity(itemInSlot.getQuantity() - quantityToRemove);
-            return itemInSlot.cloneWithQuantity(quantityToRemove);
+            return Optional.of(itemInSlot.cloneWithQuantity(quantityToRemove));
         } else {
             slots.remove(slotIndex);
-            return itemInSlot;
+            return Optional.of(itemInSlot);
         }
     }
 }
