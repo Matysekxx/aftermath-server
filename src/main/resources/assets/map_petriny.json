@@ -1,6 +1,6 @@
 {
   "id": "map_petriny",
-  "name": "Stanice Petřiny",
+  "name": "Petřiny",
   "type": "HAZARD_ZONE",
   "environment": {
     "radiation": 5,
@@ -24,5 +24,8 @@
         }
       ]
     }
-  ]
+  ],
+  "tileTriggers": {
+    "-": {"type": "METRO_TRAVEL", "attribute": "line_a"}
+  }
 }

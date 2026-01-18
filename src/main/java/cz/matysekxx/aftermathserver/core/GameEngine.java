@@ -2,10 +2,13 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.core.logic.interactions.InteractionLogic;
+import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerHandler;
+import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerRegistry;
 import cz.matysekxx.aftermathserver.core.model.Direction;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.model.Player.State;
 import cz.matysekxx.aftermathserver.core.world.*;
+import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import cz.matysekxx.aftermathserver.dto.MoveRequest;
 import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import cz.matysekxx.aftermathserver.event.EventType;
@@ -16,6 +19,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -28,12 +32,15 @@ public class GameEngine {
     private final Map<String, InteractionLogic> logicMap;
     private final GameSettings settings;
 
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap, GameSettings settings) {
+    private final TriggerRegistry triggerRegistry;
+
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap, GameSettings settings, TriggerRegistry triggerRegistry) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
         this.logicMap = logicMap;
         this.settings = settings;
+        this.triggerRegistry = triggerRegistry;
     }
 
     public void addPlayer(String sessionId) {
@@ -90,28 +97,18 @@ public class GameEngine {
         player.setY(targetY);
 
         final GameMapData currentMap = worldManager.getMap(player.getMapId());
-        final char symbolChar = currentMap.getLayer(player.getLayerIndex()).getSymbolAt(targetX, targetY);
-        final String symbol = String.valueOf(symbolChar);
+        final String symbol = String.valueOf(currentMap.getLayer(player.getLayerIndex()).getSymbolAt(targetX, targetY));
 
-        if (currentMap.tileTriggerContains(symbol)) {
-            TileTrigger trigger = currentMap.getTileTrigger(symbol);
-            handleTileTrigger(player, trigger);
-        }
+        currentMap.getMaybeTileTrigger(symbol)
+                .ifPresent(tileTrigger -> handleTileTrigger(player, tileTrigger));
 
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), player.getMapId(), false));
         return player;
     }
 
     private void handleTileTrigger(Player player, TileTrigger trigger) {
-        switch (trigger.getType()) {
-            case "METRO_TRAVEL" -> {
-                    log.info("Player {} triggered metro travel with attribute {}", player.getId(), trigger.getAttribute());
-                    //TODO: implementovat metro travel
-            }
-            case "TELEPORT" -> {
-                //TODO: implementovat teleport
-            }
-        }
+        final Optional<TriggerHandler> maybeTrigger = triggerRegistry.getHandler(trigger.getType());
+        maybeTrigger.ifPresent(triggerHandler -> triggerHandler.handle(player, trigger));
     }
 
     public boolean canMoveTo(Player player, int targetX, int targetY) {

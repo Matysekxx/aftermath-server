@@ -1,14 +1,12 @@
 package cz.matysekxx.aftermathserver.core.world;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -33,12 +31,9 @@ public class GameMapData {
         return parsedLayers.get(index);
     }
 
-    public TileTrigger getTileTrigger(String id) {
-        return tileTriggers.get(id);
-    }
-
-    public boolean tileTriggerContains(String id) {
-        return tileTriggers.containsKey(id);
+    public Optional<TileTrigger> getMaybeTileTrigger(String symbol) {
+        if (!tileTriggers.containsKey(symbol)) return Optional.empty();
+        return Optional.of(tileTriggers.get(symbol));
     }
 
     public int getLayerCount() {
@@ -56,8 +51,6 @@ public class GameMapData {
 
     public void initializeCache() {
         objectCache.clear();
-        for (MapObject obj : objects) {
-            objectCache.put(obj.getId(), obj);
-        }
+        objects.forEach(obj -> objectCache.put(obj.getId(), obj));
     }
 }

@@ -39,6 +39,15 @@ public class Player {
         ALIVE, DEAD, TRAVELLING, POISONED
     }
     public void addRads(int amount) {
-
+        rads += amount;
+        if (rads > radsLimit) {
+            rads = radsLimit;
+        }
+    }
+    public void removeRads(int amount) {
+        rads -= amount;
+        if (rads < 0) {
+            rads = 0;
+        }
     }
 }

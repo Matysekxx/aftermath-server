@@ -1,15 +1,17 @@
 package cz.matysekxx.aftermathserver.core.logic.triggers;
 
 import cz.matysekxx.aftermathserver.core.model.Player;
-import cz.matysekxx.aftermathserver.core.world.TileTrigger;
+import cz.matysekxx.aftermathserver.core.world.triggers.TeleportTrigger;
+import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
+import org.springframework.stereotype.Component;
 
+@Component("TELEPORT")
 public class TeleportHandler implements TriggerHandler {
     public boolean handle(Player player, TileTrigger tileTrigger) {
-        return false;
-    }
-
-    @Override
-    public String getType() {
-        return "";
+        final TeleportTrigger teleportTrigger = (TeleportTrigger) tileTrigger;
+        player.setLayerIndex(teleportTrigger.getTargetLayer());
+        player.setX(teleportTrigger.getTargetX());
+        player.setY(teleportTrigger.getTargetY());
+        return true;
     }
 }

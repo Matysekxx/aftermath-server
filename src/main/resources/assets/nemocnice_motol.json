@@ -1,6 +1,6 @@
 {
   "id": "hub_omega",
-  "name": "Station Omega",
+  "name": "Nemocnice Motol",
   "type": "SAFE_ZONE",
   "environment": {
     "radiation": 0,
