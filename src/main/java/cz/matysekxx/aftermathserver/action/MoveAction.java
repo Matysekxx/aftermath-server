@@ -32,6 +32,6 @@ public class MoveAction extends Action {
             );
             return WebSocketResponse.of(type, response);
         }
-        return WebSocketResponse.of("ACTION_FAILED", "OBSTACLE");
+        return null;
     }
 }

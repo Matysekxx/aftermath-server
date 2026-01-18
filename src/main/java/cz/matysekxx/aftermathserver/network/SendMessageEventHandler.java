@@ -22,7 +22,7 @@ public class SendMessageEventHandler extends GameEventHandler {
     public void handleEvent(GameEvent event) {
         if (event.payload() instanceof TextMessage message) {
             if (event.isBroadcast()) networkService.broadcastToMap(message.getPayload(), event.mapId());
-            else networkService.broadcastToMap(message.getPayload(), event.targetSessionId());
+            else networkService.sendToClient(message.getPayload(), event.targetSessionId());
         }
     }
 }

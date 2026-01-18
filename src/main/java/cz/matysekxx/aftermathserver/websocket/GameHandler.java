@@ -75,6 +75,7 @@ public class GameHandler extends TextWebSocketHandler {
             final Action action = actions.get(request.getType());
             if (action != null) {
                 final WebSocketResponse response = action.execute(session, request.getPayload());
+                if (response == null) return;
 
                 final String mapId = gameEngine.getPlayerMapId(session.getId());
                 networkService.updatePlayerLocation(session.getId(), mapId);
@@ -88,6 +89,7 @@ public class GameHandler extends TextWebSocketHandler {
             }
         } catch (Exception e) {
             log.error("Error while handling WebSocket request", e);
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Server Error: " + e.getMessage(), session.getId(), null, false));
         }
     }
 }

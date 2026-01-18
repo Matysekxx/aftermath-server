@@ -100,13 +100,26 @@ public class NetworkService {
             }
         });
     }
+    
+    void sendToClient(String payload, String sessionId) {
+        final TextMessage message = new TextMessage(payload);
+        final WebSocketSession session = sessions.get(sessionId);
+        if (session != null && session.isOpen()) {
+            try {
+                session.sendMessage(message);
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+    }
 
     void sendGameOver(String sessionId) {
         final WebSocketSession session = sessions.get(sessionId);
         if (session != null && session.isOpen()) {
-            final TreeMap<String, Object> gameOverData = new TreeMap<>();
-            gameOverData.put("message", "YOU DIED");
-            gameOverData.put("respawn_possible", true);
+            final TreeMap<String, Object> gameOverData = new TreeMap<>(Map.of(
+                    "message", "YOU DIED",
+                    "respawn_possible", true
+            ));
             try {
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of("GAME_OVER", gameOverData));
                 session.sendMessage(new TextMessage(json));
@@ -174,6 +187,18 @@ public class NetworkService {
             try {
                 final PlayerUpdatePayload payload = new PlayerUpdatePayload(p.getId(), p.getX(), p.getY(), p.getLayerIndex());
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of("PLAYER_MOVED", payload));
+                session.sendMessage(new TextMessage(json));
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+    }
+
+    void sendError(String sessionId, String message) {
+        final WebSocketSession session = sessions.get(sessionId);
+        if (session != null && session.isOpen()) {
+            try {
+                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("ACTION_FAILED", message));
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {
                 log.error(e.getMessage());

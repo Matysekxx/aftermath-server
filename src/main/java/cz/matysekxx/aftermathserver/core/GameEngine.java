@@ -125,10 +125,13 @@ public class GameEngine {
         final Player player = players.get(id);
         final GameMapData map = worldManager.getMap(player.getMapId());
         final MapObject target = map.getObject(targetObjectId);
-        if (target == null) return WebSocketResponse.of("ACTION_FAILED", "Object not found");
+        if (target == null) {
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Object not found", id, player.getMapId(), false));
+            return null;
+        }
 
         if (Math.abs(player.getX() - target.getX()) > 1 || Math.abs(player.getY() - target.getY()) > 1) {
-            return WebSocketResponse.of("ACTION_FAILED", "You are too far away");
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "You are too far away", id, player.getMapId(), false));
         }
 
         final InteractionLogic interactionLogic = logicMap.get(target.getAction());
@@ -145,12 +148,15 @@ public class GameEngine {
             }
             return response;
         }
-        return WebSocketResponse.of("ACTION_FAILED", "Action not found");
+        return null;
     }
 
     public WebSocketResponse dropItem(String playerId, int slotIndex, int amount) {
         final Player player = players.get(playerId);
-        if (player == null) return WebSocketResponse.of("ERROR", "Player not found");
+        if (player == null) {
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Player not found", playerId, null, false));
+            return null;
+        }
 
         final Optional<Item> droppedItem = player.getInventory().removeItem(slotIndex, amount);
         if (droppedItem.isPresent()) {
@@ -161,7 +167,8 @@ public class GameEngine {
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, map.getObjects(), null, player.getMapId(), true));
             return WebSocketResponse.of("DROP_SUCCESS", "Item dropped");
         }
-        return WebSocketResponse.of("ACTION_FAILED", "Item not found or invalid amount");
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Item not found or invalid amount", playerId, null, false));
+        return null;
     }
 
     @Scheduled(fixedRateString = "${game.tick-rate}")
