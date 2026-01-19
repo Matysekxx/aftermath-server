@@ -6,8 +6,9 @@ import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import org.springframework.stereotype.Component;
 
 @Component("DAMAGE")
-public class DamageHandler implements  TriggerHandler {
-    @Override public boolean handle(Player player, TileTrigger tileTrigger) {
+public non-sealed class DamageHandler extends TriggerHandler {
+    @Override
+    public boolean handle(Player player, TileTrigger tileTrigger) {
         final DamageTrigger damageTrigger = (DamageTrigger) tileTrigger;
         player.setHp(player.getHp() - damageTrigger.getDamage());
         return true;

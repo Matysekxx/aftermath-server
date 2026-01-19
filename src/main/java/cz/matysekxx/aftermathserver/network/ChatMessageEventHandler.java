@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ChatMessageEventHandler extends GameEventHandler{
-    protected ChatMessageEventHandler(@Lazy NetworkService networkService) {
+public class ChatMessageEventHandler extends GameEventHandler {
+    public ChatMessageEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }
 

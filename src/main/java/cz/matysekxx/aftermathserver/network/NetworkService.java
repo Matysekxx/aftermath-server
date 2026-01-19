@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -100,7 +99,7 @@ public class NetworkService {
             }
         });
     }
-    
+
     void sendToClient(String payload, String sessionId) {
         final TextMessage message = new TextMessage(payload);
         final WebSocketSession session = sessions.get(sessionId);

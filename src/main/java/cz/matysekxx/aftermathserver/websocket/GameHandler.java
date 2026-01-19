@@ -5,9 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.action.Action;
 import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.dto.WebSocketRequest;
-import cz.matysekxx.aftermathserver.event.EventType;
-import cz.matysekxx.aftermathserver.event.GameEvent;
-import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.network.NetworkService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +23,7 @@ public class GameHandler extends TextWebSocketHandler {
     private final NetworkService networkService;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Map<String, Action> actions;
+
     public GameHandler(GameEngine gameEngine, NetworkService networkService, Map<String, Action> actions) {
         this.gameEngine = gameEngine;
         this.networkService = networkService;

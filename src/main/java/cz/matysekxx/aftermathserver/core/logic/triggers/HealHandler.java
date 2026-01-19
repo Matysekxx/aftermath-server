@@ -6,8 +6,9 @@ import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import org.springframework.stereotype.Component;
 
 @Component("HEAL")
-public class HealHandler implements TriggerHandler {
-    @Override public boolean handle(Player player, TileTrigger tileTrigger) {
+public non-sealed class HealHandler extends TriggerHandler {
+    @Override
+    public boolean handle(Player player, TileTrigger tileTrigger) {
         if (tileTrigger instanceof HealTrigger healTrigger) {
             player.setHp(Math.min(player.getHp() + healTrigger.getHealAmount(), player.getMaxHp()));
             return true;

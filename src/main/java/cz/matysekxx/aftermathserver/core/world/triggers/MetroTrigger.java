@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=true)
-public class MetroTrigger extends  TileTrigger {
+@EqualsAndHashCode(callSuper = true)
+public class MetroTrigger extends TileTrigger {
     private String lineId;
 }

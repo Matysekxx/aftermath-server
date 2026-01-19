@@ -1,21 +1,22 @@
 package cz.matysekxx.aftermathserver.core.logic.metro;
 
 import cz.matysekxx.aftermathserver.core.model.Player;
-import cz.matysekxx.aftermathserver.core.world.MetroStation;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MetroService {
 
+    private Map<String, List<MetroStation>> stations;
     @PostConstruct
     private void init() {
         //TODO: pridat nacitani stanic metra z resources
     }
 
-    public void handleStationTrigger(Player player, String stationId){
+    public void handleStationTrigger(Player player, String stationId) {
         //TODO: po plnem pridani trigger logiky v GameEngine implementovat cestovani  mezi stanicami diky triggerum
     }
 

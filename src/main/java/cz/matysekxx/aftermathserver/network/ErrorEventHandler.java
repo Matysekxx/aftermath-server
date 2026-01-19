@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ErrorEventHandler extends GameEventHandler  {
-    protected ErrorEventHandler(@Lazy NetworkService networkService) {
+public class ErrorEventHandler extends GameEventHandler {
+    public ErrorEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }
 

@@ -6,8 +6,9 @@ import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import org.springframework.stereotype.Component;
 
 @Component("TELEPORT")
-public class TeleportHandler implements TriggerHandler {
-    @Override public boolean handle(Player player, TileTrigger tileTrigger) {
+public non-sealed class TeleportHandler extends TriggerHandler {
+    @Override
+    public boolean handle(Player player, TileTrigger tileTrigger) {
         if (tileTrigger instanceof TeleportTrigger teleportTrigger) {
             player.setLayerIndex(teleportTrigger.getTargetLayer());
             player.setX(teleportTrigger.getTargetX());

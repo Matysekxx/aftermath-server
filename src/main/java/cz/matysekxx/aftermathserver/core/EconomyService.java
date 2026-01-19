@@ -10,7 +10,7 @@ public class EconomyService {
         //TODO: implementovat logiku odebrani kreditu od hrace
     }
 
-    public void applyPayment(Player player, double amount)  {
+    public void applyPayment(Player player, double amount) {
         //TODO: implementovat logiku snizeni dluhu
     }
 }

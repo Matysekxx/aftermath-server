@@ -17,6 +17,7 @@ public class SendMessageEventHandler extends GameEventHandler {
     public EventType getType() {
         return EventType.SEND_MESSAGE;
     }
+
     @Override
     public void handleEvent(GameEvent event) {
         if (event.payload() instanceof TextMessage message) {
