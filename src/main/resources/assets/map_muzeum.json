@@ -7,7 +7,7 @@
     "darkness_level": 2
   },
   "layout": [
-    "assets/maps_a/map_muzeum0.txt"
+    "assets/maps_a/map_muzeum0.txt",
     "assets/maps_a/map_muzeum1.txt"
   ],
   "objects": [

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component("METRO_ENTRY")
 public class MetroEntryHandler implements  TriggerHandler {
-    public boolean handle(Player player, TileTrigger tileTrigger) {
+    @Override public boolean handle(Player player, TileTrigger tileTrigger) {
         player.setState(Player.State.TRAVELLING);
         player.setHp(player.getMaxHp());
         return true;

@@ -116,10 +116,10 @@ public class NetworkService {
     void sendGameOver(String sessionId) {
         final WebSocketSession session = sessions.get(sessionId);
         if (session != null && session.isOpen()) {
-            final TreeMap<String, Object> gameOverData = new TreeMap<>(Map.of(
+            final Map<String, Object> gameOverData = Map.of(
                     "message", "YOU DIED",
                     "respawn_possible", true
-            ));
+            );
             try {
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of("GAME_OVER", gameOverData));
                 session.sendMessage(new TextMessage(json));
@@ -160,13 +160,7 @@ public class NetworkService {
         final WebSocketSession session = sessions.get(sessionId);
         if (session != null && session.isOpen()) {
             try {
-                final MapLoadPayload payload = new MapLoadPayload(
-                        map.getId(),
-                        map.getName(),
-                        map.getLayout(),
-                        map.getEnvironment(),
-                        map.getParsedLayers()
-                );
+                final MapLoadPayload payload = MapLoadPayload.of(map);
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of("MAP_LOAD", payload));
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {
@@ -187,12 +181,7 @@ public class NetworkService {
         final WebSocketSession session = sessions.get(p.getId());
         if (session != null && session.isOpen()) {
             try {
-                final PlayerUpdatePayload payload = new PlayerUpdatePayload(
-                        p.getId(),
-                        p.getX(),
-                        p.getY(),
-                        p.getLayerIndex()
-                );
+                final PlayerUpdatePayload payload = PlayerUpdatePayload.of(p);
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of("PLAYER_MOVED", payload));
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {

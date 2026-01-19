@@ -7,9 +7,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 public class AftermathServerApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(AftermathServerApplication.class, args);
-    }
+    public static void main(String[] args) { SpringApplication.run(AftermathServerApplication.class, args); }
 
 }

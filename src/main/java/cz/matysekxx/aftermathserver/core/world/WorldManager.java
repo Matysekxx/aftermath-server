@@ -17,8 +17,6 @@ public class WorldManager {
     private final Map<String, GameMapData> maps = new ConcurrentHashMap<>();
     private final MapParser mapParser;
 
-    private String defaultMapId = null;
-
     public WorldManager(MapParser mapParser) {
         this.mapParser = mapParser;
     }
@@ -35,10 +33,6 @@ public class WorldManager {
                 try {
                     final GameMapData map = mapParser.loadMap("assets/" + resource.getFilename());
                     maps.put(map.getId(), map);
-
-                    if (defaultMapId == null) {
-                        defaultMapId = map.getId();
-                    }
 
                     log.info("Loaded map: {} ({} layers)", map.getId(), map.getLayerCount());
                 } catch (Exception e) {

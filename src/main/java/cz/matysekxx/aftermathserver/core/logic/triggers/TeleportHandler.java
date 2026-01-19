@@ -7,11 +7,13 @@ import org.springframework.stereotype.Component;
 
 @Component("TELEPORT")
 public class TeleportHandler implements TriggerHandler {
-    public boolean handle(Player player, TileTrigger tileTrigger) {
-        final TeleportTrigger teleportTrigger = (TeleportTrigger) tileTrigger;
-        player.setLayerIndex(teleportTrigger.getTargetLayer());
-        player.setX(teleportTrigger.getTargetX());
-        player.setY(teleportTrigger.getTargetY());
-        return true;
+    @Override public boolean handle(Player player, TileTrigger tileTrigger) {
+        if (tileTrigger instanceof TeleportTrigger teleportTrigger) {
+            player.setLayerIndex(teleportTrigger.getTargetLayer());
+            player.setX(teleportTrigger.getTargetX());
+            player.setY(teleportTrigger.getTargetY());
+            return true;
+        }
+        return false;
     }
 }

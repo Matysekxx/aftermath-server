@@ -1,5 +1,6 @@
 package cz.matysekxx.aftermathserver.dto;
 
+import cz.matysekxx.aftermathserver.core.model.Player;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,4 +11,8 @@ public class PlayerUpdatePayload {
     private int x;
     private int y;
     private int z;
+
+    public static PlayerUpdatePayload of(Player player) {
+        return new PlayerUpdatePayload(player.getId(), player.getX(), player.getY(), player.getLayerIndex());
+    }
 }

@@ -14,7 +14,8 @@ import lombok.Data;
 @JsonSubTypes({
     @JsonSubTypes.Type(value = TeleportTrigger.class, name = "TELEPORT"),
     @JsonSubTypes.Type(value = DamageTrigger.class, name = "DAMAGE"),
-    @JsonSubTypes.Type(value = MetroTrigger.class, name = "METRO_TRAVEL")
+    @JsonSubTypes.Type(value = MetroTrigger.class, name = "METRO_TRAVEL"),
+    @JsonSubTypes.Type(value = HealTrigger.class, name = "HEAL")
 })
 public abstract class TileTrigger {
     protected String type;

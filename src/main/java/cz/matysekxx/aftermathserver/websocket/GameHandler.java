@@ -22,20 +22,13 @@ import java.util.Map;
 @Component
 @Slf4j
 public class GameHandler extends TextWebSocketHandler {
-
     private final GameEngine gameEngine;
-
     private final NetworkService networkService;
-
-    private final GameEventQueue gameEventQueue;
     private final ObjectMapper objectMapper = new ObjectMapper();
-
     private final Map<String, Action> actions;
-
-    public GameHandler(GameEngine gameEngine, NetworkService networkService, GameEventQueue gameEventQueue, Map<String, Action> actions) {
+    public GameHandler(GameEngine gameEngine, NetworkService networkService, Map<String, Action> actions) {
         this.gameEngine = gameEngine;
         this.networkService = networkService;
-        this.gameEventQueue = gameEventQueue;
         this.actions = actions;
     }
 
@@ -56,15 +49,14 @@ public class GameHandler extends TextWebSocketHandler {
     protected void handleTextMessage(@NonNull WebSocketSession session, @NonNull TextMessage message) {
         try {
             final WebSocketRequest request = objectMapper.readValue(message.getPayload(), WebSocketRequest.class);
-            final Action action = actions.get(request.getType());
-            if (action != null) {
+            if (actions.containsKey(request.getType())) {
+                final Action action = actions.get(request.getType());
                 action.execute(session, request.getPayload());
                 final String mapId = gameEngine.getPlayerMapId(session.getId());
                 networkService.updatePlayerLocation(session.getId(), mapId);
             }
         } catch (Exception e) {
             log.error("Error while handling WebSocket request", e);
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Server Error: " + e.getMessage(), session.getId(), null, false));
         }
     }
 }
