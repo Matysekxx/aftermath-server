@@ -1,7 +1,7 @@
 {
   "id": "hradcanska",
   "name": "Hradčanská",
-  "type": "HAZARD_ZONE",
+  "type": "SAFE_ZONE",
   "environment": {
     "radiation": 5,
     "darkness_level": 2
