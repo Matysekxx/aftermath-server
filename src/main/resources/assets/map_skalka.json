@@ -1,0 +1,29 @@
+{
+  "id": "skalka",
+  "name": "Skalka",
+  "type": "HAZARD_ZONE",
+  "environment": {
+    "radiation": 5,
+    "darkness_level": 2
+  },
+  "layout": [
+    "assets/maps_a/map_skalka0.txt",
+    "assets/maps_a/map_skalka1.txt"
+  ],
+  "objects": [
+
+  ],
+  "tileTriggers": {
+    "-": {"type": "METRO_TRAVEL", "lineId": "line_a"},
+    "▲": {"type": "TELEPORT",
+      "targetX": 81,
+      "targetY": 10,
+      "targetLayer": 1
+    },
+    "▼": {"type": "TELEPORT",
+      "targetX": 23,
+      "targetY": 10,
+      "targetLayer": 0
+    }
+  }
+}
