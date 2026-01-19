@@ -1,6 +1,7 @@
 package cz.matysekxx.aftermathserver.core.logic.metro;
 
 import cz.matysekxx.aftermathserver.core.model.Player;
+import cz.matysekxx.aftermathserver.core.model.metro.MetroStation;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.util.Map;
 @Service
 public class MetroService {
 
-    private Map<String, List<MetroStation>> stations;
+    private Map<String, List<MetroStation>> metroStations;
     @PostConstruct
     private void init() {
         //TODO: pridat nacitani stanic metra z resources

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="baseStationC" class="cz.matysekxx.aftermathserver.core.model.metro.MetroStation" abstract="true"/>
+
+    <bean id="haje" parent="baseStationC" p:id="haje" p:name="Háje"/>
+    <bean id="opatov" parent="baseStationC" p:id="opatov" p:name="Opatov"/>
+    <bean id="chodov" parent="baseStationC" p:id="chodov" p:name="Chodov"/>
+    <bean id="roztyly" parent="baseStationC" p:id="roztyly" p:name="Roztyly"/>
+    <bean id="kacerov" parent="baseStationC" p:id="kacerov" p:name="Kačerov"/>
+    <bean id="budejovicka" parent="baseStationC" p:id="budejovicka" p:name="Budějovická"/>
+    <bean id="pankrac" parent="baseStationC" p:id="pankrac" p:name="Pankrác"/>
+    <bean id="prazdkeho-povstani" parent="baseStationC" p:id="prazskeho-povstani" p:name="Pražského povstání"/>
+    <bean id="vysehrad" parent="baseStationC" p:id="vysehrad" p:name="Vyšehrad"/>
+    <bean id="i-p-pavlova" parent="baseStationC" p:id="i-p-pavlova" p:name="I. P. Pavlova"/>
+    <bean id="muzeum" parent="baseStationC" p:id="muzeum" p:name="Muzeum"/>
+    <bean id="hlavni-nadrazi" parent="baseStationC" p:id="hlavni-nadrazi" p:name="Hlavní nádraží"/>
+    <bean id="florenc" parent="baseStationC" p:id="florenc" p:name="Florenc"/>
+    <bean id="vltavska" parent="baseStationC" p:id="vltavska" p:name="Vltavská"/>
+    <bean id="nadrazi-holesovice" parent="baseStationC" p:id="nadrazi-holesovice" p:name="Nádraží Holešovice"/>
+    <bean id="kobylisy" parent="baseStationC" p:id="kobylisy" p:name="Kobylisy"/>
+    <bean id="ladvi" parent="baseStationC" p:id="ladvi" p:name="Ladví"/>
+    <bean id="strizkov" parent="baseStationC" p:id="strizkov" p:name="Střížkov"/>
+    <bean id="prosek" parent="baseStationC" p:id="prosek" p:name="Prosek"/>
+    <bean id="letnany" parent="baseStationC" p:id="letnany" p:name="Letňany"/>
+
+    <util:list id="line-c">
+        <ref bean="haje"/>
+        <ref bean="opatov"/>
+        <ref bean="chodov"/>
+        <ref bean="roztyly"/>
+        <ref bean="kacerov"/>
+        <ref bean="budejovicka"/>
+        <ref bean="pankrac"/>
+        <ref bean="prazdkeho-povstani"/>
+        <ref bean="vysehrad"/>
+        <ref bean="i-p-pavlova"/>
+        <ref bean="muzeum"/>
+        <ref bean="hlavni-nadrazi"/>
+        <ref bean="florenc"/>
+        <ref bean="vltavska"/>
+        <ref bean="nadrazi-holesovice"/>
+        <ref bean="kobylisy"/>
+        <ref bean="ladvi"/>
+        <ref bean="strizkov"/>
+        <ref bean="prosek"/>
+        <ref bean="letnany"/>
+    </util:list>
+</beans>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="baseStationA" class="cz.matysekxx.aftermathserver.core.model.metro.MetroStation" abstract="true"/>
+
+    <bean id="nemocnice-motol" parent="baseStationA" p:id="nemocnice-motol" p:name="Nemocnice Motol"/>
+    <bean id="petriny" parent="baseStationA" p:id="petriny" p:name="Petřiny"/>
+    <bean id="nadrazi-veleslavin" parent="baseStationA" p:id="nadrazi_veleslavin" p:name="Veleslavín"/>
+    <bean id="dejvicka" parent="baseStationA" p:id="dejvicka" p:name="Dejvická"/>
+    <bean id="hradcanska" parent="baseStationA" p:id="hradcanska" p:name="Hradčanská"/>
+    <bean id="malostranska" parent="baseStationA" p:id="malostranska" p:name="Malostranská"/>
+    <bean id="staromestska" parent="baseStationA" p:id="staromestska" p:name="Staroměstská"/>
+    <bean id="mustek" parent="baseStationA" p:id="mustek" p:name="Můstek"/>
+    <bean id="muzeum" parent="baseStationA" p:id="muzeum" p:name="Muzeum"/>
+    <bean id="namesti-miru" parent="baseStationA" p:id="namesti_miru" p:name="Náměstí Míru"/>
+    <bean id="jiriho-z-podebrad" parent="baseStationA" p:id="jiriho-z-podebrad" p:name="Jiřího z Poděbrad"/>
+    <bean id="flora" parent="baseStationA" p:id="flora" p:name="Flora"/>
+    <bean id="zelivskeho" parent="baseStationA" p:id="zelivskeho" p:name="Želivského"/>
+    <bean id="strasnicka" parent="baseStationA" p:id="strasnicka" p:name="Strašnická"/>
+    <bean id="skalka" parent="baseStationA" p:id="skalka" p:name="Skalka"/>
+
+    <util:list id="line-a">
+        <ref bean="nemocnice-motol"/>
+        <ref bean="petriny"/>
+        <ref bean="nadrazi-veleslavin"/>
+        <ref bean="dejvicka"/>
+        <ref bean="hradcanska"/>
+        <ref bean="malostranska"/>
+        <ref bean="staromestska"/>
+        <ref bean="mustek"/>
+        <ref bean="muzeum"/>
+        <ref bean="namesti-miru"/>
+        <ref bean="jiriho-z-podebrad"/>
+        <ref bean="flora"/>
+        <ref bean="zelivskeho"/>
+        <ref bean="strasnicka"/>
+        <ref bean="skalka"/>
+    </util:list>
+</beans>

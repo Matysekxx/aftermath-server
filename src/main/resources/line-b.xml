@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="baseStationB" class="cz.matysekxx.aftermathserver.core.model.metro.MetroStation" abstract="true"/>
+
+    <bean id="zlicin" parent="baseStationB" p:id="zlicin" p:name="Zličín"/>
+    <bean id="stodulky" parent="baseStationB" p:id="stodulky" p:name="Stodůlky"/>
+    <bean id="luka" parent="baseStationB" p:id="luka" p:name="Luka"/>
+    <bean id="luziny" parent="baseStationB" p:id="luziny" p:name="Lužiny"/>
+    <bean id="hurka" parent="baseStationB" p:id="hurka" p:name="Hůrka"/>
+    <bean id="nove-butovice" parent="baseStationB" p:id="nove-butovice" p:name="Nové Butovice"/>
+    <bean id="jinonice" parent="baseStationB" p:id="jinonice" p:name="Jinonice"/>
+    <bean id="radlicka" parent="baseStationB" p:id="radlicka" p:name="Radlická"/>
+    <bean id="smichovske-nadrazi" parent="baseStationB" p:id="smichovske-nadrazi" p:name="Smíchovské nádraží"/>
+    <bean id="andel" parent="baseStationB" p:id="andel" p:name="Anděl"/>
+    <bean id="karlovo-namesti" parent="baseStationB" p:id="karlovo-namesti" p:name="Karlovo náměstí"/>
+    <bean id="narodni-trida" parent="baseStationB" p:id="narodni-trida" p:name="Národní třída"/>
+    <bean id="mustek" parent="baseStationB" p:id="mustek" p:name="Můstek"/>
+    <bean id="namesti-republiky" parent="baseStationB" p:id="namesti-republiky" p:name="Náměstí Republiky"/>
+    <bean id="florenc" parent="baseStationB" p:id="florenc" p:name="Florenc"/>
+    <bean id="krizikova" parent="baseStationB" p:id="krizikova" p:name="Křižíkova"/>
+    <bean id="invalidovna" parent="baseStationB" p:id="invalidovna" p:name="Invalidovna"/>
+    <bean id="palmovka" parent="baseStationB" p:id="palmovka" p:name="Palmovka"/>
+    <bean id="ceskomoravska" parent="baseStationB" p:id="ceskomoravska" p:name="Českomoravská"/>
+    <bean id="vysocanska" parent="baseStationB" p:id="vysocanska" p:name="Vysočanská"/>
+    <bean id="kolbenova" parent="baseStationB" p:id="kolbenova" p:name="Kolbenova"/>
+    <bean id="hloubetin" parent="baseStationB" p:id="hloubetin" p:name="Hloubětín"/>
+    <bean id="rajska-zahrada" parent="baseStationB" p:id="rajska-zahrada" p:name="Rajská zahrada"/>
+    <bean id="cerny-most" parent="baseStationB" p:id="cerny-most" p:name="Černý most"/>
+
+    <util:list id="line-b">
+        <ref bean="zlicin"/>
+        <ref bean="stodulky"/>
+        <ref bean="luka"/>
+        <ref bean="luziny"/>
+        <ref bean="hurka"/>
+        <ref bean="nove-butovice"/>
+        <ref bean="jinonice"/>
+        <ref bean="radlicka"/>
+        <ref bean="smichovske-nadrazi"/>
+        <ref bean="andel"/>
+        <ref bean="karlovo-namesti"/>
+        <ref bean="narodni-trida"/>
+        <ref bean="mustek"/>
+        <ref bean="namesti-republiky"/>
+        <ref bean="florenc"/>
+        <ref bean="krizikova"/>
+        <ref bean="invalidovna"/>
+        <ref bean="palmovka"/>
+        <ref bean="ceskomoravska"/>
+        <ref bean="vysocanska"/>
+        <ref bean="kolbenova"/>
+        <ref bean="hloubetin"/>
+        <ref bean="rajska-zahrada"/>
+        <ref bean="cerny-most"/>
+    </util:list>
+</beans>

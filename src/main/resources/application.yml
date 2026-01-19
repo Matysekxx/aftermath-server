@@ -6,6 +6,7 @@ spring:
     - "classpath:items-consumables.yml"
     - "classpath:items-weapons.yml"
     - "classpath:items-resources.yml"
+    - "classpath:metro-config.xml"
 game:
   tick-rate: 250
   spawn:
