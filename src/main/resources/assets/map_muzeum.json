@@ -14,6 +14,37 @@
 
   ],
   "tileTriggers": {
-    "-": {"type": "METRO_TRAVEL", "lineId": "line_a"}
+    "-": {
+      "type": "METRO_TRAVEL",
+      "lineId": "line_c"
+    },
+    "~": {
+      "type": "METRO_TRAVEL",
+      "lineId": "line_a"
+    },
+    "►": {
+      "type": "TELEPORT",
+      "targetX": 3,
+      "targetY": 3,
+      "targetLayer": 1
+    },
+    "◄": {
+      "type": "TELEPORT",
+      "targetX": 58,
+      "targetY": 24,
+      "targetLayer": 0
+    },
+    "▲": {
+      "type": "TELEPORT",
+      "targetX": 152,
+      "targetY": 16,
+      "targetLayer": 1
+    },
+    "▼": {
+      "type": "TELEPORT",
+      "targetX": 59,
+      "targetY": 37,
+      "targetLayer": 0
+    }
   }
 }
