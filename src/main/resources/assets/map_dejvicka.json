@@ -1,0 +1,17 @@
+{
+  "id": "dejvicka",
+  "name": "Dejvická",
+  "type": "HAZARD_ZONE",
+  "environment": {
+    "radiation": 5,
+    "darkness_level": 2
+  },
+  "layout": [
+    "assets/maps_a/map_dejvicka0.txt"
+  ],
+  "objects": [
+  ],
+  "tileTriggers": {
+    "-": {"type": "METRO_TRAVEL", "lineId": "line_a"}
+  }
+}

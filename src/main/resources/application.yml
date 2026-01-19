@@ -13,5 +13,3 @@ game:
     y: 2
     layer: 1
   starting-map-id: "nadrazi_veleslavin"
-messaging:
-  private-response-types: "MAP_LOAD,LOOT_SUCCESS,NOTIFICATION,ACTION_FAILED"

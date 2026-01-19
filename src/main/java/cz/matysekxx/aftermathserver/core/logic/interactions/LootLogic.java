@@ -3,7 +3,8 @@ package cz.matysekxx.aftermathserver.core.logic.interactions;
 import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
-import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
+import cz.matysekxx.aftermathserver.event.EventType;
+import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -12,9 +13,10 @@ import java.util.List;
 @Component("LOOT")
 public class LootLogic implements InteractionLogic {
     @Override
-    public synchronized WebSocketResponse interact(MapObject target, Player player) {
-        if (target.getItems().isEmpty())
-            return WebSocketResponse.of("NOTIFICATION", target.getDescription() + "It is empty");
+    public synchronized List<GameEvent> interact(MapObject target, Player player) {
+        if (target.getItems().isEmpty()) {
+            return List.of(GameEvent.create(EventType.SEND_MESSAGE, target.getDescription() + " - It is empty", player.getId(), null, false));
+        }
 
         final StringBuilder message = new StringBuilder(target.getDescription() + "\nYou found:");
         final List<Item> itemsToRemove = new ArrayList<>();
@@ -33,7 +35,11 @@ public class LootLogic implements InteractionLogic {
         if (target.getItems().isEmpty()) {
             target.setDescription("Empty");
         }
-        return WebSocketResponse.of("LOOT_SUCCESS", message.toString());
 
+        final List<GameEvent> events = new ArrayList<>();
+        events.add(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
+        events.add(GameEvent.create(EventType.SEND_MESSAGE, message.toString(), player.getId(), null, false));
+
+        return events;
     }
 }

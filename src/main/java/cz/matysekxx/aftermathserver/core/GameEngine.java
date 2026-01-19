@@ -10,8 +10,8 @@ import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.model.Player.State;
 import cz.matysekxx.aftermathserver.core.world.*;
 import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
+import cz.matysekxx.aftermathserver.dto.ChatRequest;
 import cz.matysekxx.aftermathserver.dto.MoveRequest;
-import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,7 +33,6 @@ public class GameEngine {
     private final MapObjectFactory mapObjectFactory;
     private final Map<String, InteractionLogic> logicMap;
     private final GameSettings settings;
-
     private final TriggerRegistry triggerRegistry;
 
     public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap, GameSettings settings, TriggerRegistry triggerRegistry) {
@@ -78,10 +78,16 @@ public class GameEngine {
         return player.getMapId();
     }
 
-    public Player processMove(String playerId, MoveRequest moveRequest) {
+    public void handleChatMessage(ChatRequest chatData, String id) {
+        gameEventQueue.enqueue(
+                GameEvent.create(EventType.BROADCAST_CHAT_MSG, chatData, id, getPlayerMapId(id), true)
+        );
+    }
+
+    public void processMove(String playerId, MoveRequest moveRequest) {
         final Player player = players.get(playerId);
         if (player == null) {
-            return null;
+            return;
         }
 
         int targetX = player.getX();
@@ -92,7 +98,8 @@ public class GameEngine {
         targetY += dir.getDy();
 
         if (!canMoveTo(player, targetX, targetY)) {
-            return null;
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "OBSTACLE", playerId, null, false));
+            return;
         }
         player.setX(targetX);
         player.setY(targetY);
@@ -104,7 +111,6 @@ public class GameEngine {
                 .ifPresent(tileTrigger -> handleTileTrigger(player, tileTrigger));
 
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), player.getMapId(), false));
-        return player;
     }
 
     private void handleTileTrigger(Player player, TileTrigger trigger) {
@@ -121,13 +127,13 @@ public class GameEngine {
         );
     }
 
-    public WebSocketResponse processInteract(String id, String targetObjectId) {
+    public void processInteract(String id, String targetObjectId) {
         final Player player = players.get(id);
         final GameMapData map = worldManager.getMap(player.getMapId());
         final MapObject target = map.getObject(targetObjectId);
         if (target == null) {
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Object not found", id, player.getMapId(), false));
-            return null;
+            return;
         }
 
         if (Math.abs(player.getX() - target.getX()) > 1 || Math.abs(player.getY() - target.getY()) > 1) {
@@ -136,26 +142,18 @@ public class GameEngine {
 
         final InteractionLogic interactionLogic = logicMap.get(target.getAction());
         if (interactionLogic != null) {
-            final WebSocketResponse response = interactionLogic.interact(target, player);
-            switch (response.getType()) {
-                case "LOOT_SUCCESS" -> gameEventQueue.enqueue(
-                        GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
-                case "MAP_LOAD" -> {
-                    gameEventQueue.enqueue(
-                            GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(player.getMapId()).getObjects(), player.getId(), player.getMapId(), false));
-                    gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), player.getMapId(), false));
-                }
+            final List<GameEvent> events = interactionLogic.interact(target, player);
+            if (events != null) {
+                events.forEach(gameEventQueue::enqueue);
             }
-            return response;
         }
-        return null;
     }
 
-    public WebSocketResponse dropItem(String playerId, int slotIndex, int amount) {
+    public void dropItem(String playerId, int slotIndex, int amount) {
         final Player player = players.get(playerId);
         if (player == null) {
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Player not found", playerId, null, false));
-            return null;
+            return;
         }
 
         final Optional<Item> droppedItem = player.getInventory().removeItem(slotIndex, amount);
@@ -165,10 +163,9 @@ public class GameEngine {
             map.addObject(lootBag);
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, map.getObjects(), null, player.getMapId(), true));
-            return WebSocketResponse.of("DROP_SUCCESS", "Item dropped");
+            return;
         }
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Item not found or invalid amount", playerId, null, false));
-        return null;
     }
 
     @Scheduled(fixedRateString = "${game.tick-rate}")
