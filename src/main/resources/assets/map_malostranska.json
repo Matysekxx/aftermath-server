@@ -1,0 +1,18 @@
+{
+  "id": "malostranska",
+  "name": "Malostranská",
+  "type": "HAZARD_ZONE",
+  "environment": {
+    "radiation": 5,
+    "darkness_level": 2
+  },
+  "layout": [
+    "assets/maps_a/map_malostranska0.txt"
+  ],
+  "objects": [
+
+  ],
+  "tileTriggers": {
+    "-": {"type": "METRO_TRAVEL", "lineId": "line_a"}
+  }
+}

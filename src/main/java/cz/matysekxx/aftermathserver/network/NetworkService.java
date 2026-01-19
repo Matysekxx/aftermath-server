@@ -146,7 +146,9 @@ public class NetworkService {
         final WebSocketSession session = sessions.get(p.getId());
         if (session != null && session.isOpen()) {
             try {
-                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("INVENTORY_UPDATE", p.getInventory().getSlots()));
+                final String json = objectMapper.writeValueAsString(
+                        WebSocketResponse.of("INVENTORY_UPDATE", p.getInventory().getSlots())
+                );
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {
                 log.error(e.getMessage());
@@ -185,7 +187,12 @@ public class NetworkService {
         final WebSocketSession session = sessions.get(p.getId());
         if (session != null && session.isOpen()) {
             try {
-                final PlayerUpdatePayload payload = new PlayerUpdatePayload(p.getId(), p.getX(), p.getY(), p.getLayerIndex());
+                final PlayerUpdatePayload payload = new PlayerUpdatePayload(
+                        p.getId(),
+                        p.getX(),
+                        p.getY(),
+                        p.getLayerIndex()
+                );
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of("PLAYER_MOVED", payload));
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {

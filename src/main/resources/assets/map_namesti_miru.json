@@ -1,0 +1,31 @@
+{
+  "id": "namesti_miru",
+  "name": "Náměstí Míru",
+  "type": "HAZARD_ZONE",
+  "environment": {
+    "radiation": 5,
+    "darkness_level": 2
+  },
+  "layout": [
+    "assets/maps_a/map_namesti_miru0.txt"
+  ],
+  "objects": [
+    {
+      "id": "loot_chest_petriny",
+      "type": "CONTAINER",
+      "x": 55,
+      "y": 12,
+      "action": "LOOT",
+      "description": "Ztracená bedna",
+      "items": [
+        {
+          "id": "scrap_metal",
+          "quantity": 10
+        }
+      ]
+    }
+  ],
+  "tileTriggers": {
+    "-": {"type": "METRO_TRAVEL", "lineId": "line_a"}
+  }
+}
