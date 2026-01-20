@@ -8,6 +8,9 @@
     <import resource="line-b.xml"/>
     <import resource="line-c.xml"/>
     <import resource="line-d.xml"/>
+    <import resource="line-e.xml"/>
+    <import resource="line-f.xml"/>
+    <import resource="line-g.xml"/>
 
 
 
@@ -17,5 +20,9 @@
         <entry key="line_b" value-ref="line-b"/>
         <entry key="line_c" value-ref="line-c"/>
         <entry key="line_d" value-ref="line-d"/>
+        <entry key="line-e" value-ref="line-e"/>
+        <entry key="line-f" value-ref="line-f"/>
+        <entry key="line-g" value-ref="line-g"/>
+
     </util:map>
 </beans>
