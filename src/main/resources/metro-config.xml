@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -12,17 +13,13 @@
     <import resource="line-f.xml"/>
     <import resource="line-g.xml"/>
 
-
-
-
     <util:map id="metroMapData" map-class="java.util.LinkedHashMap">
         <entry key="line_a" value-ref="line-a"/>
         <entry key="line_b" value-ref="line-b"/>
         <entry key="line_c" value-ref="line-c"/>
         <entry key="line_d" value-ref="line-d"/>
-        <entry key="line-e" value-ref="line-e"/>
-        <entry key="line-f" value-ref="line-f"/>
-        <entry key="line-g" value-ref="line-g"/>
-
+        <entry key="line_e" value-ref="line-e"/>
+        <entry key="line_f" value-ref="line-f"/>
+        <entry key="line_g" value-ref="line-g"/>
     </util:map>
 </beans>

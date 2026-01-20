@@ -16,16 +16,16 @@
     <bean id="roztyly" parent="baseStationC" p:id="roztyly" p:name="Roztyly"/>
     <bean id="kacerov" parent="baseStationC" p:id="kacerov" p:name="Kačerov"/>
     <bean id="budejovicka" parent="baseStationC" p:id="budejovicka" p:name="Budějovická"/>
-    <bean id="pankrac" parent="baseStationC" p:id="pankrac" p:name="Pankrác"/>
-    <bean id="prazdkeho-povstani" parent="baseStationC" p:id="prazskeho-povstani" p:name="Pražského povstání"/>
+    <bean id="pankrac-c" parent="baseStationC" p:id="pankrac" p:name="Pankrác"/>
+    <bean id="prazskeho-povstani" parent="baseStationC" p:id="prazskeho-povstani" p:name="Pražského povstání"/>
     <bean id="vysehrad" parent="baseStationC" p:id="vysehrad" p:name="Vyšehrad"/>
-    <bean id="i-p-pavlova" parent="baseStationC" p:id="i-p-pavlova" p:name="I. P. Pavlova"/>
-    <bean id="muzeum" parent="baseStationC" p:id="muzeum" p:name="Muzeum"/>
+    <bean id="i-p-pavlova-c" parent="baseStationC" p:id="i-p-pavlova" p:name="I. P. Pavlova"/>
+    <bean id="muzeum-c" parent="baseStationC" p:id="muzeum" p:name="Muzeum"/>
     <bean id="hlavni-nadrazi" parent="baseStationC" p:id="hlavni-nadrazi" p:name="Hlavní nádraží"/>
-    <bean id="florenc" parent="baseStationC" p:id="florenc" p:name="Florenc"/>
-    <bean id="vltavska" parent="baseStationC" p:id="vltavska" p:name="Vltavská"/>
+    <bean id="florenc-c" parent="baseStationC" p:id="florenc" p:name="Florenc"/>
+    <bean id="vltavska-c" parent="baseStationC" p:id="vltavska" p:name="Vltavská"/>
     <bean id="nadrazi-holesovice" parent="baseStationC" p:id="nadrazi-holesovice" p:name="Nádraží Holešovice"/>
-    <bean id="kobylisy" parent="baseStationC" p:id="kobylisy" p:name="Kobylisy"/>
+    <bean id="kobylisy-c" parent="baseStationC" p:id="kobylisy" p:name="Kobylisy"/>
     <bean id="ladvi" parent="baseStationC" p:id="ladvi" p:name="Ladví"/>
     <bean id="strizkov" parent="baseStationC" p:id="strizkov" p:name="Střížkov"/>
     <bean id="prosek" parent="baseStationC" p:id="prosek" p:name="Prosek"/>
@@ -40,16 +40,16 @@
         <ref bean="roztyly"/>
         <ref bean="kacerov"/>
         <ref bean="budejovicka"/>
-        <ref bean="pankrac"/>
-        <ref bean="prazdkeho-povstani"/>
+        <ref bean="pankrac-c"/>
+        <ref bean="prazskeho-povstani"/>
         <ref bean="vysehrad"/>
-        <ref bean="i-p-pavlova"/>
-        <ref bean="muzeum"/>
+        <ref bean="i-p-pavlova-c"/>
+        <ref bean="muzeum-c"/>
         <ref bean="hlavni-nadrazi"/>
-        <ref bean="florenc"/>
-        <ref bean="vltavska"/>
+        <ref bean="florenc-c"/>
+        <ref bean="vltavska-c"/>
         <ref bean="nadrazi-holesovice"/>
-        <ref bean="kobylisy"/>
+        <ref bean="kobylisy-c"/>
         <ref bean="ladvi"/>
         <ref bean="strizkov"/>
         <ref bean="prosek"/>

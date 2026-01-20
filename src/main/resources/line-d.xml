@@ -13,14 +13,14 @@
     <bean id="nemocnice-krc" parent="baseStationD" p:id="nemocnice-krc" p:name="Nemocnice Krč"/>
     <bean id="nadrazi-krc" parent="baseStationD" p:id="nadrazi-krc" p:name="Nádraží Krč"/>
     <bean id="olbrachtova" parent="baseStationD" p:id="olbrachtova" p:name="Olbrachtova"/>
-    <bean id="pankrac" parent="baseStationD" p:id="pankrac" p:name="Pankrác"/>
+    <bean id="pankrac-d" parent="baseStationD" p:id="pankrac" p:name="Pankrác"/>
     <bean id="namesti-bratri-synku" parent="baseStationD" p:id="namesti-bratri-synku" p:name="Namestí bratří Synků"/>
-    <bean id="namesti-miru" parent="baseStationD" p:id="namesti-miru" p:name="Náměstí Míru"/>
+    <bean id="namesti-miru-d" parent="baseStationD" p:id="namesti-miru" p:name="Náměstí Míru"/>
     <bean id="prokopovo-namesti" parent="baseStationD" p:id="prokopovo-namesti" p:name="Prokopovo náměstí"/>
     <bean id="basilejske-namesti" parent="baseStationD" p:id="basilejske-namesti" p:name="Basilejské náměstí"/>
-    <bean id="chmelnice" parent="baseStationD" p:id="chmelnice" p:name="Chmelnice"/>
+    <bean id="chmelnice-d" parent="baseStationD" p:id="chmelnice" p:name="Chmelnice"/>
     <bean id="nadrazi-liben" parent="baseStationD" p:id="nadrazi-liben" p:name="Nádraží Libeň"/>
-    <bean id="vysocanska" parent="baseStationD" p:id="vysocanska" p:name="Vysočanská"/>
+    <bean id="vysocanska-d" parent="baseStationD" p:id="vysocanska" p:name="Vysočanská"/>
     <bean id="vystaviste-letnany" parent="baseStationD" p:id="vystaviste-letnany" p:name="Výstaviště Letňany"/>
     <bean id="letecke-muzeum" parent="baseStationD" p:id="letecke-muzeum" p:name="Letecké muzeum"/>
     <bean id="kbely" parent="baseStationD" p:id="kbely" p:name="Kbely"/>
@@ -32,14 +32,14 @@
         <ref bean="nemocnice-krc"/>
         <ref bean="nadrazi-krc"/>
         <ref bean="olbrachtova"/>
-        <ref bean="pankrac"/>
+        <ref bean="pankrac-d"/>
         <ref bean="namesti-bratri-synku"/>
-        <ref bean="namesti-miru"/>
+        <ref bean="namesti-miru-d"/>
         <ref bean="prokopovo-namesti"/>
         <ref bean="basilejske-namesti"/>
-        <ref bean="chmelnice"/>
+        <ref bean="chmelnice-d"/>
         <ref bean="nadrazi-liben"/>
-        <ref bean="vysocanska"/>
+        <ref bean="vysocanska-d"/>
         <ref bean="vystaviste-letnany"/>
         <ref bean="letecke-muzeum"/>
     </util:list>

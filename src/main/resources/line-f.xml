@@ -12,7 +12,7 @@
     <bean id="lahovice" parent="baseStationF" p:id="lahovice" p:name="Lahovice"/>
     <bean id="nadrazi-modrany" parent="baseStationF" p:id="nadrazi-modrany" p:name="Nádraží Modřany"/>
     <bean id="tylova-ctvrt" parent="baseStationF" p:id="tylova-ctvrt" p:name="Tylova čtvrť"/>
-    <bean id="dvorce" parent="baseStationF" p:id="dvorce" p:name="Dvorce"/>
+    <bean id="dvorce-f" parent="baseStationF" p:id="dvorce" p:name="Dvorce"/>
     <bean id="smichovske-nadrazi" parent="baseStationF" p:id="smichovske-nadrazi" p:name="Smíchovské nádraží"/>
     <bean id="arbesovo-namesti" parent="baseStationF" p:id="arbesovo-namesti" p:name="Arbesovo náměstí"/>
     <bean id="ujezd" parent="baseStationF" p:id="ujezd" p:name="Újezd"/>
@@ -29,7 +29,7 @@
         <ref bean="lahovice"/>
         <ref bean="nadrazi-modrany"/>
         <ref bean="tylova-ctvrt"/>
-        <ref bean="dvorce"/>
+        <ref bean="dvorce-f"/>
         <ref bean="smichovske-nadrazi"/>
         <ref bean="arbesovo-namesti"/>
         <ref bean="ujezd"/>

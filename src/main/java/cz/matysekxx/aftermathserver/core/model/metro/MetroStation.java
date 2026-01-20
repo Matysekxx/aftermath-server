@@ -8,6 +8,8 @@ public class MetroStation {
     private String id;
     private String name;
 
+    public MetroStation() {}
+
     public boolean canPlayerTravel(Player player) {
         //TODO: pridat logiku rozhodovani  zda hrac muze cestovat na stanici
         return false;

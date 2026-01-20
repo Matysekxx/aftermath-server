@@ -2,6 +2,7 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.core.logic.interactions.InteractionLogic;
+import cz.matysekxx.aftermathserver.core.logic.metro.MetroService;
 import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerHandler;
 import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerRegistry;
 import cz.matysekxx.aftermathserver.core.model.Direction;
@@ -19,12 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 
 @Slf4j
 @Service
@@ -181,7 +180,7 @@ public class GameEngine {
             final GameMapData map = worldManager.getMap(player.getMapId());
 
             final Environment env = map.getEnvironment();
-            boolean statsChanged = switch (map.getType()) {
+            final boolean statsChanged = switch (map.getType()) {
                 case MapType.HAZARD_ZONE -> applyRadiation(player, env);
                 case MapType.SAFE_ZONE -> applyRegeneration(player);
             };
@@ -191,7 +190,6 @@ public class GameEngine {
             }
             if (statsChanged || player.getRads() > 0) gameEventQueue.enqueue(GameEvent.create(
                     EventType.SEND_STATS, player, player.getId(), player.getMapId(), false));
-
         }
     }
 

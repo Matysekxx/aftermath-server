@@ -11,14 +11,14 @@
     <bean id="repy" parent="baseStationG" p:id="repy" p:name="Řepy"/>
     <bean id="na-fialce" parent="baseStationG" p:id="na-fialce" p:name="Na Fialce"/>
     <bean id="kotlarka" parent="baseStationG" p:id="kotlarka" p:name="Kotlářka"/>
-    <bean id="andel" parent="baseStationG" p:id="andel" p:name="Anděl"/>
-    <bean id="karlovo-namesti" parent="baseStationG" p:id="karlovo-namesti" p:name="Karlovo náměstí"/>
-    <bean id="i-p-pavlova" parent="baseStationG" p:id="i-p-pavlova" p:name="I. P. Pavlova"/>
-    <bean id="namesti-miru" parent="baseStationG" p:id="namesti-miru" p:name="Náměstí Míru"/>
+    <bean id="andel-g" parent="baseStationG" p:id="andel" p:name="Anděl"/>
+    <bean id="karlovo-namesti-g" parent="baseStationG" p:id="karlovo-namesti" p:name="Karlovo náměstí"/>
+    <bean id="i-p-pavlova-g" parent="baseStationG" p:id="i-p-pavlova" p:name="I. P. Pavlova"/>
+    <bean id="namesti-miru-g" parent="baseStationG" p:id="namesti-miru" p:name="Náměstí Míru"/>
     <bean id="vrsovicke-namesti" parent="baseStationG" p:id="vrsovicke-namesti" p:name="Vršovické náměstí"/>
-    <bean id="slavia" parent="baseStationG" p:id="slavia" p:name="Slavia"/>
+    <bean id="slavia-g" parent="baseStationG" p:id="slavia" p:name="Slavia"/>
     <bean id="kubanske-namesti" parent="baseStationG" p:id="kubanske-namesti" p:name="Kubánské náměstí"/>
-    <bean id="strasnicka" parent="baseStationG" p:id="strasnicka" p:name="Strašnická"/>
+    <bean id="strasnicka-g" parent="baseStationG" p:id="strasnicka" p:name="Strašnická"/>
     <bean id="stare-strasnice" parent="baseStationG" p:id="stare-strasnice" p:name="Staré Strašnice"/>
     <bean id="malesice" parent="baseStationG" p:id="malesice" p:name="Malešice"/>
 
@@ -26,14 +26,14 @@
         <ref bean="repy"/>
         <ref bean="na-fialce"/>
         <ref bean="kotlarka"/>
-        <ref bean="andel"/>
-        <ref bean="karlovo-namesti"/>
-        <ref bean="i-p-pavlova"/>
-        <ref bean="namesti-miru"/>
+        <ref bean="andel-g"/>
+        <ref bean="karlovo-namesti-g"/>
+        <ref bean="i-p-pavlova-g"/>
+        <ref bean="namesti-miru-g"/>
         <ref bean="vrsovicke-namesti"/>
-        <ref bean="slavia"/>
+        <ref bean="slavia-g"/>
         <ref bean="kubanske-namesti"/>
-        <ref bean="strasnicka"/>
+        <ref bean="strasnicka-g"/>
         <ref bean="stare-strasnice"/>
         <ref bean="malesice"/>
     </util:list>
