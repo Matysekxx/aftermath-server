@@ -7,7 +7,7 @@
 > **The Aftermath** je textová multiplayerová RPG hra zasazená do temné budoucnosti pražského metra.
 >
 > 🚧 **WIP:** Projekt je ve fázi vývoje.
-> 
+> 
 > ⚠️ **Poznámka:** Tento repozitář obsahuje **pouze serverovou část (Backend)**.
 
 ---
@@ -42,6 +42,13 @@ Backend funguje jako "Game Engine", který:
 
 ---
 
+## 🖥️ Klient
+
+Pro testování funkčnosti a hraní je k dispozici testovací klient napsaný v Pythonu:
+👉 **[Aftermath Client (Test)](https://github.com/Matysekxx/aftermath-client-test)**
+
+---
+
 ## 🎮 Herní mechaniky
 
 ### Třídy postav
@@ -58,5 +65,3 @@ Backend funguje jako "Game Engine", který:
 * `grab` / `drop` / `use` - Inventář.
 * `status` - Stav postavy a dluhu.
 * `chat [zpráva]` - Komunikace.
-
----
