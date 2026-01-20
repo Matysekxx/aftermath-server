@@ -19,10 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 @Slf4j
 @Service
@@ -176,44 +178,44 @@ public class GameEngine {
     private void updatePlayers() {
         for (Player player : players.values()) {
             if (player == null || player.getState() == State.DEAD) continue;
-
             final GameMapData map = worldManager.getMap(player.getMapId());
-            if (map == null) continue;
 
             final Environment env = map.getEnvironment();
-            boolean statsChanged = false;
-
-            switch (map.getType()) {
-                case MapType.HAZARD_ZONE -> {
-                    if (env.getRadiation() > 0) {
-                        player.setRads(player.getRads() + env.getRadiation());
-                        if (player.getRads() > player.getRadsLimit()) {
-                            player.setHp(player.getHp() - 1);
-                            statsChanged = true;
-                        }
-                    }
-                }
-                case MapType.SAFE_ZONE -> {
-                    if (player.getHp() < player.getMaxHp()) {
-                        player.setHp(player.getHp() + 1);
-                        statsChanged = true;
-                    }
-                    if (player.getRads() > 0) {
-                        player.setRads(Math.max(0, player.getRads() - 5));
-                        statsChanged = true;
-                    }
-                }
-            }
-
+            boolean statsChanged = switch (map.getType()) {
+                case MapType.HAZARD_ZONE -> applyRadiation(player, env);
+                case MapType.SAFE_ZONE -> applyRegeneration(player);
+            };
             if (player.getHp() <= 0) {
                 handlePlayerDeath(player);
                 continue;
             }
+            if (statsChanged || player.getRads() > 0) gameEventQueue.enqueue(GameEvent.create(
+                    EventType.SEND_STATS, player, player.getId(), player.getMapId(), false));
 
-            if (statsChanged || player.getRads() > 0) {
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, player, player.getId(), player.getMapId(), false));
+        }
+    }
+
+    private boolean applyRegeneration(Player player) {
+        if (player.getHp() < player.getMaxHp()) {
+            player.setHp(player.getHp() + 1);
+            return true;
+        }
+        if (player.getRads() > 0) {
+            player.setRads(Math.max(0, player.getRads() - 5));
+            return true;
+        }
+        return false;
+    }
+
+    private boolean applyRadiation(Player player, Environment env) {
+        if (env.getRadiation() > 0) {
+            player.setRads(player.getRads() + env.getRadiation());
+            if (player.getRads() > player.getRadsLimit()) {
+                player.setHp(player.getHp() - 1);
+                return true;
             }
         }
+        return false;
     }
 
     private void handlePlayerDeath(Player player) {
