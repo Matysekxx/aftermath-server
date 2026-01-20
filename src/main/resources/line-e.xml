@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="baseStationE" class="cz.matysekxx.aftermathserver.core.model.metro.MetroStation" abstract="true"/>
+
+    <bean id="pankrac" parent="baseStationE" p:id="pankrac" p:name="Pankrác"/>
+    <bean id="michle" parent="baseStationE" p:id="michle" p:name="Michle"/>
+    <bean id="bohdanec" parent="baseStationE" p:id="bohdanec" p:name="Bohdanec"/>
+    <bean id="slavia" parent="baseStationE" p:id="slavia" p:name="Slavia"/>
+    <bean id="zelivskeho" parent="baseStationE" p:id="zelivskeho" p:name="Želivského"/>
+    <bean id="chmelnice" parent="baseStationE" p:id="chmelnice" p:name="Chmelnice"/>
+    <bean id="palmovka" parent="baseStationE" p:id="palmovka" p:name="Palmovka"/>
+    <bean id="lodenice" parent="baseStationE" p:id="lodenice" p:name="Loděnice"/>
+    <bean id="vltavska" parent="baseStationE" p:id="vltavska" p:name="Vltavská"/>
+    <bean id="letna" parent="baseStationE" p:id="letna" p:name="letná"/>
+    <bean id="hradcanska" parent="baseStationE" p:id="hradcanska" p:name="Hradčanská"/>
+    <bean id="prazsky-hrad" parent="baseStationE" p:id="prazsky-hrad" p:name="Pražský hrad"/>
+    <bean id="stresovice" parent="baseStationE" p:id="stresovice" p:name="Střešovice"/>
+    <bean id="stadion-strahov" parent="baseStationE" p:id="stadion-strahov" p:name="Station Strahov"/>
+    <bean id="andel" parent="baseStationE" p:id="andel" p:name="Anděl"/>
+    <bean id="radlicka" parent="baseStationE" p:id="radlicka" p:name="Radlická"/>
+    <bean id="dvorce" parent="baseStationE" p:id="dvorce" p:name="Dvorce"/>
+
+    <util:list id="line-e">
+        <ref bean="pankrac"/>
+        <ref bean="michle"/>
+        <ref bean="bohdanec"/>
+        <ref bean="slavia"/>
+        <ref bean="zelivskeho"/>
+        <ref bean="zelivskeho"/>
+        <ref bean="chmelnice"/>
+        <ref bean="palmovka"/>
+        <ref bean="lodenice"/>
+        <ref bean="vltavska"/>
+        <ref bean="letna"/>
+        <ref bean="hradcanska"/>
+        <ref bean="prazsky-hrad"/>
+        <ref bean="stresovice"/>
+        <ref bean="stadion-strahov"/>
+        <ref bean="andel"/>
+        <ref bean="radlicka"/>
+        <ref bean="dvorce"/>
+    </util:list>
+
+</beans>

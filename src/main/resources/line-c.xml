@@ -8,6 +8,8 @@
 
     <bean id="baseStationC" class="cz.matysekxx.aftermathserver.core.model.metro.MetroStation" abstract="true"/>
 
+    <bean id="uhrineves" parent="baseStationC" p:id="uhrineves" p:name="Uhříněves"/>
+    <bean id="petrovice" parent="baseStationC" p:id="petrovice" p:name="Petrovice"/>
     <bean id="haje" parent="baseStationC" p:id="haje" p:name="Háje"/>
     <bean id="opatov" parent="baseStationC" p:id="opatov" p:name="Opatov"/>
     <bean id="chodov" parent="baseStationC" p:id="chodov" p:name="Chodov"/>
@@ -30,6 +32,8 @@
     <bean id="letnany" parent="baseStationC" p:id="letnany" p:name="Letňany"/>
 
     <util:list id="line-c">
+        <ref bean="uhrineves"/>
+        <ref bean="petrovice"/>
         <ref bean="haje"/>
         <ref bean="opatov"/>
         <ref bean="chodov"/>
