@@ -12,4 +12,4 @@ game:
     x: 42
     y: 2
     layer: 1
-  starting-map-id: "nadrazi_veleslavin"
+  starting-map-id: "nadrazi-veleslavin"
