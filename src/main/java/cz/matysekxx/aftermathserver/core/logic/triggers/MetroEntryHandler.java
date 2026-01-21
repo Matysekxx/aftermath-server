@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Slf4j
-@Component("METRO_ENTRY")
+@Component("METRO_TRAVEL")
 public non-sealed class MetroEntryHandler extends TriggerHandler {
     private final MetroService metroService;
 

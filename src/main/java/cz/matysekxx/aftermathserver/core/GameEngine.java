@@ -4,6 +4,7 @@ import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.core.logic.interactions.InteractionLogic;
 import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerHandler;
 import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerRegistry;
+import cz.matysekxx.aftermathserver.util.Coordination;
 import cz.matysekxx.aftermathserver.util.Direction;
 import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player;
@@ -49,13 +50,14 @@ public class GameEngine {
 
         final String className = settings.getDefaultClass(); //placeholder
         final GameSettings.PlayerClassConfig classConfig = settings.getClasses().get(className);
-        final Player newPlayer = new Player(sessionId, "", settings.getSpawn().x(), settings.getSpawn().y(),
+        final Coordination spawn = worldManager.getMap(mapId).getMetroSpawn();
+        final Player newPlayer = new Player(sessionId, "", spawn.x(),spawn.y(),
                 classConfig.getMaxHp(),
                 classConfig.getInventoryCapacity(),
                 classConfig.getMaxWeight(),
                 classConfig.getRadsLimit()
         );
-        newPlayer.setLayerIndex(settings.getSpawn().z());
+        newPlayer.setLayerIndex(spawn.z());
         newPlayer.setId(sessionId);
         newPlayer.setMapId(mapId);
         newPlayer.setRole(className);
@@ -115,6 +117,7 @@ public class GameEngine {
 
     private void handleTileTrigger(Player player, TileTrigger trigger) {
         final Optional<TriggerHandler> maybeTrigger = triggerRegistry.getHandler(trigger.getType());
+        if (maybeTrigger.isEmpty()) log.error("trigger id null");
         maybeTrigger.ifPresent(triggerHandler -> triggerHandler.handle(player, trigger));
     }
 

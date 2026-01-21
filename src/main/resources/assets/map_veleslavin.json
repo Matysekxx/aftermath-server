@@ -25,6 +25,10 @@
       "targetY": 47,
       "targetLayer": 1
     }
-
+  },
+  "metroSpawn": {
+    "x": 135,
+    "y": 15,
+    "z": 0
   }
 }

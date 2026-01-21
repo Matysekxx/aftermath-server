@@ -13,7 +13,6 @@ import java.util.Map;
 public class GameSettings {
     private String startingMapId;
     private int tickRate;
-    private Coordination spawn;
 
     private String defaultClass;
     private Map<String, PlayerClassConfig> classes;
