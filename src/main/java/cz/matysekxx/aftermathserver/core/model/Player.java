@@ -5,34 +5,18 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Player {
-    private String id;
-    private String username;
+public class Player extends Entity {
     private Inventory inventory;
-    private String mapId;
-    private int layerIndex;
-    private int x, y;
-
-    private int hp;
-    private int maxHp;
     private String role;
-
     private int rads = 0;
     private int radsLimit;
 
-    private State state;
-
-    public Player(String id, String username, int x, int y, int maxHp, int inventoryCapacity, double maxWeight, int radsLimit) {
-        this.id = id;
-        this.username = username;
-        this.maxHp = maxHp;
-        this.hp = maxHp;
+    public Player(String id, String username, int x, int y, int maxHp,
+                  int inventoryCapacity, double maxWeight, int radsLimit
+    ) {
+        super(x, y, 0, "default", id, username, maxHp, maxHp, State.ALIVE);
         this.radsLimit = radsLimit;
         this.inventory = new Inventory(inventoryCapacity, maxWeight);
-        this.state = State.ALIVE;
-        this.x = x;
-        this.y = y;
-
     }
 
     public void addRads(int amount) {
@@ -47,9 +31,5 @@ public class Player {
         if (rads < 0) {
             rads = 0;
         }
-    }
-
-    public enum State {
-        ALIVE, DEAD, TRAVELLING, POISONED
     }
 }

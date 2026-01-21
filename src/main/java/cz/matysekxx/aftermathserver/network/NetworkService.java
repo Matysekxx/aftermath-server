@@ -3,17 +3,17 @@ package cz.matysekxx.aftermathserver.network;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.core.model.Player;
+import cz.matysekxx.aftermathserver.core.model.metro.MetroStation;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
-import cz.matysekxx.aftermathserver.dto.MapLoadPayload;
-import cz.matysekxx.aftermathserver.dto.PlayerUpdatePayload;
-import cz.matysekxx.aftermathserver.dto.StatsResponse;
-import cz.matysekxx.aftermathserver.dto.WebSocketResponse;
+import cz.matysekxx.aftermathserver.dto.*;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
+import cz.matysekxx.aftermathserver.util.Tuple;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -100,6 +100,19 @@ public class NetworkService {
         });
     }
 
+    void sendUIList(Tuple<String, List<MetroStation>> metroStations, String id) {
+        try {
+            final UILoadResponse dto = objectMapper.readValue(objectMapper.writeValueAsString(metroStations), UILoadResponse.class);
+            final TextMessage msg = new TextMessage(objectMapper.writeValueAsString(dto));
+            final WebSocketSession session = sessions.get(id);
+            if (session != null && session.isOpen()) {
+                session.sendMessage(msg);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
+
     void sendToClient(String payload, String sessionId) {
         final TextMessage message = new TextMessage(payload);
         final WebSocketSession session = sessions.get(sessionId);
@@ -115,10 +128,7 @@ public class NetworkService {
     void sendGameOver(String sessionId) {
         final WebSocketSession session = sessions.get(sessionId);
         if (session != null && session.isOpen()) {
-            final Map<String, Object> gameOverData = Map.of(
-                    "message", "YOU DIED",
-                    "respawn_possible", true
-            );
+            final var gameOverData = Map.of("message", "YOU DIED");
             try {
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of("GAME_OVER", gameOverData));
                 session.sendMessage(new TextMessage(json));

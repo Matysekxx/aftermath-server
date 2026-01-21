@@ -9,5 +9,6 @@ public enum EventType {
     SEND_PLAYER_POSITION,
     SEND_MESSAGE,
     SEND_ERROR,
-    BROADCAST_CHAT_MSG
+    BROADCAST_CHAT_MSG,
+    OPEN_METRO_UI;
 }

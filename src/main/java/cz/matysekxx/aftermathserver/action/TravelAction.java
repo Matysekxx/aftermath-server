@@ -1,4 +1,30 @@
 package cz.matysekxx.aftermathserver.action;
 
-public class TravelAction {
+import com.fasterxml.jackson.databind.JsonNode;
+import cz.matysekxx.aftermathserver.core.GameEngine;
+import cz.matysekxx.aftermathserver.core.logic.metro.MetroService;
+import cz.matysekxx.aftermathserver.core.model.Player;
+import cz.matysekxx.aftermathserver.core.model.State;
+import cz.matysekxx.aftermathserver.dto.TravelRequest;
+import cz.matysekxx.aftermathserver.event.GameEventQueue;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.WebSocketSession;
+
+@Component("TRAVEL")
+public class TravelAction extends Action {
+    private final MetroService metroService;
+
+    protected TravelAction(GameEngine gameEngine, MetroService metroService) {
+        super("TRAVEL", gameEngine);
+        this.metroService = metroService;
+    }
+
+    @Override
+    public void execute(WebSocketSession session, JsonNode payload) {
+        final TravelRequest travelRequest = objectMapper.convertValue(payload, TravelRequest.class);
+        final Player player = gameEngine.getPlayerById(session.getId());
+        if (player.getState() == State.TRAVELLING) {
+            metroService.startTravel(player, travelRequest.getMapId());
+        }
+    }
 }

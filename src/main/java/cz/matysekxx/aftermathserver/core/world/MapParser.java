@@ -35,7 +35,6 @@ public class MapParser {
             final List<ParsedMapLayer> layers = parseLayoutLayers(mapData.getLayout());
             mapData.setParsedLayers(layers);
             mapData.initializeCache();
-
             return mapData;
         }
     }

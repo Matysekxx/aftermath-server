@@ -2,6 +2,7 @@ package cz.matysekxx.aftermathserver.core.world;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
+import cz.matysekxx.aftermathserver.util.Coordination;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class GameMapData {
     private String id;
     private String name;
     private MapType type;
+    private Coordination spawn;
     private Environment environment;
     private List<String> layout = new ArrayList<>();
     private List<MapObject> objects = new CopyOnWriteArrayList<>();

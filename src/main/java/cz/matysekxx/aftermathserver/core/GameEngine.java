@@ -2,13 +2,12 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.core.logic.interactions.InteractionLogic;
-import cz.matysekxx.aftermathserver.core.logic.metro.MetroService;
 import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerHandler;
 import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerRegistry;
-import cz.matysekxx.aftermathserver.core.model.Direction;
+import cz.matysekxx.aftermathserver.util.Direction;
 import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player;
-import cz.matysekxx.aftermathserver.core.model.Player.State;
+import cz.matysekxx.aftermathserver.core.model.State;
 import cz.matysekxx.aftermathserver.core.world.*;
 import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import cz.matysekxx.aftermathserver.dto.ChatRequest;
@@ -46,17 +45,17 @@ public class GameEngine {
     }
 
     public void addPlayer(String sessionId) {
-        final String mapId = settings.getStartingMapId() != null ? settings.getStartingMapId() : "nemocnice_motol";
+        final String mapId = settings.getStartingMapId() != null ? settings.getStartingMapId() : "nemocnice-motol";
 
         final String className = settings.getDefaultClass(); //placeholder
         final GameSettings.PlayerClassConfig classConfig = settings.getClasses().get(className);
-        final Player newPlayer = new Player(sessionId, "", settings.getSpawn().getX(), settings.getSpawn().getY(),
+        final Player newPlayer = new Player(sessionId, "", settings.getSpawn().x(), settings.getSpawn().y(),
                 classConfig.getMaxHp(),
                 classConfig.getInventoryCapacity(),
                 classConfig.getMaxWeight(),
                 classConfig.getRadsLimit()
         );
-        newPlayer.setLayerIndex(settings.getSpawn().getLayer());
+        newPlayer.setLayerIndex(settings.getSpawn().z());
         newPlayer.setId(sessionId);
         newPlayer.setMapId(mapId);
         newPlayer.setRole(className);
@@ -176,7 +175,7 @@ public class GameEngine {
 
     private void updatePlayers() {
         for (Player player : players.values()) {
-            if (player == null || player.getState() == State.DEAD) continue;
+            if (player == null || player.getState() == State.DEAD || player.getState() == State.TRAVELLING) continue;
             final GameMapData map = worldManager.getMap(player.getMapId());
 
             final Environment env = map.getEnvironment();
@@ -226,5 +225,9 @@ public class GameEngine {
         map.addObject(corpse);
         player.getInventory().clear();
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_GAME_OVER, player, player.getId(), player.getMapId(), false));
+    }
+
+    public Player getPlayerById(String playerId) {
+        return players.get(playerId);
     }
 }

@@ -1,5 +1,6 @@
 package cz.matysekxx.aftermathserver.config;
 
+import cz.matysekxx.aftermathserver.util.Coordination;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -12,17 +13,10 @@ import java.util.Map;
 public class GameSettings {
     private String startingMapId;
     private int tickRate;
-    private SpawnSettings spawn;
+    private Coordination spawn;
 
     private String defaultClass;
     private Map<String, PlayerClassConfig> classes;
-
-    @Data
-    public static class SpawnSettings {
-        private int x;
-        private int y;
-        private int layer;
-    }
 
     @Data
     public static class PlayerClassConfig {
