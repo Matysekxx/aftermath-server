@@ -14,7 +14,7 @@ class CollisionIntegrationTest {
 
     @Test
     void testVeleslavinMapCollisions() {
-        String mapId = "nadrazi_veleslavin";
+        String mapId = "nadrazi-veleslavin";
 
         GameMapData map = worldManager.getMap(mapId);
         assertNotNull(map, "Mapa 'nadrazi_veleslavin' se nenačetla!");

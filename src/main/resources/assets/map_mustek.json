@@ -1,0 +1,22 @@
+{
+  "id": "mustek",
+  "name": "Můstek",
+  "type": "SAFE_ZONE",
+  "environment": {
+    "radiation": 5,
+    "darkness_level": 2
+  },
+  "layout": [
+    "assets/maps_a/map_mustek0.txt"
+  ],
+  "objects": [
+  ],
+  "tileTriggers": {
+    "-": {"type": "METRO_TRAVEL", "lineId": "line_a"}
+  },
+  "metroSpawn": {
+    "x": 177,
+    "y": 29,
+    "z": 0
+  }
+}
