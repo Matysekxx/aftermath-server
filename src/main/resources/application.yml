@@ -8,8 +8,5 @@ spring:
     - "classpath:items-resources.yml"
 game:
   tick-rate: 250
-  spawn:
-    x: 42
-    y: 2
-    layer: 1
+  admin-mode: true
   starting-map-id: "nadrazi-veleslavin"

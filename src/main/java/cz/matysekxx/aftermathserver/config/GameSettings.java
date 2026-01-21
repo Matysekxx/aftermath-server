@@ -13,6 +13,7 @@ import java.util.Map;
 public class GameSettings {
     private String startingMapId;
     private int tickRate;
+    private boolean adminMode;
 
     private String defaultClass;
     private Map<String, PlayerClassConfig> classes;
