@@ -100,8 +100,11 @@ public class NetworkService {
 
     void sendUIList(Map.Entry<String, List<MetroStation>> metroStations, String id) {
         try {
-            final UILoadResponse dto = objectMapper.readValue(objectMapper.writeValueAsString(metroStations), UILoadResponse.class);
-            final TextMessage msg = new TextMessage(objectMapper.writeValueAsString(dto));
+            final UILoadResponse dto = new UILoadResponse();
+            dto.setLineId(metroStations.getKey());
+            dto.setStations(metroStations.getValue());
+
+            final TextMessage msg = new TextMessage(objectMapper.writeValueAsString(WebSocketResponse.of("OPEN_METRO_UI", dto)));
             final WebSocketSession session = sessions.get(id);
             if (session != null && session.isOpen()) {
                 session.sendMessage(msg);
