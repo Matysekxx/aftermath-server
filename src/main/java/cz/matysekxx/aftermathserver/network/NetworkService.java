@@ -10,10 +10,8 @@ import cz.matysekxx.aftermathserver.dto.*;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
-import cz.matysekxx.aftermathserver.util.Tuple;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -100,7 +98,7 @@ public class NetworkService {
         });
     }
 
-    void sendUIList(Tuple<String, List<MetroStation>> metroStations, String id) {
+    void sendUIList(Map.Entry<String, List<MetroStation>> metroStations, String id) {
         try {
             final UILoadResponse dto = objectMapper.readValue(objectMapper.writeValueAsString(metroStations), UILoadResponse.class);
             final TextMessage msg = new TextMessage(objectMapper.writeValueAsString(dto));
@@ -183,6 +181,18 @@ public class NetworkService {
             broadcastToMap(objectMapper.writeValueAsString(WebSocketResponse.of("MAP_OBJECTS_UPDATE", objects)), mapId);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
+        }
+    }
+
+    void sendMapObjects(String sessionId, List<MapObject> objects) {
+        final WebSocketSession session = sessions.get(sessionId);
+        if (session != null && session.isOpen()) {
+            try {
+                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("MAP_OBJECTS_UPDATE", objects));
+                session.sendMessage(new TextMessage(json));
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
         }
     }
 

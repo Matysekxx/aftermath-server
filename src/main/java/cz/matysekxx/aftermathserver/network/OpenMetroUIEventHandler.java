@@ -3,11 +3,13 @@ package cz.matysekxx.aftermathserver.network;
 import cz.matysekxx.aftermathserver.core.model.metro.MetroStation;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
-import cz.matysekxx.aftermathserver.util.Tuple;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
+@Component
 public class OpenMetroUIEventHandler extends GameEventHandler {
 
     protected OpenMetroUIEventHandler(@Lazy NetworkService networkService) {
@@ -21,9 +23,9 @@ public class OpenMetroUIEventHandler extends GameEventHandler {
 
     @Override
     public void handleEvent(GameEvent event) {
-        if (event.payload() instanceof Tuple<?,?> tuple) {
+        if (event.payload() instanceof Map.Entry<?,?> entry) {
             @SuppressWarnings("unchecked")
-            Tuple<String, List<MetroStation>> payload = (Tuple<String, List<MetroStation>>) tuple;
+            var payload = (Map.Entry<String, List<MetroStation>>) entry;
             networkService.sendUIList(payload, event.targetSessionId());
         }
     }

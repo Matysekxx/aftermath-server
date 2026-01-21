@@ -19,7 +19,7 @@ public class GameMapData {
     private String id;
     private String name;
     private MapType type;
-    private Coordination spawn;
+    private Coordination metroSpawn;
     private Environment environment;
     private List<String> layout = new ArrayList<>();
     private List<MapObject> objects = new CopyOnWriteArrayList<>();
