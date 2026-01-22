@@ -7,4 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TravelRequest {
     private String mapId;
+    private String lineId;
 }

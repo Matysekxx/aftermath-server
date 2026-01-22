@@ -15,9 +15,11 @@
   "tileTriggers": {
     "-": {"type": "METRO_TRAVEL", "lineId": "line_a"}
   },
-  "metroSpawn": {
-    "x": 188,
-    "y": 12,
-    "z": 0
+  "spawns": {
+    "line_a": {
+      "x": 188,
+      "y": 12,
+      "z": 0
+    }
   }
 }

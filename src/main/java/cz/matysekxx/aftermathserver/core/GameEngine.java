@@ -35,7 +35,6 @@ public class GameEngine {
     private final Map<String, InteractionLogic> logicMap;
     private final GameSettings settings;
     private final TriggerRegistry triggerRegistry;
-    private boolean adminMode;
 
     public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap, GameSettings settings, TriggerRegistry triggerRegistry) {
         this.worldManager = worldManager;
@@ -44,7 +43,6 @@ public class GameEngine {
         this.logicMap = logicMap;
         this.settings = settings;
         this.triggerRegistry = triggerRegistry;
-        this.adminMode = settings.isAdminMode();
     }
 
     public void addPlayer(String sessionId) {
@@ -52,7 +50,7 @@ public class GameEngine {
 
         final String className = settings.getDefaultClass(); //placeholder
         final GameSettings.PlayerClassConfig classConfig = settings.getClasses().get(className);
-        final Coordination spawn = worldManager.getMap(mapId).getMetroSpawn();
+        final Coordination spawn = worldManager.getMap(mapId).getMetroSpawn(settings.getLineId());
         final Player newPlayer = new Player(sessionId, "", spawn.x(),spawn.y(),
                 classConfig.getMaxHp(),
                 classConfig.getInventoryCapacity(),
@@ -182,13 +180,11 @@ public class GameEngine {
         for (Player player : players.values()) {
             if (player == null || player.getState() == State.DEAD || player.getState() == State.TRAVELLING) continue;
             final GameMapData map = worldManager.getMap(player.getMapId());
-
             final Environment env = map.getEnvironment();
             boolean statsChanged = switch (map.getType()) {
                 case MapType.HAZARD_ZONE -> applyRadiation(player, env);
                 case MapType.SAFE_ZONE -> applyRegeneration(player);
             };
-            statsChanged ^= adminMode; //for testing purposes
             if (player.getHp() <= 0) {
                 handlePlayerDeath(player);
                 continue;

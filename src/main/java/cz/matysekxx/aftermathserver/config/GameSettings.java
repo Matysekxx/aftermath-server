@@ -12,9 +12,8 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "game")
 public class GameSettings {
     private String startingMapId;
+    private String lineId;
     private int tickRate;
-    private boolean adminMode;
-
     private String defaultClass;
     private Map<String, PlayerClassConfig> classes;
 

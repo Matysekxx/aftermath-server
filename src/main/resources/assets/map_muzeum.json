@@ -24,20 +24,20 @@
     },
     "►": {
       "type": "TELEPORT",
-      "targetX": 3,
+      "targetX": 2,
       "targetY": 3,
-      "targetLayer": 1
+      "targetLayer": 0
     },
     "◄": {
       "type": "TELEPORT",
-      "targetX": 58,
-      "targetY": 24,
-      "targetLayer": 0
+      "targetX": 57,
+      "targetY": 23,
+      "targetLayer": 1
     },
     "▲": {
       "type": "TELEPORT",
-      "targetX": 152,
-      "targetY": 16,
+      "targetX": 163,
+      "targetY": 17,
       "targetLayer": 1
     },
     "▼": {
@@ -47,9 +47,16 @@
       "targetLayer": 0
     }
   },
-  "metroSpawn": {
-    "x": 91,
-    "y": 15,
-    "z": 0
+  "spawns": {
+    "line_a": {
+      "x": 91,
+      "y": 15,
+      "z": 0
+    },
+    "line_c": {
+      "x": 167,
+      "y": 17,
+      "z": 1
+    }
   }
 }

@@ -17,7 +17,7 @@
     "-": {"type": "METRO_TRAVEL", "lineId": "line_a"},
     "►": {"type": "TELEPORT",
       "targetX": 29,
-      "targetY": 33,
+      "targetY": 35,
       "targetLayer": 1
     },
     "◄": {"type": "TELEPORT",
@@ -26,9 +26,11 @@
       "targetLayer": 0
     }
   },
-  "metroSpawn": {
-    "x": 69,
-    "y": 9,
-    "z": 0
+  "spawns": {
+    "line_a": {
+      "x": 69,
+      "y": 9,
+      "z": 0
+    }
   }
 }

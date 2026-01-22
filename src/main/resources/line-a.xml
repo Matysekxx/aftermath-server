@@ -10,7 +10,7 @@
 
     <bean id="nemocnice-motol" parent="baseStationA" p:id="nemocnice-motol" p:name="Nemocnice Motol"/>
     <bean id="petriny" parent="baseStationA" p:id="petriny" p:name="Petřiny"/>
-    <bean id="nadrazi-veleslavin" parent="baseStationA" p:id="nadrazi_veleslavin" p:name="Veleslavín"/>
+    <bean id="nadrazi-veleslavin" parent="baseStationA" p:id="nadrazi-veleslavin" p:name="Veleslavín"/>
     <bean id="borislavka" parent="baseStationA" p:id="borislavka" p:name="Bořislavka"/>
     <bean id="dejvicka" parent="baseStationA" p:id="dejvicka" p:name="Dejvická"/>
     <bean id="hradcanska-a" parent="baseStationA" p:id="hradcanska" p:name="Hradčanská"/>

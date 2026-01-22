@@ -7,6 +7,6 @@ spring:
     - "classpath:items-weapons.yml"
     - "classpath:items-resources.yml"
 game:
-  tick-rate: 250
-  admin-mode: true
+  tick-rate: 500
   starting-map-id: "nadrazi-veleslavin"
+  line-id: "line_a"

@@ -19,7 +19,7 @@ public class GameMapData {
     private String id;
     private String name;
     private MapType type;
-    private Coordination metroSpawn;
+    private Map<String, Coordination> spawns = new HashMap<>();
     private Environment environment;
     private List<String> layout = new ArrayList<>();
     private List<MapObject> objects = new CopyOnWriteArrayList<>();
@@ -54,5 +54,9 @@ public class GameMapData {
     public void initializeCache() {
         objectCache.clear();
         objects.forEach(obj -> objectCache.put(obj.getId(), obj));
+    }
+
+    public Coordination getMetroSpawn(String lineId) {
+        return spawns.get(lineId);
     }
 }

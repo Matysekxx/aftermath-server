@@ -10,14 +10,18 @@
     "assets/maps_a/map_malostranska0.txt"
   ],
   "objects": [
-
   ],
   "tileTriggers": {
-    "-": {"type": "METRO_TRAVEL", "lineId": "line_a"}
+    "-": {
+      "type": "METRO_TRAVEL",
+      "lineId": "line_a"
+    }
   },
-  "metroSpawn": {
-    "x": 74,
-    "y": 10,
-    "z": 0
+  "spawns": {
+    "line_a": {
+      "x": 74,
+      "y": 10,
+      "z": 0
+    }
   }
 }

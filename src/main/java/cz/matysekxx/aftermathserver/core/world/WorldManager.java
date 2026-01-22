@@ -48,7 +48,11 @@ public class WorldManager {
 
     public GameMapData getMap(String mapId) {
         if (maps.containsKey(mapId)) return  maps.get(mapId);
-        throw new IllegalArgumentException("Invalid map ID: " + mapId);
+        return null;
+    }
+
+    public boolean containsMap(String mapId) {
+        return maps.containsKey(mapId);
     }
 
     public TileType getTileAt(String mapId, int layer, int x, int y) {

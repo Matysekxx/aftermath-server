@@ -47,10 +47,15 @@ public class MetroService {
         );
     }
 
-    public void startTravel(Player player, String targetMapId) {
+    public void startTravel(Player player, String targetMapId, String lineId) {
         try {
+            if (!worldManager.containsMap(targetMapId)) {
+                log.error("Target map not found: {}", targetMapId);
+                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Travel failed: " + targetMapId, player.getId(), null, false));
+                return;
+            }
             final GameMapData targetMap = worldManager.getMap(targetMapId);
-            var spawn = targetMap.getMetroSpawn();
+            var spawn = targetMap.getMetroSpawn(lineId);
 
             if (spawn != null) {
                 player.setX(spawn.x());
@@ -64,7 +69,7 @@ public class MetroService {
                 gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, targetMap.getObjects(), player.getId(), targetMapId, false));
                 gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), null, false));
             } else {
-                log.error("Metro spawn not found for map: {}", targetMapId);
+                log.error("Metro spawn not found for map: {} and line: {}", targetMapId, lineId);
                 player.setState(State.ALIVE);
                 gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Travel failed: Destination spawn missing", player.getId(), null, false));
             }

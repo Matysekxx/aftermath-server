@@ -63,3 +63,7 @@ game:
         type: FLOOR
       - symbol: '◄'
         type: FLOOR
+      - symbol: '▲'
+        type: FLOOR
+      - symbol: '▼'
+        type: FLOOR

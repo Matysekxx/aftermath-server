@@ -24,7 +24,7 @@ public class TravelAction extends Action {
         final TravelRequest travelRequest = objectMapper.convertValue(payload, TravelRequest.class);
         final Player player = gameEngine.getPlayerById(session.getId());
         if (player.getState() == State.TRAVELLING) {
-            metroService.startTravel(player, travelRequest.getMapId());
+            metroService.startTravel(player, travelRequest.getMapId(), travelRequest.getLineId());
         }
     }
 }

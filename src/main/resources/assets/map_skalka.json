@@ -18,17 +18,19 @@
     "▲": {"type": "TELEPORT",
       "targetX": 81,
       "targetY": 10,
-      "targetLayer": 1
+      "targetLayer": 0
     },
     "▼": {"type": "TELEPORT",
       "targetX": 23,
       "targetY": 10,
-      "targetLayer": 0
+      "targetLayer": 1
     }
   },
-  "metroSpawn": {
-    "x": 81,
-    "y": 9,
-    "z": 0
+  "spawns": {
+    "line_a": {
+      "x": 81,
+      "y": 9,
+      "z": 0
+    }
   }
 }
