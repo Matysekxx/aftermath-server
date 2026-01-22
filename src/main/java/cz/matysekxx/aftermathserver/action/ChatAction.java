@@ -18,8 +18,8 @@ public class ChatAction extends Action {
     }
 
     @Override
-    public void execute(WebSocketSession session, JsonNode payload) {
+    public void execute(String sessionId, JsonNode payload) {
         final var chatData = objectMapper.convertValue(payload, ChatRequest.class);
-        gameEngine.handleChatMessage(chatData, session.getId());
+        gameEngine.handleChatMessage(chatData, sessionId);
     }
 }

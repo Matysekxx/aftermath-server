@@ -64,7 +64,7 @@ public class GameHandler extends TextWebSocketHandler {
             final WebSocketRequest request = objectMapper.readValue(message.getPayload(), WebSocketRequest.class);
             if (actions.containsKey(request.getType())) {
                 final Action action = actions.get(request.getType());
-                action.execute(session, request.getPayload());
+                action.execute(session.getId(), request.getPayload());
                 final String mapId = gameEngine.getPlayerMapId(session.getId());
                 networkService.updatePlayerLocation(session.getId(), mapId);
             }

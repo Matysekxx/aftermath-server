@@ -24,9 +24,9 @@ public class TravelAction extends Action {
     }
 
     @Override
-    public void execute(WebSocketSession session, JsonNode payload) {
+    public void execute(String sessionId, JsonNode payload) {
         final TravelRequest travelRequest = objectMapper.convertValue(payload, TravelRequest.class);
-        final Player player = gameEngine.getPlayerById(session.getId());
+        final Player player = gameEngine.getPlayerById(sessionId);
         if (player.getState() == State.TRAVELLING) {
             metroService.startTravel(player, travelRequest.getMapId(), travelRequest.getLineId());
         }

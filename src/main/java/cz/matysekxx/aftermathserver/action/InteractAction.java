@@ -18,8 +18,8 @@ public class InteractAction extends Action {
     }
 
     @Override
-    public void execute(WebSocketSession session, JsonNode payload) {
+    public void execute(String sessionId, JsonNode payload) {
         final var request = objectMapper.convertValue(payload, InteractRequest.class);
-        gameEngine.processInteract(session.getId(), request.getTarget());
+        gameEngine.processInteract(sessionId, request.getTarget());
     }
 }

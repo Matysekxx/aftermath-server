@@ -24,5 +24,5 @@ public abstract class Action {
     ///
     /// @param session The WebSocket session of the player triggering the action.
     /// @param payload The JSON payload containing action details.
-    public abstract void execute(WebSocketSession session, JsonNode payload);
+    public abstract void execute(String sessionId, JsonNode payload);
 }

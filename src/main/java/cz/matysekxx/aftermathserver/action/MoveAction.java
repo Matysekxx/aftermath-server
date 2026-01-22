@@ -18,8 +18,8 @@ public class MoveAction extends Action {
     }
 
     @Override
-    public void execute(WebSocketSession session, JsonNode payload) {
+    public void execute(String sessionId, JsonNode payload) {
         final var request = objectMapper.convertValue(payload, MoveRequest.class);
-        gameEngine.processMove(session.getId(), request);
+        gameEngine.processMove(sessionId, request);
     }
 }

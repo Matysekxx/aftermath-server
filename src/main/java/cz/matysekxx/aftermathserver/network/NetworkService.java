@@ -54,8 +54,6 @@ public class NetworkService {
                     final GameEvent gameEvent = gameEventQueue.take();
                     if (handlers.containsKey(gameEvent.type())) {
                         handlers.get(gameEvent.type()).handleEvent(gameEvent);
-                    } else {
-                        log.warn("Unknown event type: {}", gameEvent.type());
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
