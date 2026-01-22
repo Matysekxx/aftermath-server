@@ -8,15 +8,22 @@ import lombok.Getter;
 
 import java.util.List;
 
+/// DTO for sending complete map data to the client.
 @Getter
 @AllArgsConstructor
 public class MapLoadPayload {
+    /// The unique identifier of the map.
     private String mapId;
+    /// The display name of the map.
     private String mapName;
+    /// List of file paths for map layers (layout files).
     private List<String> levels;
+    /// Environmental settings (radiation, darkness).
     private Environment environment;
+    /// The parsed 2D character arrays representing the map layers.
     private List<ParsedMapLayer> parsedLayers;
 
+    /// Creates a MapLoadPayload from GameMapData.
     public static MapLoadPayload of(GameMapData gameMapData) {
         return new MapLoadPayload(
                 gameMapData.getId(),

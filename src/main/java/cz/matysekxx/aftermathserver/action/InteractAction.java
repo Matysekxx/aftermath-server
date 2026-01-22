@@ -6,6 +6,10 @@ import cz.matysekxx.aftermathserver.dto.InteractRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+/// Handles interactions with map objects.
+///
+/// Triggered by the `INTERACT` command.
+/// Used for looting containers, talking to NPCs, or using world objects.
 @Component("INTERACT")
 public class InteractAction extends Action {
 

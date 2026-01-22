@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+/// Service responsible for handling metro system logic.
+///
+/// Manages station triggers, travel initiation, and available destinations.
 @Slf4j
 @Service
 public class MetroService {
@@ -23,6 +26,7 @@ public class MetroService {
     private final GameEventQueue gameEventQueue;
     private final WorldManager worldManager;
 
+    /// Initializes the MetroService with station data and dependencies.
     @Autowired
     public MetroService(@Qualifier("metroMapData") Map<String, List<MetroStation>> metroStations, GameEventQueue gameEventQueue, WorldManager worldManager) {
         this.metroStations = metroStations;
@@ -31,6 +35,12 @@ public class MetroService {
         log.info("MetroService initialized");
     }
 
+    /// Handles the event when a player steps on a metro trigger tile.
+    ///
+    /// Validates the line, updates player state to TRAVELLING, and opens the Metro UI on the client.
+    ///
+    /// @param player The player triggering the event.
+    /// @param lineId The ID of the metro line.
     public void handleStationTrigger(Player player, String lineId) {
         final List<MetroStation> availableDestinations = getAvailableDestinations(lineId);
         
@@ -47,6 +57,14 @@ public class MetroService {
         );
     }
 
+    /// Initiates the travel process for a player to a target map.
+    ///
+    /// Validates the target map and spawn point. If valid, moves the player to the metro spawn point
+    /// of the target map and sends updated map data.
+    ///
+    /// @param player The player travelling.
+    /// @param targetMapId The ID of the destination map.
+    /// @param lineId The ID of the metro line being used.
     public void startTravel(Player player, String targetMapId, String lineId) {
         try {
             if (!worldManager.containsMap(targetMapId)) {
@@ -80,10 +98,17 @@ public class MetroService {
         }
     }
 
+    /// Completes the travel process.
+    ///
+    /// Currently a placeholder for future logic (e.g., cutscenes).
     public void completeTravel(Player player) {
         //TODO: zatim se nepouziva pozdeji pridam napr poslani eventu na spusteni cutsceny na klientovi
     }
 
+    /// Retrieves a list of available stations for a given line.
+    ///
+    /// @param lineId The ID of the metro line.
+    /// @return List of MetroStation objects or null if line not found.
     public List<MetroStation> getAvailableDestinations(String lineId) {
         return metroStations.get(lineId);
     }

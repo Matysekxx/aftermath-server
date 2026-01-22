@@ -10,6 +10,10 @@ import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+/// Handles metro travel requests.
+///
+/// Triggered by the `TRAVEL` command from the client's metro UI.
+/// Validates if the player is in the correct state and initiates the travel process via MetroService.
 @Component("TRAVEL")
 public class TravelAction extends Action {
     private final MetroService metroService;

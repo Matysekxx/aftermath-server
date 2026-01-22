@@ -1,5 +1,9 @@
 package cz.matysekxx.aftermathserver.core.world;
 
+/// Defines the type of environment for a map.
 public enum MapType {
-    HAZARD_ZONE, SAFE_ZONE
+    /// Area with environmental hazards (radiation).
+    HAZARD_ZONE,
+    /// Safe area where players regenerate.
+    SAFE_ZONE
 }

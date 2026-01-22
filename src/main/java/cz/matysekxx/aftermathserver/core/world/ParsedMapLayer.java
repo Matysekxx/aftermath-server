@@ -4,6 +4,9 @@ import lombok.Getter;
 
 import java.util.Arrays;
 
+/// Represents a single layer of a parsed map.
+///
+/// Contains the grid of TileTypes and original symbols.
 @Getter
 public class ParsedMapLayer {
     private final TileType[][] tiles;
@@ -18,6 +21,7 @@ public class ParsedMapLayer {
         this.width = height > 0 ? tiles[0].length : 0;
     }
 
+    /// Parses a string content into a map layer using the registry.
     public static ParsedMapLayer parse(String content, TileRegistry registry) {
         final String[] lines = content.split("\\R");
         final int height = lines.length;
@@ -45,6 +49,7 @@ public class ParsedMapLayer {
         return new ParsedMapLayer(tiles, symbols);
     }
 
+    /// Gets the tile type at specific coordinates.
     public TileType getTileAt(int x, int y) {
         if (x < 0 || x >= width || y < 0 || y >= height) {
             return TileType.VOID;
@@ -52,6 +57,7 @@ public class ParsedMapLayer {
         return tiles[y][x];
     }
 
+    /// Gets the original symbol at specific coordinates.
     public char getSymbolAt(int x, int y) {
         if (x < 0 || x >= width || y < 0 || y >= height) {
             return ' ';

@@ -6,6 +6,7 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+/// Handles `SEND_STATS` events by sending updated player statistics to the client.
 @Component
 public class StatsEventHandler extends GameEventHandler {
 

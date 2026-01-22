@@ -10,8 +10,15 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/// Handles looting interactions.
+///
+/// Transfers items from a container object to the player's inventory.
 @Component("LOOT")
 public class LootLogic implements InteractionLogic {
+    /// Executes the loot interaction.
+    ///
+    /// Checks if container is empty, moves items to player inventory if space allows,
+    /// and updates the container description.
     @Override
     public synchronized List<GameEvent> interact(MapObject target, Player player) {
         if (target.getItems().isEmpty()) {

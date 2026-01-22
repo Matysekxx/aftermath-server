@@ -25,6 +25,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+/// Core engine managing the game state and loop.
+///
+/// Handles player management, movement, interactions, and the main game tick.
 @Slf4j
 @Service
 public class GameEngine {
@@ -45,6 +48,7 @@ public class GameEngine {
         this.triggerRegistry = triggerRegistry;
     }
 
+    /// Adds a new player session to the game.
     public void addPlayer(String sessionId) {
         final String mapId = settings.getStartingMapId() != null ? settings.getStartingMapId() : "nemocnice-motol";
 
@@ -70,22 +74,26 @@ public class GameEngine {
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, newPlayer, sessionId, mapId, false));
     }
 
+    /// Removes a player session.
     public void removePlayer(String sessionId) {
         players.remove(sessionId);
     }
 
+    /// Retrieves the map ID for a given player.
     public String getPlayerMapId(String playerId) {
         final Player player = players.get(playerId);
         if (player == null) return null;
         return player.getMapId();
     }
 
+    /// Processes a chat message request.
     public void handleChatMessage(ChatRequest chatData, String id) {
         gameEventQueue.enqueue(
                 GameEvent.create(EventType.BROADCAST_CHAT_MSG, chatData, id, getPlayerMapId(id), true)
         );
     }
 
+    /// Processes a movement request.
     public void processMove(String playerId, MoveRequest moveRequest) {
         final Player player = players.get(playerId);
         if (player == null) {
@@ -121,6 +129,7 @@ public class GameEngine {
         maybeTrigger.ifPresent(triggerHandler -> triggerHandler.handle(player, trigger));
     }
 
+    /// Checks if a player can move to target coordinates.
     public boolean canMoveTo(Player player, int targetX, int targetY) {
         return worldManager.isWalkable(
                 player.getMapId(),
@@ -130,6 +139,7 @@ public class GameEngine {
         );
     }
 
+    /// Processes an interaction request.
     public void processInteract(String id, String targetObjectId) {
         final Player player = players.get(id);
         final GameMapData map = worldManager.getMap(player.getMapId());
@@ -152,6 +162,7 @@ public class GameEngine {
         }
     }
 
+    /// Handles dropping an item from inventory.
     public void dropItem(String playerId, int slotIndex, int amount) {
         final Player player = players.get(playerId);
         if (player == null) {
@@ -171,6 +182,7 @@ public class GameEngine {
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Item not found or invalid amount", playerId, null, false));
     }
 
+    /// Main game loop executed periodically.
     @Scheduled(fixedRateString = "${game.tick-rate}")
     public void gameLoop() {
         updatePlayers();

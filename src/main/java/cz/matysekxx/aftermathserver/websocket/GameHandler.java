@@ -16,6 +16,10 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.Map;
 
+/// Main WebSocket handler for the game.
+///
+/// Manages player connections, disconnections, and routes incoming messages
+/// to their respective actions.
 @Component
 @Slf4j
 public class GameHandler extends TextWebSocketHandler {
@@ -30,12 +34,19 @@ public class GameHandler extends TextWebSocketHandler {
         this.actions = actions;
     }
 
+    /// Handles the cleanup when a WebSocket connection is closed.
+    ///
+    /// @param session The closed session.
+    /// @param status The reason for closing.
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) {
         networkService.removeSession(session.getId());
         gameEngine.removePlayer(session.getId());
     }
 
+    /// Handles the initialization when a new WebSocket connection is established.
+    ///
+    /// @param session The new session.
     @Override
     public void afterConnectionEstablished(@NonNull WebSocketSession session) {
         networkService.addSession(session);
@@ -43,6 +54,10 @@ public class GameHandler extends TextWebSocketHandler {
         networkService.updatePlayerLocation(session.getId(), gameEngine.getPlayerMapId(session.getId()));
     }
 
+    /// Processes incoming text messages from clients.
+    ///
+    /// @param session The session that sent the message.
+    /// @param message The text message containing a JSON request.
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, @NonNull TextMessage message) {
         try {

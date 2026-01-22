@@ -3,6 +3,9 @@ package cz.matysekxx.aftermathserver.core.model;
 import lombok.Getter;
 import lombok.Setter;
 
+/// Represents a player in the game.
+///
+/// Extends Entity with player-specific attributes like inventory, role, and radiation.
 @Getter
 @Setter
 public class Player extends Entity {
@@ -11,6 +14,7 @@ public class Player extends Entity {
     private int rads = 0;
     private int radsLimit;
 
+    /// Creates a new Player instance.
     public Player(String id, String username, int x, int y, int maxHp,
                   int inventoryCapacity, double maxWeight, int radsLimit
     ) {
@@ -19,6 +23,7 @@ public class Player extends Entity {
         this.inventory = new Inventory(inventoryCapacity, maxWeight);
     }
 
+    /// Increases radiation level, capped at the limit.
     public void addRads(int amount) {
         rads += amount;
         if (rads > radsLimit) {
@@ -26,6 +31,7 @@ public class Player extends Entity {
         }
     }
 
+    /// Reduces radiation level, floored at 0.
     public void removeRads(int amount) {
         rads -= amount;
         if (rads < 0) {

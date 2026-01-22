@@ -6,6 +6,10 @@ import cz.matysekxx.aftermathserver.dto.MoveRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+/// Handles player movement.
+///
+/// Triggered by the `MOVE` command.
+/// Updates the player's position based on the requested direction (UP, DOWN, LEFT, RIGHT).
 @Component("MOVE")
 public class MoveAction extends Action {
 

@@ -6,6 +6,7 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+/// Handles `SEND_PLAYER_POSITION` events by sending the player's current coordinates to the client.
 @Component
 public class PositionEventHandler extends GameEventHandler {
 

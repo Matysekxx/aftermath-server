@@ -9,6 +9,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 import java.util.function.Predicate;
 
+/// Trigger definition for conditional teleportation.
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ConditionTeleportTrigger extends TeleportTrigger {

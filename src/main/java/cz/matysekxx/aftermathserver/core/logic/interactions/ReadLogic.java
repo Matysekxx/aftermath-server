@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/// Handles reading interactions.
+///
+/// Sends the description of an object (e.g., a sign or note) to the player.
 @Component("READ")
 public class ReadLogic implements InteractionLogic {
     @Override

@@ -6,6 +6,7 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+/// Handles `SEND_INVENTORY` events by sending the player's inventory contents to the client.
 @Component
 public class InventoryEventHandler extends GameEventHandler {
 

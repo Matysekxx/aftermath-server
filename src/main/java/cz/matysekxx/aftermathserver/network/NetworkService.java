@@ -25,6 +25,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/// Service responsible for WebSocket communication and event dispatching.
+///
+/// Manages active sessions, handles the main event loop, and sends messages to clients.
 @Service
 @Slf4j
 public class NetworkService {
@@ -42,6 +45,7 @@ public class NetworkService {
         }
     }
 
+    /// Starts the background thread for processing events from the queue.
     @PostConstruct
     private void startEventLoop() {
         final Runnable runnable = () -> {
@@ -50,6 +54,8 @@ public class NetworkService {
                     final GameEvent gameEvent = gameEventQueue.take();
                     if (handlers.containsKey(gameEvent.type())) {
                         handlers.get(gameEvent.type()).handleEvent(gameEvent);
+                    } else {
+                        log.warn("Unknown event type: {}", gameEvent.type());
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -64,6 +70,7 @@ public class NetworkService {
         eventLoopExecutor.execute(runnable);
     }
 
+    /// Stops the event processing loop.
     @PreDestroy
     private void stopEventLoop() {
         if (eventLoopExecutor != null && !eventLoopExecutor.isShutdown()) {
@@ -72,15 +79,18 @@ public class NetworkService {
         }
     }
 
+    /// Registers a new WebSocket session.
     public void addSession(WebSocketSession session) {
         sessions.put(session.getId(), session);
     }
 
+    /// Removes a closed WebSocket session.
     public void removeSession(String sessionId) {
         sessions.remove(sessionId);
         sessionToMap.remove(sessionId);
     }
 
+    /// Updates the map ID associated with a session.
     public void updatePlayerLocation(String sessionId, String mapId) {
         sessionToMap.put(sessionId, mapId);
     }

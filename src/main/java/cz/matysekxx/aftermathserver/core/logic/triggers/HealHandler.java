@@ -5,6 +5,9 @@ import cz.matysekxx.aftermathserver.core.world.triggers.HealTrigger;
 import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import org.springframework.stereotype.Component;
 
+/// Handles healing triggers.
+///
+/// Restores player health when stepping on a healing tile.
 @Component("HEAL")
 public non-sealed class HealHandler extends TriggerHandler {
     @Override

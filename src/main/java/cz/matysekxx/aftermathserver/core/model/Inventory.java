@@ -5,30 +5,44 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/// Manages a collection of items for a player.
+///
+/// Handles adding, removing, and stacking items within capacity and weight limits.
 public class Inventory {
     private final int capacity;
     private final double maxWeight;
     private final Map<Integer, Item> slots = new HashMap<>();
 
+    /// Creates an inventory with specific limits.
     public Inventory(int capacity, double maxWeight) {
         this.capacity = capacity;
         this.maxWeight = maxWeight;
     }
 
+    /// Removes all items.
     public void clear() {
         slots.clear();
     }
 
+    /// Returns a read-only view of the inventory slots.
     public Map<Integer, Item> getSlots() {
         return Collections.unmodifiableMap(slots);
     }
 
+    /// Calculates the total weight of all items.
     public double getCurrentWeight() {
         return slots.values().stream()
                 .mapToDouble(Item::getTotalWeight)
                 .sum();
     }
 
+    /// Attempts to add an item to the inventory.
+    ///
+    /// Tries to stack with existing items first, then finds a free slot.
+    /// Checks weight limits.
+    ///
+    /// @param itemToAdd The item to add.
+    /// @return true if the item was fully added, false otherwise.
     public boolean addItem(Item itemToAdd) {
         if (getCurrentWeight() + itemToAdd.getTotalWeight() > maxWeight) {
             return false;
@@ -60,6 +74,11 @@ public class Inventory {
         return amountRemaining <= 0;
     }
 
+    /// Removes a specific quantity of an item from a slot.
+    ///
+    /// @param slotIndex The slot to remove from.
+    /// @param quantityToRemove Amount to remove.
+    /// @return An Optional containing the removed item (split if necessary), or empty if slot invalid.
     public Optional<Item> removeItem(int slotIndex, int quantityToRemove) {
         if (!slots.containsKey(slotIndex)) return Optional.empty();
 

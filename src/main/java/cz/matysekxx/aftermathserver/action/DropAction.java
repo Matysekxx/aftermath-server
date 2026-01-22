@@ -5,6 +5,10 @@ import cz.matysekxx.aftermathserver.core.GameEngine;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+/// Handles dropping items from inventory.
+///
+/// Triggered by the `DROP` command.
+/// Removes an item from the player's inventory and places it on the map at the player's location.
 @Component("DROP")
 public class DropAction extends Action {
     public DropAction(GameEngine gameEngine) {

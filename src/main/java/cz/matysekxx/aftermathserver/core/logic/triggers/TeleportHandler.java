@@ -5,6 +5,9 @@ import cz.matysekxx.aftermathserver.core.world.triggers.TeleportTrigger;
 import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import org.springframework.stereotype.Component;
 
+/// Handles teleport triggers.
+///
+/// Instantly moves the player to a specified location and layer.
 @Component("TELEPORT")
 public non-sealed class TeleportHandler extends TriggerHandler {
     @Override

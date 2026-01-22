@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/// Service for parsing map files.
+///
+/// Handles loading JSON metadata and parsing text-based layout files.
 @Service
 @Slf4j
 public class MapParser {
@@ -27,6 +30,7 @@ public class MapParser {
         this.itemFactory = itemFactory;
     }
 
+    /// Loads a map from a JSON file path.
     public GameMapData loadMap(String jsonPath) throws IOException {
         final ClassPathResource resource = new ClassPathResource(jsonPath);
         try (final InputStream is = resource.getInputStream()) {
@@ -71,6 +75,7 @@ public class MapParser {
         }
     }
 
+    /// Parses a string content into a map layer.
     public ParsedMapLayer parseString(String content) {
         return ParsedMapLayer.parse(content, tileRegistry);
     }

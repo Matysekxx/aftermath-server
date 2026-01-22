@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 
+/// Base class for all tile-based triggers.
 @Data
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,

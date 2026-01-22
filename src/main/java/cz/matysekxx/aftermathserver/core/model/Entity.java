@@ -2,6 +2,9 @@ package cz.matysekxx.aftermathserver.core.model;
 
 import lombok.Data;
 
+/// Abstract base class for all dynamic entities in the game world.
+///
+/// Includes Players and NPCs. Handles position, health, and state.
 @Data
 public abstract class Entity {
     protected int x;
@@ -14,6 +17,7 @@ public abstract class Entity {
     protected int maxHp;
     protected State state;
 
+    /// Constructs a new Entity.
     public Entity(int x, int y, int layerIndex, String mapId,
                   String id, String username, int hp, int maxHp,
                   State state
@@ -29,6 +33,9 @@ public abstract class Entity {
         this.state = state;
     }
 
+    /// Reduces health by the specified amount.
+    ///
+    /// If health drops to 0 or less, state is changed to DEAD.
     public void takeDamage(int amount) {
         hp -= amount;
         if (hp <= 0) {
@@ -36,6 +43,7 @@ public abstract class Entity {
         }
     }
 
+    /// Restores health by the specified amount, up to maxHp.
     public void heal(int amount) {
         hp += amount;
         if (hp > maxHp) {
@@ -43,6 +51,7 @@ public abstract class Entity {
         }
     }
 
+    /// Checks if the entity is dead.
     public boolean isDead() {
         return state == State.DEAD;
     }

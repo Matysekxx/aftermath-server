@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/// Manages the lifecycle and access to all game maps.
+///
+/// Loads maps on startup and provides methods to query map data and tile properties.
 @Service
 @Slf4j
 public class WorldManager {
@@ -21,6 +24,7 @@ public class WorldManager {
         this.mapParser = mapParser;
     }
 
+    /// Loads all maps from the classpath assets.
     @PostConstruct
     public void loadMaps() {
         log.info("Loading maps...");
@@ -46,15 +50,18 @@ public class WorldManager {
         }
     }
 
+    /// Retrieves a map by its ID.
     public GameMapData getMap(String mapId) {
         if (maps.containsKey(mapId)) return  maps.get(mapId);
         return null;
     }
 
+    /// Checks if a map exists.
     public boolean containsMap(String mapId) {
         return maps.containsKey(mapId);
     }
 
+    /// Gets the tile type at specific coordinates.
     public TileType getTileAt(String mapId, int layer, int x, int y) {
         GameMapData map = maps.get(mapId);
         if (map == null) return TileType.VOID;
@@ -65,6 +72,7 @@ public class WorldManager {
         return parsedLayer.getTileAt(x, y);
     }
 
+    /// Checks if a specific coordinate is walkable.
     public boolean isWalkable(String mapId, int layer, int x, int y) {
         return getTileAt(mapId, layer, x, y).isWalkable();
     }

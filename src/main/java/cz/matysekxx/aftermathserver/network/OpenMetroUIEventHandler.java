@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+/// Handles `OPEN_METRO_UI` events by sending the list of available metro stations to the client.
 @Component
 public class OpenMetroUIEventHandler extends GameEventHandler {
 

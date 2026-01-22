@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/// Represents an interactive object on the map.
 @Data
 @NoArgsConstructor
 public class MapObject {

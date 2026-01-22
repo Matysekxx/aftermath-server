@@ -5,6 +5,7 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+/// Handles `SEND_ERROR` events by sending an error message to the client.
 @Component
 public class ErrorEventHandler extends GameEventHandler {
     public ErrorEventHandler(@Lazy NetworkService networkService) {

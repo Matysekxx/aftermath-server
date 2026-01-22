@@ -14,6 +14,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Slf4j
+/// Handles metro entry triggers.
+///
+/// Triggered when a player steps on a metro station entrance/platform trigger.
+/// Delegates logic to `MetroService`.
 @Component("METRO_TRAVEL")
 public non-sealed class MetroEntryHandler extends TriggerHandler {
     private final MetroService metroService;

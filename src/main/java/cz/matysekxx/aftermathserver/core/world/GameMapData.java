@@ -11,6 +11,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/// Holds all data regarding a specific game map.
+///
+/// Includes layout, objects, triggers, and environment settings.
 @Data
 public class GameMapData {
     @JsonIgnore
@@ -26,6 +29,7 @@ public class GameMapData {
     private List<ParsedMapLayer> parsedLayers = new ArrayList<>();
     private Map<String, TileTrigger> tileTriggers = new HashMap<>();
 
+    /// Retrieves a specific layer by index.
     public ParsedMapLayer getLayer(int index) {
         if (index < 0 || index >= parsedLayers.size()) {
             return null;
@@ -33,6 +37,7 @@ public class GameMapData {
         return parsedLayers.get(index);
     }
 
+    /// Checks if a symbol corresponds to a tile trigger.
     public Optional<TileTrigger> getMaybeTileTrigger(String symbol) {
         if (!tileTriggers.containsKey(symbol)) return Optional.empty();
         return Optional.of(tileTriggers.get(symbol));

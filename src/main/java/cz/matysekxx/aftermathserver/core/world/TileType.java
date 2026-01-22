@@ -3,6 +3,7 @@ package cz.matysekxx.aftermathserver.core.world;
 import lombok.Getter;
 
 
+/// Defines the properties of a map tile.
 @Getter
 public enum TileType {
     WALL(false, false, null),
