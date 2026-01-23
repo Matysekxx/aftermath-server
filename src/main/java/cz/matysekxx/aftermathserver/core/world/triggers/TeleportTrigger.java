@@ -11,9 +11,14 @@ public class TeleportTrigger extends TileTrigger {
     private int targetY;
     private int targetLayer;
 
+    public TeleportTrigger() {
+        this.type = "TELEPORT";
+    }
+
     public TeleportTrigger(int targetX, int targetY, int targetLayer) {
         this.targetX = targetX;
         this.targetY = targetY;
         this.targetLayer = targetLayer;
+        this.type = "TELEPORT";
     }
 }

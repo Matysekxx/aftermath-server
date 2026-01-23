@@ -62,9 +62,9 @@ public class MapParser {
                 log.warn("Invalid link in map {}: {} -> {}", mapData.getId(), link.from(), link.to());
                 continue;
             }
+            final Coordination dest = destinations.getFirst();
             for (Coordination src : sources) {
-                final TeleportTrigger trigger = new TeleportTrigger(src.x(), src.y(), src.z());
-
+                final TeleportTrigger trigger = new TeleportTrigger(dest.x(), dest.y(), dest.z());
                 mapData.getDynamicTriggers().put(src, trigger);
             }
         }

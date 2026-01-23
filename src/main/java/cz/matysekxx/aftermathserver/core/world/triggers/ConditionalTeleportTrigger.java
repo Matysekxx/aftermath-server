@@ -19,6 +19,16 @@ public class ConditionalTeleportTrigger extends TeleportTrigger {
     @JsonIgnore
     private Predicate<Player> predicate;
 
+    public ConditionalTeleportTrigger() {
+        super();
+        this.type = "CONDITIONAL_TELEPORT";
+    }
+
+    public ConditionalTeleportTrigger(int targetX, int targetY, int targetLayer) {
+        super(targetX, targetY, targetLayer);
+        this.type = "CONDITIONAL_TELEPORT";
+    }
+
     public void setCondition(String condition) {
         this.condition = condition;
         this.predicate = buildPredicate(condition);

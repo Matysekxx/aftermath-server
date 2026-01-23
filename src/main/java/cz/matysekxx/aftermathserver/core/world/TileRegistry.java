@@ -29,7 +29,7 @@ public class TileRegistry {
 
     /// Looks up the TileType for a given character symbol.
     public TileType getType(char c) {
-        return mapping.getOrDefault(c, TileType.FLOOR);
+        return mapping.getOrDefault(c, TileType.UNKNOWN);
     }
 
     @Data

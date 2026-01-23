@@ -202,7 +202,7 @@ public class GameEngine {
             if (player == null || player.getState() == State.DEAD || player.getState() == State.TRAVELLING) continue;
             final GameMapData map = worldManager.getMap(player.getMapId());
             final Environment env = map.getEnvironment();
-            boolean statsChanged = switch (map.getType()) {
+            boolean statsChanged = switch (map.getType()) {  //err
                 case MapType.HAZARD_ZONE -> applyRadiation(player, env);
                 case MapType.SAFE_ZONE -> applyRegeneration(player);
             };
