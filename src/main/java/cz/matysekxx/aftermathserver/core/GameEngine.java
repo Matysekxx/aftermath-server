@@ -54,7 +54,10 @@ public class GameEngine {
 
         final String className = settings.getDefaultClass(); //placeholder
         final GameSettings.PlayerClassConfig classConfig = settings.getClasses().get(className);
-        final Coordination spawn = worldManager.getMap(mapId).getMetroSpawn(settings.getLineId());
+        
+        final GameMapData startingMap = worldManager.getMap(mapId);
+        final Coordination spawn = startingMap.getMetroSpawn(settings.getLineId());
+        
         final Player newPlayer = new Player(sessionId, "", spawn.x(),spawn.y(),
                 classConfig.getMaxHp(),
                 classConfig.getInventoryCapacity(),
@@ -115,10 +118,15 @@ public class GameEngine {
         player.setY(targetY);
 
         final GameMapData currentMap = worldManager.getMap(player.getMapId());
-        final String symbol = String.valueOf(currentMap.getLayer(player.getLayerIndex()).getSymbolAt(targetX, targetY));
 
-        currentMap.getMaybeTileTrigger(symbol)
-                .ifPresent(tileTrigger -> handleTileTrigger(player, tileTrigger));
+        final int finalTargetX = targetX;
+        final int finalTargetY = targetY;
+        currentMap.getDynamicTrigger(targetX, targetY, player.getLayerIndex())
+                .ifPresentOrElse(
+                        trigger -> handleTileTrigger(player, trigger),
+                        () -> currentMap.getMaybeTileTrigger(String.valueOf(currentMap.getLayer(player.getLayerIndex()).getSymbolAt(finalTargetX, finalTargetY)))
+                                .ifPresent(trigger -> handleTileTrigger(player, trigger))
+                );
 
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), player.getMapId(), false));
     }

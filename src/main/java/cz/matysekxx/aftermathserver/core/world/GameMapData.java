@@ -1,6 +1,7 @@
 package cz.matysekxx.aftermathserver.core.world;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import cz.matysekxx.aftermathserver.core.world.triggers.Link;
 import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import cz.matysekxx.aftermathserver.util.Coordination;
 import lombok.AccessLevel;
@@ -28,6 +29,10 @@ public class GameMapData {
     private List<MapObject> objects = new CopyOnWriteArrayList<>();
     private Map<Integer, ParsedMapLayer> parsedLayers = new HashMap<>();
     private Map<String, TileTrigger> tileTriggers = new HashMap<>();
+    @JsonIgnore
+    private Map<Coordination, TileTrigger> dynamicTriggers = new HashMap<>();
+
+    private List<Link> links;
 
     /// Retrieves a specific layer by index.
     public ParsedMapLayer getLayer(int index) {
@@ -38,6 +43,10 @@ public class GameMapData {
     public Optional<TileTrigger> getMaybeTileTrigger(String symbol) {
         if (!tileTriggers.containsKey(symbol)) return Optional.empty();
         return Optional.of(tileTriggers.get(symbol));
+    }
+
+    public Optional<TileTrigger> getDynamicTrigger(int x, int y, int z) {
+        return Optional.ofNullable(dynamicTriggers.get(new Coordination(x, y, z)));
     }
 
     public int getLayerCount() {

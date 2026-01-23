@@ -1,8 +1,10 @@
 package cz.matysekxx.aftermathserver.core.world;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import cz.matysekxx.aftermathserver.util.Coordination;
 import lombok.Getter;
 
-import java.util.Arrays;
+import java.util.*;
 
 /// Represents a single layer of a parsed map.
 ///
@@ -11,42 +13,52 @@ import java.util.Arrays;
 public class ParsedMapLayer {
     private final TileType[][] tiles;
     private final char[][] symbols;
+    @JsonIgnore
+    private final Map<String, List<Coordination>> markers;
     private final int width;
     private final int height;
 
-    public ParsedMapLayer(TileType[][] tiles, char[][] symbols) {
+    private ParsedMapLayer(TileType[][] tiles, char[][] symbols, Map<String, List<Coordination>> markers) {
         this.tiles = tiles;
         this.symbols = symbols;
         this.height = tiles.length;
         this.width = height > 0 ? tiles[0].length : 0;
+        this.markers = markers;
     }
 
     /// Parses a string content into a map layer using the registry.
-    public static ParsedMapLayer parse(String content, TileRegistry registry) {
+    public static ParsedMapLayer parse(String content, TileRegistry registry, int layerIndex) {
         final String[] lines = content.split("\\R");
         final int height = lines.length;
         final int width = Arrays.stream(lines).mapToInt(String::length).max().orElse(0);
 
         final TileType[][] tiles = new TileType[height][width];
         final char[][] symbols = new char[height][width];
+        final Map<String, List<Coordination>> markers = new HashMap<>();
 
         for (int y = 0; y < height; y++) {
             String line = lines[y];
             boolean inQuotes = false;
-
             for (int x = 0; x < width; x++) {
-                final char c = x < line.length() ? line.charAt(x) : ' ';
+                char c = ' ';
+                if (x < line.length()) {
+                    c = line.charAt(x);
+                }
                 symbols[y][x] = c;
-
                 if (c == '"') {
                     inQuotes = !inQuotes;
-                    tiles[y][x] = TileType.FLOOR;
-                    continue;
                 }
-                tiles[y][x] = inQuotes ? TileType.FLOOR : registry.getType(c);
+                final TileType type = registry.getType(c);
+                if (!inQuotes && c != '"' && type == TileType.UNKNOWN && c != ' ') {
+                    markers.computeIfAbsent(String.valueOf(c), k -> new ArrayList<>())
+                            .add(new Coordination(x, y,layerIndex));
+                    tiles[y][x] = registry.getType('.');
+                } else {
+                    tiles[y][x] = type;
+                }
             }
         }
-        return new ParsedMapLayer(tiles, symbols);
+        return new ParsedMapLayer(tiles, symbols, markers);
     }
 
     /// Gets the tile type at specific coordinates.

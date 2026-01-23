@@ -3,6 +3,9 @@ package cz.matysekxx.aftermathserver.core.world;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.ItemFactory;
+import cz.matysekxx.aftermathserver.core.world.triggers.Link;
+import cz.matysekxx.aftermathserver.core.world.triggers.TeleportTrigger;
+import cz.matysekxx.aftermathserver.util.Coordination;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -36,8 +39,34 @@ public class MapParser {
             processMapObjects(mapData);
             final Map<Integer, ParsedMapLayer> layers = parseLayoutLayers(mapData.getLayout());
             mapData.setParsedLayers(layers);
+
+            processLinks(mapData, layers);
+            
             mapData.initializeCache();
             return mapData;
+        }
+    }
+    
+    private void processLinks(GameMapData mapData, Map<Integer, ParsedMapLayer> layers) {
+        if (mapData.getLinks() == null || mapData.getLinks().isEmpty()) return;
+        final Map<String, List<Coordination>> globalMarkers = new HashMap<>();
+        for (ParsedMapLayer layer : layers.values()) {
+            layer.getMarkers().forEach((key, value) ->
+                globalMarkers.computeIfAbsent(key, k -> new ArrayList<>()).addAll(value)
+            );
+        }
+        for (Link link : mapData.getLinks()) {
+            final List<Coordination> sources = globalMarkers.get(link.from());
+            final List<Coordination> destinations = globalMarkers.get(link.to());
+            if (sources == null || destinations == null || destinations.isEmpty()) {
+                log.warn("Invalid link in map {}: {} -> {}", mapData.getId(), link.from(), link.to());
+                continue;
+            }
+            for (Coordination src : sources) {
+                final TeleportTrigger trigger = new TeleportTrigger(src.x(), src.y(), src.z());
+
+                mapData.getDynamicTriggers().put(src, trigger);
+            }
         }
     }
 
@@ -46,7 +75,7 @@ public class MapParser {
 
         final Map<Integer, ParsedMapLayer> layers = new HashMap<>();
         for (Map.Entry<Integer, String> entry : layoutFiles.entrySet()) {
-            layers.put(entry.getKey(), parseFile(entry.getValue()));
+            layers.put(entry.getKey(), parseFile(entry));
         }
         return Collections.unmodifiableMap(layers);
     }
@@ -65,16 +94,16 @@ public class MapParser {
         }
     }
 
-    private ParsedMapLayer parseFile(String path) throws IOException {
-        final ClassPathResource resource = new ClassPathResource(path);
+    private ParsedMapLayer parseFile(Map.Entry<Integer, String> entry) throws IOException {
+        final ClassPathResource resource = new ClassPathResource(entry.getValue());
         try (final InputStream is = resource.getInputStream()) {
             final String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-            return ParsedMapLayer.parse(content, tileRegistry);
+            return ParsedMapLayer.parse(content, tileRegistry, entry.getKey());
         }
     }
 
     /// Parses a string content into a map layer.
     public ParsedMapLayer parseString(String content) {
-        return ParsedMapLayer.parse(content, tileRegistry);
+        return ParsedMapLayer.parse(content, tileRegistry, 0);
     }
 }
