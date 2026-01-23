@@ -6,7 +6,7 @@ import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 /// Abstract base class for handling tile triggers.
 ///
 /// Implementations define specific behavior when a player steps on a special tile.
-public abstract sealed class TriggerHandler permits DamageHandler, HealHandler, MetroEntryHandler, TeleportHandler {
+public abstract sealed class TriggerHandler permits ConditionalTeleportHandler, DamageHandler, HealHandler, MetroEntryHandler, TeleportHandler {
     /// Processes the trigger effect on the player.
     ///
     /// @param player The player triggering the tile.

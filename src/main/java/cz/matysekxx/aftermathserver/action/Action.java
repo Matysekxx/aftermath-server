@@ -22,7 +22,7 @@ public abstract class Action {
 
     /// Executes the action based on the received payload.
     ///
-    /// @param session The WebSocket session of the player triggering the action.
+    /// @param sessionId The WebSocket session of the player triggering the action.
     /// @param payload The JSON payload containing action details.
     public abstract void execute(String sessionId, JsonNode payload);
 }
