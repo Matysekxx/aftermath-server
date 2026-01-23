@@ -1,6 +1,7 @@
 package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
+import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
 import cz.matysekxx.aftermathserver.core.logic.interactions.InteractionLogic;
 import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerHandler;
 import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerRegistry;
@@ -53,7 +54,7 @@ public class GameEngine {
         final String mapId = settings.getStartingMapId() != null ? settings.getStartingMapId() : "nemocnice-motol";
 
         final String className = settings.getDefaultClass(); //placeholder
-        final GameSettings.PlayerClassConfig classConfig = settings.getClasses().get(className);
+        final PlayerClassConfig classConfig = settings.getClasses().get(className);
         
         final GameMapData startingMap = worldManager.getMap(mapId);
         final Coordination spawn = startingMap.getMetroSpawn(settings.getLineId());
