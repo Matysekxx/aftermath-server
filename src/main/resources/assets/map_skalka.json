@@ -14,18 +14,12 @@
 
   ],
   "tileTriggers": {
-    "-": {"type": "METRO_TRAVEL", "lineId": "line_a"},
-    "▲": {"type": "TELEPORT",
-      "targetX": 81,
-      "targetY": 10,
-      "targetLayer": 0
-    },
-    "▼": {"type": "TELEPORT",
-      "targetX": 23,
-      "targetY": 10,
-      "targetLayer": 1
-    }
+    "-": {"type": "METRO_TRAVEL", "lineId": "line_a"}
   },
+  "links": [
+    {"from": "▼", "to": "▲"},
+    {"from": "▲", "to": "▼"}
+  ],
   "spawns": {
     "line_a": {
       "x": 81,

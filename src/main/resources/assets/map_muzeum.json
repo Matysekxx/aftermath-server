@@ -14,39 +14,15 @@
 
   ],
   "tileTriggers": {
-    "-": {
-      "type": "METRO_TRAVEL",
-      "lineId": "line_c"
-    },
-    "~": {
-      "type": "METRO_TRAVEL",
-      "lineId": "line_a"
-    },
-    "►": {
-      "type": "TELEPORT",
-      "targetX": 2,
-      "targetY": 3,
-      "targetLayer": 0
-    },
-    "◄": {
-      "type": "TELEPORT",
-      "targetX": 57,
-      "targetY": 23,
-      "targetLayer": 1
-    },
-    "▲": {
-      "type": "TELEPORT",
-      "targetX": 163,
-      "targetY": 17,
-      "targetLayer": 1
-    },
-    "▼": {
-      "type": "TELEPORT",
-      "targetX": 59,
-      "targetY": 37,
-      "targetLayer": 0
-    }
+    "-": {"type": "METRO_TRAVEL", "lineId": "line_c"},
+    "~": {"type": "METRO_TRAVEL", "lineId": "line_a"}
   },
+  "links": [
+    {"from": "◄", "to": "▼"},
+    {"from": "▼", "to": "◄"},
+    {"from": "►", "to": "▲"},
+    {"from": "▲", "to": "►"}
+  ],
   "spawns": {
     "line_a": {
       "x": 91,
