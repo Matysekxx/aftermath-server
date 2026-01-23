@@ -6,9 +6,9 @@
     "radiation": 5,
     "darkness_level": 2
   },
-  "layout": [
-    "assets/maps_a/map_petriny.txt"
-  ],
+  "layout": {
+    "0": "assets/maps_a/map_petriny.txt"
+  },
   "objects": [
     {
       "id": "loot_chest_petriny",

@@ -6,9 +6,9 @@
     "radiation": 0,
     "darkness_level": 1
   },
-  "layout": [
-    "assets/maps_a/map_nemocnice_motol0.txt"
-  ],
+  "layout": {
+    "0": "assets/maps_a/map_nemocnice_motol0.txt"
+  },
   "objects": [
     {
       "id": "loot_bag_01",

@@ -6,9 +6,9 @@
     "radiation": 5,
     "darkness_level": 2
   },
-  "layout": [
-    "assets/maps_a/map_malostranska0.txt"
-  ],
+  "layout": {
+    "0": "assets/maps_a/map_malostranska0.txt"
+  },
   "objects": [
   ],
   "tileTriggers": {

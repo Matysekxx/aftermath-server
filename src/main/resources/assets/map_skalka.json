@@ -6,10 +6,10 @@
     "radiation": 5,
     "darkness_level": 2
   },
-  "layout": [
-    "assets/maps_a/map_skalka0.txt",
-    "assets/maps_a/map_skalka1.txt"
-  ],
+  "layout": {
+    "0": "assets/maps_a/map_skalka0.txt",
+    "1": "assets/maps_a/map_skalka1.txt"
+  },
   "objects": [
 
   ],

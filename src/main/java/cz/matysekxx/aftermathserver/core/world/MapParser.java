@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /// Service for parsing map files.
 ///
@@ -36,21 +34,21 @@ public class MapParser {
         try (final InputStream is = resource.getInputStream()) {
             final GameMapData mapData = objectMapper.readValue(is, GameMapData.class);
             processMapObjects(mapData);
-            final List<ParsedMapLayer> layers = parseLayoutLayers(mapData.getLayout());
+            final Map<Integer, ParsedMapLayer> layers = parseLayoutLayers(mapData.getLayout());
             mapData.setParsedLayers(layers);
             mapData.initializeCache();
             return mapData;
         }
     }
 
-    private List<ParsedMapLayer> parseLayoutLayers(List<String> layoutFiles) throws IOException {
-        if (layoutFiles == null) return Collections.emptyList();
+    private Map<Integer, ParsedMapLayer> parseLayoutLayers(Map<Integer, String> layoutFiles) throws IOException {
+        if (layoutFiles == null) return Map.of();
 
-        final List<ParsedMapLayer> layers = new ArrayList<>();
-        for (String file : layoutFiles) {
-            layers.add(parseFile(file));
+        final Map<Integer, ParsedMapLayer> layers = new HashMap<>();
+        for (Map.Entry<Integer, String> entry : layoutFiles.entrySet()) {
+            layers.put(entry.getKey(), parseFile(entry.getValue()));
         }
-        return Collections.unmodifiableList(layers);
+        return Collections.unmodifiableMap(layers);
     }
 
     private void processMapObjects(GameMapData mapData) {

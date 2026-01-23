@@ -6,10 +6,10 @@
     "radiation": 0,
     "darkness_level": 2
   },
-  "layout": [
-    "assets/maps_a/map_nadrazi_veleslavin0.txt",
-    "assets/maps_a/map_nadrazi_veleslavin1.txt"
-  ],
+  "layout": {
+    "0": "assets/maps_a/map_nadrazi_veleslavin0.txt",
+    "1": "assets/maps_a/map_nadrazi_veleslavin1.txt"
+  },
   "objects": [
 
   ],

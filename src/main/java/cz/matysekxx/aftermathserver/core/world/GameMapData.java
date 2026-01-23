@@ -24,16 +24,13 @@ public class GameMapData {
     private MapType type;
     private Map<String, Coordination> spawns = new HashMap<>();
     private Environment environment;
-    private List<String> layout = new ArrayList<>();
+    private Map<Integer, String> layout = new HashMap<>();
     private List<MapObject> objects = new CopyOnWriteArrayList<>();
-    private List<ParsedMapLayer> parsedLayers = new ArrayList<>();
+    private Map<Integer, ParsedMapLayer> parsedLayers = new HashMap<>();
     private Map<String, TileTrigger> tileTriggers = new HashMap<>();
 
     /// Retrieves a specific layer by index.
     public ParsedMapLayer getLayer(int index) {
-        if (index < 0 || index >= parsedLayers.size()) {
-            return null;
-        }
         return parsedLayers.get(index);
     }
 
