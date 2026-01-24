@@ -1,5 +1,6 @@
 package cz.matysekxx.aftermathserver.core.logic.metro;
 
+import cz.matysekxx.aftermathserver.core.EconomyService;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.model.State;
 import cz.matysekxx.aftermathserver.core.model.metro.MetroStation;
@@ -25,13 +26,15 @@ public class MetroService {
     private final Map<String, List<MetroStation>> metroStations;
     private final GameEventQueue gameEventQueue;
     private final WorldManager worldManager;
+    private final EconomyService economyService;
 
     /// Initializes the MetroService with station data and dependencies.
     @Autowired
-    public MetroService(@Qualifier("metroMapData") Map<String, List<MetroStation>> metroStations, GameEventQueue gameEventQueue, WorldManager worldManager) {
+    public MetroService(@Qualifier("metroMapData") Map<String, List<MetroStation>> metroStations, GameEventQueue gameEventQueue, WorldManager worldManager, EconomyService economyService) {
         this.metroStations = metroStations;
         this.gameEventQueue = gameEventQueue;
         this.worldManager = worldManager;
+        this.economyService = economyService;
         log.info("MetroService initialized");
     }
 
@@ -62,7 +65,7 @@ public class MetroService {
     /// Validates the target map and spawn point. If valid, moves the player to the metro spawn point
     /// of the target map and sends updated map data.
     ///
-    /// @param player      The player travelling.
+    /// @param player      The player traveling.
     /// @param targetMapId The ID of the destination map.
     /// @param lineId      The ID of the metro line being used.
     public void startTravel(Player player, String targetMapId, String lineId) {
@@ -76,6 +79,9 @@ public class MetroService {
             var spawn = targetMap.getMetroSpawn(lineId);
 
             if (spawn != null) {
+                final String startMapId = player.getMapId();
+                final List<MetroStation> stations = metroStations.get(lineId);
+
                 player.setX(spawn.x());
                 player.setY(spawn.y());
                 player.setLayerIndex(spawn.z());
@@ -83,6 +89,15 @@ public class MetroService {
                 player.setMapId(targetMapId);
                 player.setState(State.ALIVE);
 
+                int startIndex = -1;
+                int targetIndex = -1;
+
+                for (int i = 0; i < stations.size(); i++) {
+                    if (stations.get(i).getId().equals(startMapId)) startIndex = i;
+                    if (stations.get(i).getId().equals(targetMapId)) targetIndex = i;
+                }
+                final int distance = (startIndex != -1 && targetIndex != -1) ? Math.abs(targetIndex - startIndex) : 1;
+                economyService.recordActivityCost(player, 15 * Math.max(1, distance));
                 gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, targetMap, player.getId(), null, false));
                 gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, targetMap.getObjects(), player.getId(), targetMapId, false));
                 gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), null, false));
@@ -100,7 +115,7 @@ public class MetroService {
 
     /// Completes the travel process.
     ///
-    /// Currently a placeholder for future logic (e.g., cutscenes).
+    /// Currently, a placeholder for future logic (e.g., cutscenes).
     public void completeTravel(Player player) {
         //TODO: zatim se nepouziva pozdeji pridam napr poslani eventu na spusteni cutsceny na klientovi
     }

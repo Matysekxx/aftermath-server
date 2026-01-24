@@ -1,21 +1,94 @@
 package cz.matysekxx.aftermathserver.core;
 
+import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import org.springframework.stereotype.Service;
 
-/// Service managing game economy.
+/// Service responsible for managing the game's economic systems.
 ///
-/// Handles debts and payments.
+/// This includes credit transactions, debt accumulation, interest rates,
+/// and price calculations for buying and selling items.
 @Service
 public class EconomyService {
 
-    /// Processes daily debt accumulation for a player.
+    /// Processes the end-of-day debt cycle.
+    ///
+    /// Combines the base living fee with any accumulated activity costs (like travel)
+    /// and applies them to the player's total debt.
+    ///
+    /// @param player The player to process.
     public void processDailyDebt(Player player) {
-        //TODO: implementovat logiku odebrani kreditu od hrace
+        final int baseFee = 20;
+        final int totalDailyCost = baseFee + player.getPendingCosts();
+        player.setDebt(player.getDebt() + totalDailyCost);
+        player.setPendingCosts(0);
     }
 
-    /// Applies a payment to reduce player's debt.
-    public void applyPayment(Player player, double amount) {
-        //TODO: implementovat logiku snizeni dluhu
+    /// Records a specific cost incurred by player activity during the day.
+    ///
+    /// This could be for metro travel, entering specific zones, or service fees.
+    /// These costs are usually added to the daily bill instead of being paid instantly.
+    ///
+    /// @param player The player who performed the activity.
+    /// @param amount The cost of the activity.
+    public void recordActivityCost(Player player, int amount) {
+        player.setPendingCosts(player.getPendingCosts() + amount);
+    }
+
+    /// Deducts credits from a player's balance to pay off a portion of their debt.
+    ///
+    /// @param player The player making the payment.
+    /// @param amount The amount of credits to transfer from balance to debt reduction.
+    /// @return true if the payment was successful, false if the player has insufficient credits.
+    public boolean applyPayment(Player player, int amount) {
+        if (canAfford(player, amount)) {
+            player.removeCredits(amount);
+            player.setDebt(Math.max(0, player.getDebt() - amount));
+            return true;
+        }
+        return false;
+    }
+
+    /// Checks if a player has enough credits to afford a specific cost.
+    ///
+    /// @param player The player to check.
+    /// @param cost The required amount of credits.
+    /// @return true if the player's credits are greater than or equal to the cost.
+    public boolean canAfford(Player player, int cost) {
+        return player.getCredits() >= cost;
+    }
+
+    /// Adds credits to a player's balance.
+    ///
+    /// Used for rewards, selling items, or finding loot.
+    ///
+    /// @param player The recipient player.
+    /// @param amount The amount of credits to add.
+    public void addCredits(Player player, int amount) {
+        player.addCredits(amount);
+    }
+
+    /// Deducts credits from a player's balance for a purchase or fee.
+    ///
+    /// @param player The player paying.
+    /// @param amount The amount of credits to remove.
+    /// @return true if the transaction was successful.
+    public boolean removeCredits(Player player, int amount) {
+        if (canAfford(player, amount)) {
+            player.removeCredits(amount);
+            return true;
+        }
+        return false;
+    }
+
+    /// Calculates the final price of an item when sold by a player to an NPC.
+    ///
+    /// This may eventually take into account player skills, reputation, or item condition.
+    ///
+    /// @param item The item being sold.
+    /// @param player The player selling the item.
+    /// @return The calculated credit value.
+    public int calculateSellPrice(Item item, Player player) {
+        return item.getPrice() != null ? item.getPrice() : 0;
     }
 }

@@ -32,14 +32,16 @@ public class GameEngine {
     private final WorldManager worldManager;
     private final GameEventQueue gameEventQueue;
     private final MapObjectFactory mapObjectFactory;
-
     private final GameSettings settings;
     private final MovementService movementService;
     private final StatsService statsService;
     private final InteractionService interactionService;
+    private final EconomyService economyService;
 
+    private long tickCounter = 0;
+    private static final int TICKS_PER_DAY = 1200;
 
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService) {
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
@@ -47,6 +49,7 @@ public class GameEngine {
         this.movementService = movementService;
         this.statsService = statsService;
         this.interactionService = interactionService;
+        this.economyService = economyService;
     }
 
     /// Adds a new player session to the game.
@@ -115,20 +118,22 @@ public class GameEngine {
     public void dropItem(String playerId, int slotIndex, int amount) {
         final Player player = players.get(playerId);
         final Optional<Item> droppedItem = player.getInventory().removeItem(slotIndex, amount);
-        if (droppedItem.isPresent()) {
+        droppedItem.ifPresentOrElse(item -> {
             final GameMapData map = worldManager.getMap(player.getMapId());
             final MapObject lootBag = mapObjectFactory.createLootBag(droppedItem.get().getId(), amount, player.getX(), player.getY());
             map.addObject(lootBag);
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, map.getObjects(), null, player.getMapId(), true));
-            return;
-        }
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Item not found or invalid amount", playerId, null, false));
+        }, () -> gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Item not found or invalid amount", playerId, null, false)));
     }
 
     /// Main game loop executed periodically.
     @Scheduled(fixedRateString = "${game.tick-rate}")
     public void gameLoop() {
+        tickCounter++;
+        if (tickCounter % TICKS_PER_DAY == 0) {
+            processDailyCycle();
+        }
         updatePlayers();
     }
 
@@ -146,6 +151,19 @@ public class GameEngine {
             if (statsChanged || player.getRads() > 0)
                 gameEventQueue.enqueue(
                         GameEvent.create(EventType.SEND_STATS, player, player.getId(), player.getMapId(), false));
+        }
+    }
+
+    /// Handles the end-of-day logic.
+    ///
+    /// Triggers debt calculation for all players via EconomyService.
+    private void processDailyCycle() {
+        log.info("Processing daily cycle. Day: {}", tickCounter / TICKS_PER_DAY);
+        for (Player player : players.values()) {
+            if (player.getState() == State.DEAD) continue;
+            economyService.processDailyDebt(player);
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MESSAGE,
+                    "A new day has dawned. Daily living fees have been deducted.", player.getId(), null, false));
         }
     }
 

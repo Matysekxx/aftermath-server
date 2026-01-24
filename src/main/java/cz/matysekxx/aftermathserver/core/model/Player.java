@@ -13,6 +13,9 @@ public class Player extends Entity {
     private String role;
     private int rads = 0;
     private int radsLimit;
+    private int credits;
+    private int debt;
+    private int pendingCosts;
 
     /// Creates a new Player instance.
     public Player(String id, String username, int x, int y, int maxHp,
@@ -37,5 +40,14 @@ public class Player extends Entity {
         if (rads < 0) {
             rads = 0;
         }
+    }
+
+    public void addCredits(int amount) {
+        credits += amount;
+    }
+
+    public void removeCredits(int amount) {
+        credits -= amount;
+
     }
 }
