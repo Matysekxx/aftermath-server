@@ -1,11 +1,11 @@
 spring:
   config:
     import:
-    - "classpath:tiles.yml"
-    - "classpath:player_classes.yml"
-    - "classpath:items-consumables.yml"
-    - "classpath:items-weapons.yml"
-    - "classpath:items-resources.yml"
+      - "classpath:tiles.yml"
+      - "classpath:player_classes.yml"
+      - "classpath:items-consumables.yml"
+      - "classpath:items-weapons.yml"
+      - "classpath:items-resources.yml"
 game:
   tick-rate: 500
   starting-map-id: "nadrazi-veleslavin"

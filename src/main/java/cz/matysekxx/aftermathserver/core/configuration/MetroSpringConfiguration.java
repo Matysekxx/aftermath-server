@@ -8,4 +8,5 @@ import org.springframework.context.annotation.ImportResource;
 /// Bridges the Spring configuration with XML definitions for metro lines and services.
 @Configuration
 @ImportResource("classpath:metro-service-config.xml")
-public class MetroSpringConfiguration {}
+public class MetroSpringConfiguration {
+}

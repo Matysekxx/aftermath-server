@@ -3,7 +3,6 @@ package cz.matysekxx.aftermathserver.action;
 import com.fasterxml.jackson.databind.JsonNode;
 import cz.matysekxx.aftermathserver.core.GameEngine;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.WebSocketSession;
 
 /// Handles dropping items from inventory.
 ///

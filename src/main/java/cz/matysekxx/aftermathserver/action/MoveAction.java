@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.dto.MoveRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.WebSocketSession;
 
 /// Handles player movement.
 ///

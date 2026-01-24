@@ -10,7 +10,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 import java.util.function.Predicate;
 
-/// Trigger definition for conditional teleportation.
+/// Represents a single station in the metro network.
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Slf4j
@@ -19,14 +19,9 @@ public class ConditionalTeleportTrigger extends TeleportTrigger {
     @JsonIgnore
     private Predicate<Player> predicate;
 
-    public ConditionalTeleportTrigger() {
-        super();
-        this.type = "CONDITIONAL_TELEPORT";
-    }
-
-    public ConditionalTeleportTrigger(int targetX, int targetY, int targetLayer) {
+    public ConditionalTeleportTrigger(int targetX, int targetY, int targetLayer, String condition) {
         super(targetX, targetY, targetLayer);
-        this.type = "CONDITIONAL_TELEPORT";
+        setCondition(condition);
     }
 
     public void setCondition(String condition) {
@@ -41,10 +36,15 @@ public class ConditionalTeleportTrigger extends TeleportTrigger {
         final SpelExpressionParser parser = new SpelExpressionParser();
         final Expression exp = parser.parseExpression(condition);
         return player -> {
-            log.info("player {} has condition {}", player, condition);
             final Boolean result = exp.getValue(player, Boolean.class);
-            log.info("player {} has result {}", player, result);
             return result != null && result;
         };
+    }
+
+    @Override
+    public void onEnter(Player player, TriggerContext context) {
+        if (predicate == null || predicate.test(player)) {
+            super.onEnter(player, context);
+        }
     }
 }

@@ -10,10 +10,11 @@
     "0": "assets/maps_a/map_zelivskeho0.txt"
   },
   "objects": [
-
   ],
   "tileTriggers": {
-    "-": {"type": "METRO_TRAVEL", "lineId": "line_a"}
+    "-": {
+      "lineId": "line_a"
+    }
   },
   "spawns": {
     "line_a": {

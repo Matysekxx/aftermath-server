@@ -51,7 +51,7 @@ public class ParsedMapLayer {
                 final TileType type = registry.getType(c);
                 if (!inQuotes && c != '"' && type == TileType.UNKNOWN && c != ' ') {
                     markers.computeIfAbsent(String.valueOf(c), k -> new ArrayList<>())
-                            .add(new Coordination(x, y,layerIndex));
+                            .add(new Coordination(x, y, layerIndex));
                     tiles[y][x] = registry.getType('.');
                 } else {
                     tiles[y][x] = type;

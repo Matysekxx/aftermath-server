@@ -6,9 +6,7 @@ import cz.matysekxx.aftermathserver.core.logic.metro.MetroService;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.model.State;
 import cz.matysekxx.aftermathserver.dto.TravelRequest;
-import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.WebSocketSession;
 
 /// Handles metro travel requests.
 ///

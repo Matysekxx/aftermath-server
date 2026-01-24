@@ -11,14 +11,21 @@
     "1": "assets/maps_a/map_skalka1.txt"
   },
   "objects": [
-
   ],
   "tileTriggers": {
-    "-": {"type": "METRO_TRAVEL", "lineId": "line_a"}
+    "-": {
+      "lineId": "line_a"
+    }
   },
   "links": [
-    {"from": "▼", "to": "▲"},
-    {"from": "▲", "to": "▼"}
+    {
+      "from": "▼",
+      "to": "▲"
+    },
+    {
+      "from": "▲",
+      "to": "▼"
+    }
   ],
   "spawns": {
     "line_a": {

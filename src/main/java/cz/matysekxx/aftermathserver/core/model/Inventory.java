@@ -76,7 +76,7 @@ public class Inventory {
 
     /// Removes a specific quantity of an item from a slot.
     ///
-    /// @param slotIndex The slot to remove from.
+    /// @param slotIndex        The slot to remove from.
     /// @param quantityToRemove Amount to remove.
     /// @return An Optional containing the removed item (split if necessary), or empty if slot invalid.
     public Optional<Item> removeItem(int slotIndex, int quantityToRemove) {

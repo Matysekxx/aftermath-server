@@ -5,10 +5,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /// Configuration class holding definitions for all items in the game.
@@ -26,7 +23,7 @@ public class ItemTable {
     /// Initializes the lookup map after properties are set.
     @PostConstruct
     public void init() {
-        final List<Item> allItems = new ArrayList<>();
+        final Collection<Item> allItems = new ArrayList<>();
         allItems.addAll(resourceItems);
         allItems.addAll(weaponItems);
         allItems.addAll(consumableItems);

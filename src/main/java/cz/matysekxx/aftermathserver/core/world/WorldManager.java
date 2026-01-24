@@ -52,7 +52,7 @@ public class WorldManager {
 
     /// Retrieves a map by its ID.
     public GameMapData getMap(String mapId) {
-        if (maps.containsKey(mapId)) return  maps.get(mapId);
+        if (maps.containsKey(mapId)) return maps.get(mapId);
         return null;
     }
 

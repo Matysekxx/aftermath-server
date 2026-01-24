@@ -4,10 +4,10 @@ import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.model.State;
 import cz.matysekxx.aftermathserver.core.model.metro.MetroStation;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
-import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,7 +43,7 @@ public class MetroService {
     /// @param lineId The ID of the metro line.
     public void handleStationTrigger(Player player, String lineId) {
         final List<MetroStation> availableDestinations = getAvailableDestinations(lineId);
-        
+
         if (availableDestinations == null) {
             log.error("Metro line not found: {}", lineId);
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Metro line not found", player.getId(), null, false));
@@ -62,9 +62,9 @@ public class MetroService {
     /// Validates the target map and spawn point. If valid, moves the player to the metro spawn point
     /// of the target map and sends updated map data.
     ///
-    /// @param player The player travelling.
+    /// @param player      The player travelling.
     /// @param targetMapId The ID of the destination map.
-    /// @param lineId The ID of the metro line being used.
+    /// @param lineId      The ID of the metro line being used.
     public void startTravel(Player player, String targetMapId, String lineId) {
         try {
             if (!worldManager.containsMap(targetMapId)) {

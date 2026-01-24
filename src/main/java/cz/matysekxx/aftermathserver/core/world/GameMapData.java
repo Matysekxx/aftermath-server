@@ -8,7 +8,10 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -26,13 +29,13 @@ public class GameMapData {
     private Map<String, Coordination> spawns = new HashMap<>();
     private Environment environment;
     private Map<Integer, String> layout = new HashMap<>();
-    private List<MapObject> objects = new CopyOnWriteArrayList<>();
+    private Collection<MapObject> objects = new CopyOnWriteArrayList<>();
     private Map<Integer, ParsedMapLayer> parsedLayers = new HashMap<>();
     private Map<String, TileTrigger> tileTriggers = new HashMap<>();
     @JsonIgnore
     private Map<Coordination, TileTrigger> dynamicTriggers = new HashMap<>();
 
-    private List<Link> links;
+    private Collection<Link> links;
 
     /// Retrieves a specific layer by index.
     public ParsedMapLayer getLayer(int index) {

@@ -3,25 +3,24 @@ package cz.matysekxx.aftermathserver.core;
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
 import cz.matysekxx.aftermathserver.core.logic.interactions.InteractionLogic;
-import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerHandler;
-import cz.matysekxx.aftermathserver.core.logic.triggers.TriggerRegistry;
-import cz.matysekxx.aftermathserver.util.Coordination;
-import cz.matysekxx.aftermathserver.util.Direction;
+import cz.matysekxx.aftermathserver.core.logic.metro.MetroService;
 import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.model.State;
 import cz.matysekxx.aftermathserver.core.world.*;
-import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
+import cz.matysekxx.aftermathserver.core.world.triggers.TriggerContext;
 import cz.matysekxx.aftermathserver.dto.ChatRequest;
 import cz.matysekxx.aftermathserver.dto.MoveRequest;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
+import cz.matysekxx.aftermathserver.util.Coordination;
+import cz.matysekxx.aftermathserver.util.Direction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,28 +37,29 @@ public class GameEngine {
     private final MapObjectFactory mapObjectFactory;
     private final Map<String, InteractionLogic> logicMap;
     private final GameSettings settings;
-    private final TriggerRegistry triggerRegistry;
+    private final MetroService metroService;
 
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap, GameSettings settings, TriggerRegistry triggerRegistry) {
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap, GameSettings settings, MetroService metroService) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
         this.logicMap = logicMap;
         this.settings = settings;
-        this.triggerRegistry = triggerRegistry;
+        this.metroService = metroService;
     }
 
     /// Adds a new player session to the game.
     public void addPlayer(String sessionId) {
+        //TODO: zmenit tvorbu hrace s prijetim zpravy od klienta
         final String mapId = settings.getStartingMapId() != null ? settings.getStartingMapId() : "nemocnice-motol";
 
         final String className = settings.getDefaultClass(); //placeholder
         final PlayerClassConfig classConfig = settings.getClasses().get(className);
-        
+
         final GameMapData startingMap = worldManager.getMap(mapId);
         final Coordination spawn = startingMap.getMetroSpawn(settings.getLineId());
-        
-        final Player newPlayer = new Player(sessionId, "", spawn.x(),spawn.y(),
+
+        final Player newPlayer = new Player(sessionId, "", spawn.x(), spawn.y(),
                 classConfig.getMaxHp(),
                 classConfig.getInventoryCapacity(),
                 classConfig.getMaxWeight(),
@@ -100,10 +100,6 @@ public class GameEngine {
     /// Processes a movement request.
     public void processMove(String playerId, MoveRequest moveRequest) {
         final Player player = players.get(playerId);
-        if (player == null) {
-            return;
-        }
-
         int targetX = player.getX();
         int targetY = player.getY();
 
@@ -122,20 +118,16 @@ public class GameEngine {
 
         final int finalTargetX = targetX;
         final int finalTargetY = targetY;
+        final TriggerContext context = new TriggerContext(metroService);
+
         currentMap.getDynamicTrigger(targetX, targetY, player.getLayerIndex())
                 .ifPresentOrElse(
-                        trigger -> handleTileTrigger(player, trigger),
+                        trigger -> trigger.onEnter(player, context),
                         () -> currentMap.getMaybeTileTrigger(String.valueOf(currentMap.getLayer(player.getLayerIndex()).getSymbolAt(finalTargetX, finalTargetY)))
-                                .ifPresent(trigger -> handleTileTrigger(player, trigger))
+                                .ifPresent(trigger -> trigger.onEnter(player, context))
                 );
 
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), player.getMapId(), false));
-    }
-
-    private void handleTileTrigger(Player player, TileTrigger trigger) {
-        final Optional<TriggerHandler> maybeTrigger = triggerRegistry.getHandler(trigger.getType());
-        if (maybeTrigger.isEmpty()) log.error("trigger id null");
-        maybeTrigger.ifPresent(triggerHandler -> triggerHandler.handle(player, trigger));
     }
 
     /// Checks if a player can move to target coordinates.
@@ -164,7 +156,7 @@ public class GameEngine {
 
         final InteractionLogic interactionLogic = logicMap.get(target.getAction());
         if (interactionLogic != null) {
-            final List<GameEvent> events = interactionLogic.interact(target, player);
+            final Collection<GameEvent> events = interactionLogic.interact(target, player);
             if (events != null) {
                 events.forEach(gameEventQueue::enqueue);
             }
@@ -174,11 +166,6 @@ public class GameEngine {
     /// Handles dropping an item from inventory.
     public void dropItem(String playerId, int slotIndex, int amount) {
         final Player player = players.get(playerId);
-        if (player == null) {
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Player not found", playerId, null, false));
-            return;
-        }
-
         final Optional<Item> droppedItem = player.getInventory().removeItem(slotIndex, amount);
         if (droppedItem.isPresent()) {
             final GameMapData map = worldManager.getMap(player.getMapId());
@@ -202,7 +189,7 @@ public class GameEngine {
             if (player == null || player.getState() == State.DEAD || player.getState() == State.TRAVELLING) continue;
             final GameMapData map = worldManager.getMap(player.getMapId());
             final Environment env = map.getEnvironment();
-            boolean statsChanged = switch (map.getType()) {  //err
+            boolean statsChanged = switch (map.getType()) {
                 case MapType.HAZARD_ZONE -> applyRadiation(player, env);
                 case MapType.SAFE_ZONE -> applyRegeneration(player);
             };

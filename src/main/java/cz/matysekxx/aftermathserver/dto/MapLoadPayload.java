@@ -6,7 +6,6 @@ import cz.matysekxx.aftermathserver.core.world.ParsedMapLayer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.List;
 import java.util.Map;
 
 /// DTO for sending complete map data to the client.

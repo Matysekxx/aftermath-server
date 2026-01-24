@@ -33,7 +33,7 @@ class InventoryTest {
     @Test
     void testWeightLimit() {
         final Inventory inventory = new Inventory(5, 10.0);
-        final Item  heavySomething = Item.builder()
+        final Item heavySomething = Item.builder()
                 .id("something")
                 .name("something")
                 .description("something")

@@ -8,6 +8,7 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /// Handles looting interactions.
@@ -20,13 +21,13 @@ public class LootLogic implements InteractionLogic {
     /// Checks if container is empty, moves items to player inventory if space allows,
     /// and updates the container description.
     @Override
-    public synchronized List<GameEvent> interact(MapObject target, Player player) {
+    public synchronized Collection<GameEvent> interact(MapObject target, Player player) {
         if (target.getItems().isEmpty()) {
             return List.of(GameEvent.create(EventType.SEND_MESSAGE, target.getDescription() + " - It is empty", player.getId(), null, false));
         }
 
         final StringBuilder message = new StringBuilder(target.getDescription() + "\nYou found:");
-        final List<Item> itemsToRemove = new ArrayList<>();
+        final Collection<Item> itemsToRemove = new ArrayList<>();
 
         for (Item item : target.getItems()) {
             if (player.getInventory().addItem(item)) {
@@ -43,7 +44,7 @@ public class LootLogic implements InteractionLogic {
             target.setDescription("Empty");
         }
 
-        final List<GameEvent> events = new ArrayList<>();
+        final Collection<GameEvent> events = new ArrayList<>();
         events.add(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
         events.add(GameEvent.create(EventType.SEND_MESSAGE, message.toString(), player.getId(), null, false));
 

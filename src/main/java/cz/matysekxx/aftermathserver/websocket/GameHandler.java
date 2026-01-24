@@ -37,7 +37,7 @@ public class GameHandler extends TextWebSocketHandler {
     /// Handles the cleanup when a WebSocket connection is closed.
     ///
     /// @param session The closed session.
-    /// @param status The reason for closing.
+    /// @param status  The reason for closing.
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) {
         networkService.removeSession(session.getId());

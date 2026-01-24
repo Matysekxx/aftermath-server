@@ -12,7 +12,9 @@
   "objects": [
   ],
   "tileTriggers": {
-    "-": {"type": "METRO_TRAVEL", "lineId": "line_a"}
+    "-": {
+      "lineId": "line_a"
+    }
   },
   "spawns": {
     "line_a": {

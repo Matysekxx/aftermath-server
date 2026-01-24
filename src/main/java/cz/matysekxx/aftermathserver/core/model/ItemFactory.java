@@ -15,7 +15,7 @@ public class ItemFactory {
 
     /// Creates a new item instance.
     ///
-    /// @param id The item ID.
+    /// @param id       The item ID.
     /// @param quantity The quantity.
     /// @return A new Item object.
     public Item createItem(String id, int quantity) {

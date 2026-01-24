@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /// Represents an interactive object on the map.
 @Data
@@ -16,5 +16,5 @@ public class MapObject {
     private int x, y;
     private String action;
     private String description;
-    private List<Item> items = new ArrayList<>();
+    private Collection<Item> items = new ArrayList<>();
 }

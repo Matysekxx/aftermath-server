@@ -41,18 +41,18 @@ public class MapParser {
             mapData.setParsedLayers(layers);
 
             processLinks(mapData, layers);
-            
+
             mapData.initializeCache();
             return mapData;
         }
     }
-    
+
     private void processLinks(GameMapData mapData, Map<Integer, ParsedMapLayer> layers) {
         if (mapData.getLinks() == null || mapData.getLinks().isEmpty()) return;
         final Map<String, List<Coordination>> globalMarkers = new HashMap<>();
         for (ParsedMapLayer layer : layers.values()) {
             layer.getMarkers().forEach((key, value) ->
-                globalMarkers.computeIfAbsent(key, k -> new ArrayList<>()).addAll(value)
+                    globalMarkers.computeIfAbsent(key, k -> new ArrayList<>()).addAll(value)
             );
         }
         for (Link link : mapData.getLinks()) {

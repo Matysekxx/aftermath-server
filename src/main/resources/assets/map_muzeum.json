@@ -11,17 +11,32 @@
     "1": "assets/maps_a/map_muzeum1.txt"
   },
   "objects": [
-
   ],
   "tileTriggers": {
-    "-": {"type": "METRO_TRAVEL", "lineId": "line_c"},
-    "~": {"type": "METRO_TRAVEL", "lineId": "line_a"}
+    "-": {
+      "lineId": "line_c"
+    },
+    "~": {
+      "lineId": "line_a"
+    }
   },
   "links": [
-    {"from": "◄", "to": "▼"},
-    {"from": "▼", "to": "◄"},
-    {"from": "►", "to": "▲"},
-    {"from": "▲", "to": "►"}
+    {
+      "from": "◄",
+      "to": "▼"
+    },
+    {
+      "from": "▼",
+      "to": "◄"
+    },
+    {
+      "from": "►",
+      "to": "▲"
+    },
+    {
+      "from": "▲",
+      "to": "►"
+    }
   ],
   "spawns": {
     "line_a": {
