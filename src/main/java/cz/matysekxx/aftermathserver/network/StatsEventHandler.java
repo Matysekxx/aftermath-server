@@ -1,6 +1,6 @@
 package cz.matysekxx.aftermathserver.network;
 
-import cz.matysekxx.aftermathserver.core.model.Player;
+import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.context.annotation.Lazy;

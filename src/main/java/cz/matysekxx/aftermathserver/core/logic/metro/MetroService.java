@@ -1,8 +1,8 @@
 package cz.matysekxx.aftermathserver.core.logic.metro;
 
 import cz.matysekxx.aftermathserver.core.EconomyService;
-import cz.matysekxx.aftermathserver.core.model.Player;
-import cz.matysekxx.aftermathserver.core.model.State;
+import cz.matysekxx.aftermathserver.core.model.entity.Player;
+import cz.matysekxx.aftermathserver.core.model.entity.State;
 import cz.matysekxx.aftermathserver.core.model.metro.MetroStation;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;

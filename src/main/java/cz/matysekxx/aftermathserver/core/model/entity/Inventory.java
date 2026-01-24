@@ -1,4 +1,6 @@
-package cz.matysekxx.aftermathserver.core.model;
+package cz.matysekxx.aftermathserver.core.model.entity;
+
+import cz.matysekxx.aftermathserver.core.model.item.Item;
 
 import java.util.Collections;
 import java.util.HashMap;

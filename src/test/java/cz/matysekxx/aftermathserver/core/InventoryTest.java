@@ -1,8 +1,8 @@
 package cz.matysekxx.aftermathserver.core;
 
-import cz.matysekxx.aftermathserver.core.model.Inventory;
-import cz.matysekxx.aftermathserver.core.model.Item;
-import cz.matysekxx.aftermathserver.core.model.ItemType;
+import cz.matysekxx.aftermathserver.core.model.entity.Inventory;
+import cz.matysekxx.aftermathserver.core.model.item.Item;
+import cz.matysekxx.aftermathserver.core.model.item.ItemType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

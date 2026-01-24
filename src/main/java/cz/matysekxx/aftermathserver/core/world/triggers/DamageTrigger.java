@@ -1,6 +1,6 @@
 package cz.matysekxx.aftermathserver.core.world.triggers;
 
-import cz.matysekxx.aftermathserver.core.model.Player;
+import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

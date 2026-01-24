@@ -2,7 +2,7 @@ package cz.matysekxx.aftermathserver.core.world.triggers;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import cz.matysekxx.aftermathserver.core.model.Player;
+import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import lombok.Data;
 
 /// Base class for all tile-based triggers.

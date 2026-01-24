@@ -1,4 +1,4 @@
-package cz.matysekxx.aftermathserver.core.model;
+package cz.matysekxx.aftermathserver.core.model.item;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Data;

@@ -1,0 +1,35 @@
+game:
+  npcs:
+    definitions:
+      - id: "mutant_rat"
+        name: "Mutant Rat"
+        type: "MUTANT"
+        aggressive: true
+        damage: 5
+        range: 1
+        maxHp: 20
+        behavior: "AGGRESSIVE"
+        loot:
+          - id: "meat"
+            quantity: 1
+
+      - id: "tunnel_lurker"
+        name: "Tunnel Lurker"
+        type: "MUTANT"
+        aggressive: true
+        damage: 12
+        range: 1
+        maxHp: 45
+        behavior: "AGGRESSIVE"
+        loot:
+          - id: "scrap"
+            quantity: 2
+
+      - id: "feral_ghoul"
+        name: "Feral Ghoul"
+        type: "MUTANT"
+        aggressive: true
+        damage: 8
+        range: 1
+        maxHp: 30
+        behavior: "AGGRESSIVE"

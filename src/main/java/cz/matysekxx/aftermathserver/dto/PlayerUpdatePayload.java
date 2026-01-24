@@ -1,6 +1,6 @@
 package cz.matysekxx.aftermathserver.dto;
 
-import cz.matysekxx.aftermathserver.core.model.Player;
+import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

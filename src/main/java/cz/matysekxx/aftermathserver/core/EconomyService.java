@@ -1,7 +1,7 @@
 package cz.matysekxx.aftermathserver.core;
 
-import cz.matysekxx.aftermathserver.core.model.Item;
-import cz.matysekxx.aftermathserver.core.model.Player;
+import cz.matysekxx.aftermathserver.core.model.item.Item;
+import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import org.springframework.stereotype.Service;
 
 /// Service responsible for managing the game's economic systems.

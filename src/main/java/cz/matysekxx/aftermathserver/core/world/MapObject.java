@@ -1,6 +1,6 @@
 package cz.matysekxx.aftermathserver.core.world;
 
-import cz.matysekxx.aftermathserver.core.model.Item;
+import cz.matysekxx.aftermathserver.core.model.item.Item;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

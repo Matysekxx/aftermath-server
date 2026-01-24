@@ -1,4 +1,4 @@
-package cz.matysekxx.aftermathserver.core.model;
+package cz.matysekxx.aftermathserver.core.model.item;
 
 /// Categorizes items based on their usage and behavior.
 public enum ItemType {

@@ -1,8 +1,8 @@
 package cz.matysekxx.aftermathserver.core.world;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.matysekxx.aftermathserver.core.model.Item;
-import cz.matysekxx.aftermathserver.core.model.ItemFactory;
+import cz.matysekxx.aftermathserver.core.model.item.Item;
+import cz.matysekxx.aftermathserver.core.model.item.ItemFactory;
 import cz.matysekxx.aftermathserver.core.world.triggers.Link;
 import cz.matysekxx.aftermathserver.core.world.triggers.TeleportTrigger;
 import cz.matysekxx.aftermathserver.util.Coordination;

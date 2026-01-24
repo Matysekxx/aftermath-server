@@ -1,5 +1,6 @@
-package cz.matysekxx.aftermathserver.core.model;
+package cz.matysekxx.aftermathserver.core.model.item;
 
+import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import lombok.*;
 
 /// Represents an item in the game.

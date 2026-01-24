@@ -1,4 +1,4 @@
-package cz.matysekxx.aftermathserver.core.model;
+package cz.matysekxx.aftermathserver.core.model.entity;
 
 /// Represents the current state of an entity.
 public enum State {
