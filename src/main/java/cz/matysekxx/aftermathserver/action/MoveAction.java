@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class MoveAction extends Action {
 
     public MoveAction(GameEngine gameEngine) {
-        super("PLAYER_MOVED", gameEngine);
+        super(gameEngine);
     }
 
     @Override

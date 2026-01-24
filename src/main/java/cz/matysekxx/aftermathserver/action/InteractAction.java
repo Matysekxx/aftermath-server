@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class InteractAction extends Action {
 
     public InteractAction(GameEngine gameEngine) {
-        super("INTERACT_RESULT", gameEngine);
+        super(gameEngine);
     }
 
     @Override

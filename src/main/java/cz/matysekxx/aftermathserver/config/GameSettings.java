@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
 import java.util.Map;
 
 /// Configuration properties for game-wide settings.
@@ -16,6 +17,8 @@ import java.util.Map;
 public class GameSettings {
     /// The ID of the map where new players start.
     private String startingMapId;
+    /// List of map IDs allowed for player spawning.
+    private List<String> spawnableMaps;
     /// Default line ID for metro initialization.
     private String lineId;
     /// The rate at which the game engine ticks (in milliseconds).

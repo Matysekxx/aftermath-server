@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component("DROP")
 public class DropAction extends Action {
     public DropAction(GameEngine gameEngine) {
-        super("DROP", gameEngine);
+        super(gameEngine);
     }
 
     @Override

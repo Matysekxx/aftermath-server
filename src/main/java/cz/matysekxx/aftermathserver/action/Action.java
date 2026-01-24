@@ -11,11 +11,9 @@ import cz.matysekxx.aftermathserver.core.GameEngine;
 /// Instances are typically Spring components mapped to a specific action string.
 public abstract class Action {
     protected static final ObjectMapper objectMapper = new ObjectMapper();
-    protected final String type;
     protected final GameEngine gameEngine;
 
-    protected Action(String type, GameEngine gameEngine) {
-        this.type = type;
+    protected Action(GameEngine gameEngine) {
         this.gameEngine = gameEngine;
     }
 

@@ -50,8 +50,6 @@ public class GameHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(@NonNull WebSocketSession session) {
         networkService.addSession(session);
-        gameEngine.addPlayer(session.getId());
-        networkService.updatePlayerLocation(session.getId(), gameEngine.getPlayerMapId(session.getId()));
     }
 
     /// Processes incoming text messages from clients.
@@ -66,7 +64,9 @@ public class GameHandler extends TextWebSocketHandler {
                 final Action action = actions.get(request.getType());
                 action.execute(session.getId(), request.getPayload());
                 final String mapId = gameEngine.getPlayerMapId(session.getId());
-                networkService.updatePlayerLocation(session.getId(), mapId);
+                if (mapId != null) {
+                    networkService.updatePlayerLocation(session.getId(), mapId);
+                }
             }
         } catch (Exception e) {
             log.error("Error while handling WebSocket request", e);

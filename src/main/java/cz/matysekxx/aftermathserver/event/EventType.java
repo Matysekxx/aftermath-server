@@ -23,5 +23,7 @@ public enum EventType {
     /// Broadcast a chat message to players on the same map.
     BROADCAST_CHAT_MSG,
     /// Trigger opening of the Metro travel UI on client.
-    OPEN_METRO_UI;
+    OPEN_METRO_UI,
+    /// Send available login options (classes, maps) to client.
+    SEND_LOGIN_OPTIONS;
 }

@@ -10,6 +10,9 @@ import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.core.world.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.dto.ChatRequest;
+import cz.matysekxx.aftermathserver.dto.LoginOptionsResponse;
+import cz.matysekxx.aftermathserver.dto.LoginRequest;
+import cz.matysekxx.aftermathserver.dto.SpawnPointInfo;
 import cz.matysekxx.aftermathserver.dto.MoveRequest;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
@@ -19,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,18 +57,48 @@ public class GameEngine {
         this.economyService = economyService;
     }
 
-    /// Adds a new player session to the game.
-    public void addPlayer(String sessionId) {
-        //TODO: zmenit tvorbu hrace s prijetim zpravy od klienta
-        final String mapId = settings.getStartingMapId() != null ? settings.getStartingMapId() : "nemocnice-motol";
+    /// Sends available login options (classes, maps) to the client.
+    public void sendLoginOptions(String sessionId) {
+        final List<String> classes = new ArrayList<>(settings.getClasses().keySet());
+        final List<SpawnPointInfo> maps = new ArrayList<>();
 
-        final String className = settings.getDefaultClass(); //placeholder
+        final List<String> allowedMaps = settings.getSpawnableMaps() != null ? settings.getSpawnableMaps() : List.of("nemocnice-motol");
+
+        for (String mapId : allowedMaps) {
+            if (worldManager.containsMap(mapId)) {
+                maps.add(new SpawnPointInfo(mapId, worldManager.getMap(mapId).getName()));
+            }
+        }
+
+        final LoginOptionsResponse response = new LoginOptionsResponse(classes, maps);
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_LOGIN_OPTIONS, response, sessionId, null, false));
+    }
+
+    /// Adds a new player session to the game.
+    public void addPlayer(String sessionId, LoginRequest request) {
+        if (players.containsKey(sessionId)) return;
+
+        String mapId = request.getStartingMapId();
+        if (mapId == null || !worldManager.containsMap(mapId)) {
+            mapId = settings.getStartingMapId() != null ? settings.getStartingMapId() : "nemocnice-motol";
+        }
+
+        String className = request.getPlayerClass();
+        if (className == null || !settings.getClasses().containsKey(className)) {
+            className = settings.getDefaultClass();
+        }
+
         final PlayerClassConfig classConfig = settings.getClasses().get(className);
 
         final GameMapData startingMap = worldManager.getMap(mapId);
-        final Coordination spawn = startingMap.getMetroSpawn(settings.getLineId());
+        Coordination spawn = startingMap.getMetroSpawn(settings.getLineId());
+        if (spawn == null) spawn = new Coordination(10, 10, 0);
 
-        final Player newPlayer = new Player(sessionId, "", spawn.x(), spawn.y(),
+        final Player newPlayer = new Player(
+                sessionId,
+                request.getUsername(),
+                spawn.x(),
+                spawn.y(),
                 classConfig.getMaxHp(),
                 classConfig.getInventoryCapacity(),
                 classConfig.getMaxWeight(),

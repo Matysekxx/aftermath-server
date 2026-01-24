@@ -231,4 +231,16 @@ public class NetworkService {
             }
         }
     }
+
+    void sendLoginOptions(String sessionId, LoginOptionsResponse response) {
+        final WebSocketSession session = sessions.get(sessionId);
+        if (session != null && session.isOpen()) {
+            try {
+                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("LOGIN_OPTIONS", response));
+                session.sendMessage(new TextMessage(json));
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+    }
 }

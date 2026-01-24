@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class ChatAction extends Action {
 
     public ChatAction(GameEngine gameEngine) {
-        super("CHAT_MSG", gameEngine);
+        super(gameEngine);
     }
 
     @Override

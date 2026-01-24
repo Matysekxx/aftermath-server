@@ -17,7 +17,7 @@ public class TravelAction extends Action {
     private final MetroService metroService;
 
     protected TravelAction(GameEngine gameEngine, MetroService metroService) {
-        super("TRAVEL", gameEngine);
+        super(gameEngine);
         this.metroService = metroService;
     }
 
