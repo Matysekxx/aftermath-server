@@ -1,6 +1,7 @@
 package cz.matysekxx.aftermathserver.core.world;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.world.triggers.Link;
 import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import cz.matysekxx.aftermathserver.util.Coordination;
@@ -30,6 +31,7 @@ public class GameMapData {
     private Environment environment;
     private Map<Integer, String> layout = new HashMap<>();
     private Collection<MapObject> objects = new CopyOnWriteArrayList<>();
+    private Collection<Npc> npcs = new CopyOnWriteArrayList<>();
     private Map<Integer, ParsedMapLayer> parsedLayers = new HashMap<>();
     private Map<String, TileTrigger> tileTriggers = new HashMap<>();
     @JsonIgnore
@@ -59,6 +61,10 @@ public class GameMapData {
     public void addObject(MapObject object) {
         objects.add(object);
         objectCache.put(object.getId(), object);
+    }
+
+    public void addNpc(Npc npc) {
+        npcs.add(npc);
     }
 
     public MapObject getObject(String id) {
