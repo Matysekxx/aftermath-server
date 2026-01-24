@@ -38,14 +38,16 @@ public class GameEngine {
     private final Map<String, InteractionLogic> logicMap;
     private final GameSettings settings;
     private final MovementService movementService;
+    private final StatsService statsService;
 
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap, GameSettings settings, MovementService movementService) {
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap, GameSettings settings, MovementService movementService, StatsService statsService) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
         this.logicMap = logicMap;
         this.settings = settings;
         this.movementService = movementService;
+        this.statsService = statsService;
     }
 
     /// Adds a new player session to the game.
@@ -149,42 +151,15 @@ public class GameEngine {
     private void updatePlayers() {
         for (Player player : players.values()) {
             if (player == null || player.getState() == State.DEAD || player.getState() == State.TRAVELLING) continue;
-            final GameMapData map = worldManager.getMap(player.getMapId());
-            final Environment env = map.getEnvironment();
-            boolean statsChanged = switch (map.getType()) {
-                case MapType.HAZARD_ZONE -> applyRadiation(player, env);
-                case MapType.SAFE_ZONE -> applyRegeneration(player);
-            };
+            final boolean statsChanged = statsService.applyStats(player);
             if (player.getHp() <= 0) {
                 handlePlayerDeath(player);
                 continue;
             }
-            if (statsChanged || player.getRads() > 0) gameEventQueue.enqueue(GameEvent.create(
-                    EventType.SEND_STATS, player, player.getId(), player.getMapId(), false));
+            if (statsChanged || player.getRads() > 0)
+                gameEventQueue.enqueue(
+                        GameEvent.create(EventType.SEND_STATS, player, player.getId(), player.getMapId(), false));
         }
-    }
-
-    private boolean applyRegeneration(Player player) {
-        if (player.getHp() < player.getMaxHp()) {
-            player.setHp(player.getHp() + 1);
-            return true;
-        }
-        if (player.getRads() > 0) {
-            player.setRads(Math.max(0, player.getRads() - 5));
-            return true;
-        }
-        return false;
-    }
-
-    private boolean applyRadiation(Player player, Environment env) {
-        if (env.getRadiation() > 0) {
-            player.setRads(player.getRads() + env.getRadiation());
-            if (player.getRads() > player.getRadsLimit()) {
-                player.setHp(player.getHp() - 1);
-                return true;
-            }
-        }
-        return false;
     }
 
     private void handlePlayerDeath(Player player) {
