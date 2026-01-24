@@ -2,26 +2,23 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
-import cz.matysekxx.aftermathserver.core.logic.interactions.InteractionLogic;
-import cz.matysekxx.aftermathserver.core.logic.metro.MetroService;
 import cz.matysekxx.aftermathserver.core.model.Item;
 import cz.matysekxx.aftermathserver.core.model.Player;
 import cz.matysekxx.aftermathserver.core.model.State;
-import cz.matysekxx.aftermathserver.core.world.*;
-import cz.matysekxx.aftermathserver.core.world.triggers.TriggerContext;
+import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.core.world.MapObject;
+import cz.matysekxx.aftermathserver.core.world.MapObjectFactory;
+import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.dto.ChatRequest;
 import cz.matysekxx.aftermathserver.dto.MoveRequest;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Coordination;
-import cz.matysekxx.aftermathserver.util.Direction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,19 +32,21 @@ public class GameEngine {
     private final WorldManager worldManager;
     private final GameEventQueue gameEventQueue;
     private final MapObjectFactory mapObjectFactory;
-    private final Map<String, InteractionLogic> logicMap;
+
     private final GameSettings settings;
     private final MovementService movementService;
     private final StatsService statsService;
+    private final InteractionService interactionService;
 
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap, GameSettings settings, MovementService movementService, StatsService statsService) {
+
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
-        this.logicMap = logicMap;
         this.settings = settings;
         this.movementService = movementService;
         this.statsService = statsService;
+        this.interactionService = interactionService;
     }
 
     /// Adds a new player session to the game.
@@ -109,22 +108,7 @@ public class GameEngine {
         final Player player = players.get(id);
         final GameMapData map = worldManager.getMap(player.getMapId());
         final MapObject target = map.getObject(targetObjectId);
-        if (target == null) {
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Object not found", id, player.getMapId(), false));
-            return;
-        }
-
-        if (Math.abs(player.getX() - target.getX()) > 1 || Math.abs(player.getY() - target.getY()) > 1) {
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "You are too far away", id, player.getMapId(), false));
-        }
-
-        final InteractionLogic interactionLogic = logicMap.get(target.getAction());
-        if (interactionLogic != null) {
-            final Collection<GameEvent> events = interactionLogic.interact(target, player);
-            if (events != null) {
-                events.forEach(gameEventQueue::enqueue);
-            }
-        }
+        interactionService.processInteraction(player, target);
     }
 
     /// Handles dropping an item from inventory.
@@ -148,6 +132,9 @@ public class GameEngine {
         updatePlayers();
     }
 
+    /// Updates the state of all active players.
+    ///
+    /// Applies environmental effects and checks for death conditions.
     private void updatePlayers() {
         for (Player player : players.values()) {
             if (player == null || player.getState() == State.DEAD || player.getState() == State.TRAVELLING) continue;
@@ -162,6 +149,10 @@ public class GameEngine {
         }
     }
 
+    /// Handles the logic when a player's health reaches zero.
+    ///
+    /// Changes player state to DEAD, creates a lootable corpse object on the map,
+    /// and clears the player's inventory.
     private void handlePlayerDeath(Player player) {
         if (player.getState() == State.DEAD) return;
         player.setState(State.DEAD);
@@ -174,6 +165,10 @@ public class GameEngine {
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_GAME_OVER, player, player.getId(), player.getMapId(), false));
     }
 
+    /// Retrieves a player instance by their unique session ID.
+    ///
+    /// @param playerId The session ID of the player.
+    /// @return The Player object, or null if not found.
     public Player getPlayerById(String playerId) {
         return players.get(playerId);
     }
