@@ -37,15 +37,15 @@ public class GameEngine {
     private final MapObjectFactory mapObjectFactory;
     private final Map<String, InteractionLogic> logicMap;
     private final GameSettings settings;
-    private final MetroService metroService;
+    private final MovementService movementService;
 
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap, GameSettings settings, MetroService metroService) {
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, Map<String, InteractionLogic> logicMap, GameSettings settings, MovementService movementService) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
         this.logicMap = logicMap;
         this.settings = settings;
-        this.metroService = metroService;
+        this.movementService = movementService;
     }
 
     /// Adds a new player session to the game.
@@ -99,45 +99,7 @@ public class GameEngine {
 
     /// Processes a movement request.
     public void processMove(String playerId, MoveRequest moveRequest) {
-        final Player player = players.get(playerId);
-        int targetX = player.getX();
-        int targetY = player.getY();
-
-        final var dir = Direction.valueOf(moveRequest.getDirection().toUpperCase());
-        targetX += dir.getDx();
-        targetY += dir.getDy();
-
-        if (!canMoveTo(player, targetX, targetY)) {
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "OBSTACLE", playerId, null, false));
-            return;
-        }
-        player.setX(targetX);
-        player.setY(targetY);
-
-        final GameMapData currentMap = worldManager.getMap(player.getMapId());
-
-        final int finalTargetX = targetX;
-        final int finalTargetY = targetY;
-        final TriggerContext context = new TriggerContext(metroService);
-
-        currentMap.getDynamicTrigger(targetX, targetY, player.getLayerIndex())
-                .ifPresentOrElse(
-                        trigger -> trigger.onEnter(player, context),
-                        () -> currentMap.getMaybeTileTrigger(String.valueOf(currentMap.getLayer(player.getLayerIndex()).getSymbolAt(finalTargetX, finalTargetY)))
-                                .ifPresent(trigger -> trigger.onEnter(player, context))
-                );
-
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), player.getMapId(), false));
-    }
-
-    /// Checks if a player can move to target coordinates.
-    public boolean canMoveTo(Player player, int targetX, int targetY) {
-        return worldManager.isWalkable(
-                player.getMapId(),
-                player.getLayerIndex(),
-                targetX,
-                targetY
-        );
+        movementService.movementProcess(players.get(playerId), moveRequest);
     }
 
     /// Processes an interaction request.
