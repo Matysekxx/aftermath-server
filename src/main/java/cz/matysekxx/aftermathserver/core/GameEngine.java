@@ -2,22 +2,26 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
+import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.entity.State;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
+import cz.matysekxx.aftermathserver.core.world.MapType;
 import cz.matysekxx.aftermathserver.core.world.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.dto.ChatRequest;
 import cz.matysekxx.aftermathserver.dto.LoginOptionsResponse;
 import cz.matysekxx.aftermathserver.dto.LoginRequest;
+import cz.matysekxx.aftermathserver.dto.NpcDto;
 import cz.matysekxx.aftermathserver.dto.SpawnPointInfo;
 import cz.matysekxx.aftermathserver.dto.MoveRequest;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Vector3;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -42,11 +46,12 @@ public class GameEngine {
     private final StatsService statsService;
     private final InteractionService interactionService;
     private final EconomyService economyService;
+    private final SpawnManager spawnManager;
 
     private long tickCounter = 0;
     private static final int TICKS_PER_DAY = 1200;
 
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService) {
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService, SpawnManager spawnManager) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
@@ -55,6 +60,14 @@ public class GameEngine {
         this.statsService = statsService;
         this.interactionService = interactionService;
         this.economyService = economyService;
+        this.spawnManager = spawnManager;
+    }
+
+    /// Initializes world content such as NPCs.
+    @PostConstruct
+    public void initializeWorld() {
+        log.info("Initializing world content...");
+        spawnNpc();
     }
 
     /// Sends available login options (classes, maps) to the client.
@@ -112,6 +125,15 @@ public class GameEngine {
 
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, worldManager.getMap(mapId), sessionId, mapId, false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(mapId).getObjects(), sessionId, mapId, false));
+
+        final List<NpcDto> npcs = new ArrayList<>();
+        for (Npc npc : worldManager.getMap(mapId).getNpcs()) {
+            final NpcDto npcDto = new NpcDto(npc.getId(), npc.getName(), npc.getType(), npc.getX(), npc.getY(), npc.getHp(), npc.getMaxHp(), npc.isAggressive());
+            npcs.add(npcDto);
+        }
+
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, npcs, sessionId, mapId, false));
+
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, mapId, false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, newPlayer, sessionId, mapId, false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, newPlayer, sessionId, mapId, false));
@@ -155,7 +177,7 @@ public class GameEngine {
         final Optional<Item> droppedItem = player.getInventory().removeItem(slotIndex, amount);
         droppedItem.ifPresentOrElse(item -> {
             final GameMapData map = worldManager.getMap(player.getMapId());
-            final MapObject lootBag = mapObjectFactory.createLootBag(droppedItem.get().getId(), amount, player.getX(), player.getY());
+            final MapObject lootBag = mapObjectFactory.createLootBag(item.getId(), amount, player.getX(), player.getY());
             map.addObject(lootBag);
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, map.getObjects(), null, player.getMapId(), true));
@@ -170,6 +192,15 @@ public class GameEngine {
             processDailyCycle();
         }
         updatePlayers();
+    }
+
+    private void spawnNpc() {
+        for (GameMapData map : worldManager.getMaps()) {
+            if (map.getType() == MapType.HAZARD_ZONE) {
+                spawnManager.spawnRandomNpcs(map.getId(), 5);
+                log.info("Spawned NPCs on map: {}", map.getId());
+            }
+        }
     }
 
     /// Updates the state of all active players.

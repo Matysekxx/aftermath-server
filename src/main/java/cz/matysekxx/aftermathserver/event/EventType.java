@@ -25,5 +25,6 @@ public enum EventType {
     /// Trigger opening of the Metro travel UI on client.
     OPEN_METRO_UI,
     /// Send available login options (classes, maps) to client.
-    SEND_LOGIN_OPTIONS;
+    SEND_LOGIN_OPTIONS,
+    SEND_NPCS;
 }

@@ -7,6 +7,8 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -54,6 +56,10 @@ public class WorldManager {
     public GameMapData getMap(String mapId) {
         if (maps.containsKey(mapId)) return maps.get(mapId);
         return null;
+    }
+
+    public Collection<GameMapData> getMaps() {
+        return maps.values();
     }
 
     /// Checks if a map exists.

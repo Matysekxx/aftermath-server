@@ -26,10 +26,10 @@ public class MapObjectFactory {
     /// Creates a corpse container from a dead player.
     public MapObject createPlayerCorpse(Player deadPlayer) {
         final MapObject corpse = new MapObject();
-        corpse.setId("corpse_" + deadPlayer.getUsername());
+        corpse.setId("corpse_" + deadPlayer.getName());
         corpse.setType("CONTAINER");
         corpse.setAction("LOOT");
-        corpse.setDescription("Dead body player " + deadPlayer.getUsername());
+        corpse.setDescription("Dead body player " + deadPlayer.getName());
 
         corpse.setX(deadPlayer.getX());
         corpse.setY(deadPlayer.getY());

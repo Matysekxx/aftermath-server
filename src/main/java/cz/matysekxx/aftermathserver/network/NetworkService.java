@@ -107,19 +107,10 @@ public class NetworkService {
     }
 
     void sendUIList(Map.Entry<String, List<MetroStation>> metroStations, String id) {
-        try {
-            final UILoadResponse dto = new UILoadResponse();
-            dto.setLineId(metroStations.getKey());
-            dto.setStations(metroStations.getValue());
-
-            final TextMessage msg = new TextMessage(objectMapper.writeValueAsString(WebSocketResponse.of("OPEN_METRO_UI", dto)));
-            final WebSocketSession session = sessions.get(id);
-            if (session != null && session.isOpen()) {
-                session.sendMessage(msg);
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
+        final UILoadResponse dto = new UILoadResponse();
+        dto.setLineId(metroStations.getKey());
+        dto.setStations(metroStations.getValue());
+        sendJson(id, "OPEN_METRO_UI", dto);
     }
 
     void sendToClient(String payload, String sessionId) {
@@ -135,56 +126,19 @@ public class NetworkService {
     }
 
     void sendGameOver(String sessionId) {
-        final WebSocketSession session = sessions.get(sessionId);
-        if (session != null && session.isOpen()) {
-            final var gameOverData = Map.of("message", "YOU DIED");
-            try {
-                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("GAME_OVER", gameOverData));
-                session.sendMessage(new TextMessage(json));
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
-        }
+        sendJson(sessionId, "GAME_OVER", Map.of("message", "YOU DIED"));
     }
 
     void sendStatsToClient(Player p) {
-        final WebSocketSession session = sessions.get(p.getId());
-        if (session != null && session.isOpen()) {
-            try {
-                final StatsResponse stats = StatsResponse.of(p);
-                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("STATS_UPDATE", stats));
-                session.sendMessage(new TextMessage(json));
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
-        }
+        sendJson(p.getId(), "STATS_UPDATE", StatsResponse.of(p));
     }
 
     void sendInventory(Player p) {
-        final WebSocketSession session = sessions.get(p.getId());
-        if (session != null && session.isOpen()) {
-            try {
-                final String json = objectMapper.writeValueAsString(
-                        WebSocketResponse.of("INVENTORY_UPDATE", p.getInventory().getSlots())
-                );
-                session.sendMessage(new TextMessage(json));
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
-        }
+        sendJson(p.getId(), "INVENTORY_UPDATE", p.getInventory().getSlots());
     }
 
     void sendMapData(String sessionId, GameMapData map) {
-        final WebSocketSession session = sessions.get(sessionId);
-        if (session != null && session.isOpen()) {
-            try {
-                final MapLoadPayload payload = MapLoadPayload.of(map);
-                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("MAP_LOAD", payload));
-                session.sendMessage(new TextMessage(json));
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
-        }
+        sendJson(sessionId, "MAP_LOAD", MapLoadPayload.of(map));
     }
 
     void broadcastMapObjects(List<MapObject> objects, String mapId) {
@@ -196,50 +150,41 @@ public class NetworkService {
     }
 
     void sendMapObjects(String sessionId, List<MapObject> objects) {
-        final WebSocketSession session = sessions.get(sessionId);
-        if (session != null && session.isOpen()) {
-            try {
-                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("MAP_OBJECTS_UPDATE", objects));
-                session.sendMessage(new TextMessage(json));
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
+        sendJson(sessionId, "MAP_OBJECTS_UPDATE", objects);
+    }
+
+    void sendNpcs(String sessionId, String mapId, boolean isBroadcast, List<NpcDto> npcs) {
+        try {
+            final String json = objectMapper.writeValueAsString(WebSocketResponse.of("NPCS_UPDATE", npcs));
+            if (isBroadcast) {
+                broadcastToMap(json, mapId);
+            } else sendToClient(json, sessionId);
+        } catch (JsonProcessingException e) {
+            log.error("Error serializing NPCs: {}", e.getMessage());
         }
     }
 
     void sendPosition(Player p) {
-        final WebSocketSession session = sessions.get(p.getId());
-        if (session != null && session.isOpen()) {
-            try {
-                final PlayerUpdatePayload payload = PlayerUpdatePayload.of(p);
-                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("PLAYER_MOVED", payload));
-                session.sendMessage(new TextMessage(json));
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
-        }
+        sendJson(p.getId(), "PLAYER_MOVED", PlayerUpdatePayload.of(p));
     }
 
     void sendError(String sessionId, String message) {
-        final WebSocketSession session = sessions.get(sessionId);
-        if (session != null && session.isOpen()) {
-            try {
-                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("ACTION_FAILED", message));
-                session.sendMessage(new TextMessage(json));
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
-        }
+        sendJson(sessionId, "ACTION_FAILED", message);
     }
 
     void sendLoginOptions(String sessionId, LoginOptionsResponse response) {
+        sendJson(sessionId, "LOGIN_OPTIONS", response);
+    }
+
+    /// Helper method to serialize and send a message to a specific session.
+    private void sendJson(String sessionId, String type, Object payload) {
         final WebSocketSession session = sessions.get(sessionId);
         if (session != null && session.isOpen()) {
             try {
-                final String json = objectMapper.writeValueAsString(WebSocketResponse.of("LOGIN_OPTIONS", response));
+                final String json = objectMapper.writeValueAsString(WebSocketResponse.of(type, payload));
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {
-                log.error(e.getMessage());
+                log.error("Error sending message to {}: {}", sessionId, e.getMessage());
             }
         }
     }

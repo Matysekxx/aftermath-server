@@ -12,14 +12,14 @@ public abstract class Entity {
     protected int layerIndex;
     protected String mapId;
     protected String id;
-    protected String username;
+    protected String name;
     protected int hp;
     protected int maxHp;
     protected State state;
 
     /// Constructs a new Entity.
     public Entity(int x, int y, int layerIndex, String mapId,
-                  String id, String username, int hp, int maxHp,
+                  String id, String name, int hp, int maxHp,
                   State state
     ) {
         this.x = x;
@@ -27,7 +27,7 @@ public abstract class Entity {
         this.layerIndex = layerIndex;
         this.mapId = mapId;
         this.id = id;
-        this.username = username;
+        this.name = name;
         this.hp = hp;
         this.maxHp = maxHp;
         this.state = state;
