@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-/// Handles `OPEN_METRO_UI` events by sending the list of available metro stations to the client.
+/// Handles `OPEN_METRO_UI` events.
 @Component
 public class OpenMetroUIEventHandler extends GameEventHandler {
 
-    protected OpenMetroUIEventHandler(@Lazy NetworkService networkService) {
+    public OpenMetroUIEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }
 
@@ -26,8 +26,8 @@ public class OpenMetroUIEventHandler extends GameEventHandler {
     public void handleEvent(GameEvent event) {
         if (event.payload() instanceof Map.Entry<?, ?> entry) {
             @SuppressWarnings("unchecked")
-            var payload = (Map.Entry<String, List<MetroStation>>) entry;
-            networkService.sendUIList(payload, event.targetSessionId());
+            final Map.Entry<String, List<MetroStation>> stations = (Map.Entry<String, List<MetroStation>>) entry;
+            networkService.sendUIList(stations, event.targetSessionId());
         }
     }
 }

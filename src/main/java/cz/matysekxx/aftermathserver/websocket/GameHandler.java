@@ -49,6 +49,7 @@ public class GameHandler extends TextWebSocketHandler {
     /// @param session The new session.
     @Override
     public void afterConnectionEstablished(@NonNull WebSocketSession session) {
+        log.info("Connection established with session: {}", session.getId());
         networkService.addSession(session);
     }
 
@@ -60,6 +61,7 @@ public class GameHandler extends TextWebSocketHandler {
     protected void handleTextMessage(@NonNull WebSocketSession session, @NonNull TextMessage message) {
         try {
             final WebSocketRequest request = objectMapper.readValue(message.getPayload(), WebSocketRequest.class);
+            log.info("Received request: {} from session: {}", request.getType(), session.getId());
             if (actions.containsKey(request.getType())) {
                 final Action action = actions.get(request.getType());
                 action.execute(session.getId(), request.getPayload());
@@ -67,6 +69,8 @@ public class GameHandler extends TextWebSocketHandler {
                 if (mapId != null) {
                     networkService.updatePlayerLocation(session.getId(), mapId);
                 }
+            } else {
+                log.warn("Unknown action type: {}", request.getType());
             }
         } catch (Exception e) {
             log.error("Error while handling WebSocket request", e);

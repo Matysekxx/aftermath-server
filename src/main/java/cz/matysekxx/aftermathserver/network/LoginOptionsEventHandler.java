@@ -6,7 +6,6 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-/// Handles `SEND_LOGIN_OPTIONS` events.
 @Component
 public class LoginOptionsEventHandler extends GameEventHandler {
 

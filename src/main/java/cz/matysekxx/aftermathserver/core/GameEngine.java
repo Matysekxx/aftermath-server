@@ -72,18 +72,22 @@ public class GameEngine {
 
     /// Sends available login options (classes, maps) to the client.
     public void sendLoginOptions(String sessionId) {
-        final List<String> classes = new ArrayList<>(settings.getClasses().keySet());
+        log.info("Sending login options to session: {}", sessionId);
+        final var classesMap = settings.getClasses();
+        final List<String> classes = classesMap != null ? new ArrayList<>(classesMap.keySet()) : new ArrayList<>();
         final List<SpawnPointInfo> maps = new ArrayList<>();
 
         final List<String> allowedMaps = settings.getSpawnableMaps() != null ? settings.getSpawnableMaps() : List.of("nemocnice-motol");
 
         for (String mapId : allowedMaps) {
-            if (worldManager.containsMap(mapId)) {
+            if (worldManager.containsMap(mapId) && worldManager.getMap(mapId).getType() != MapType.HAZARD_ZONE) {
                 maps.add(new SpawnPointInfo(mapId, worldManager.getMap(mapId).getName()));
             }
         }
 
         final LoginOptionsResponse response = new LoginOptionsResponse(classes, maps);
+        log.info("Prepared LoginOptionsResponse: classes={}, maps={}", classes.size(), maps.size());
+        log.info("Enqueuing SEND_LOGIN_OPTIONS event for session: {}", sessionId);
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_LOGIN_OPTIONS, response, sessionId, null, false));
     }
 
@@ -97,7 +101,7 @@ public class GameEngine {
         }
 
         String className = request.getPlayerClass();
-        if (className == null || !settings.getClasses().containsKey(className)) {
+        if (className == null || settings.getClasses() == null || !settings.getClasses().containsKey(className)) {
             className = settings.getDefaultClass();
         }
 

@@ -102,6 +102,9 @@ public class NetworkService {
                 session.sendMessage(message);
             } catch (IOException e) {
                 log.error(e.getMessage());
+            } catch (IllegalStateException e) {
+                log.warn("Connection closed while broadcasting to {}: {}", session.getId(), e.getMessage());
+                removeSession(session.getId());
             }
         });
     }
@@ -121,6 +124,9 @@ public class NetworkService {
                 session.sendMessage(message);
             } catch (IOException e) {
                 log.error(e.getMessage());
+            } catch (IllegalStateException e) {
+                log.warn("Connection closed while sending message to {}: {}", sessionId, e.getMessage());
+                removeSession(sessionId);
             }
         }
     }
@@ -182,10 +188,16 @@ public class NetworkService {
         if (session != null && session.isOpen()) {
             try {
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of(type, payload));
+                log.info("Sending JSON to {}: {}", sessionId, json);
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {
                 log.error("Error sending message to {}: {}", sessionId, e.getMessage());
+            } catch (IllegalStateException e) {
+                log.warn("Connection closed while sending message to {}: {}", sessionId, e.getMessage());
+                removeSession(sessionId);
             }
+        } else {
+            log.warn("Cannot send message to session {}: Session not found or closed", sessionId);
         }
     }
 }

@@ -6,15 +6,15 @@ import cz.matysekxx.aftermathserver.dto.LoginRequest;
 import org.springframework.stereotype.Component;
 
 @Component("LOGIN")
-public class LoginAction extends Action{
-    protected LoginAction(GameEngine gameEngine) {
+public class LoginAction extends Action {
+
+    public LoginAction(GameEngine gameEngine) {
         super(gameEngine);
     }
 
     @Override
     public void execute(String sessionId, JsonNode payload) {
-        final var loginRequest = objectMapper.convertValue(payload, LoginRequest.class);
-        gameEngine.addPlayer(sessionId, loginRequest);
-
+        final LoginRequest request = objectMapper.convertValue(payload, LoginRequest.class);
+        gameEngine.addPlayer(sessionId, request);
     }
 }
