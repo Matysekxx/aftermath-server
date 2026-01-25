@@ -26,8 +26,6 @@ public class RestLogic implements InteractionLogic{
     public Collection<GameEvent> interact(MapObject target, Player player) {
         player.setHp(player.getMaxHp());
         player.setRads(0);
-        player.setY(target.getY());
-        player.setX(target.getX());
         return List.of(GameEvent.create(EventType.SEND_STATS, player, player.getId(), player.getMapId(), false));
     }
 }

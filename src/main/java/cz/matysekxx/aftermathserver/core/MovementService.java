@@ -11,6 +11,7 @@ import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Direction;
+import cz.matysekxx.aftermathserver.util.Vector2;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Consumer;
@@ -46,17 +47,17 @@ public class MovementService {
         targetX += dir.getDx();
         targetY += dir.getDy();
 
-        if (!canMoveTo(player, targetX, targetY)) {
+        final Vector2 target = new Vector2(targetX, targetY);
+
+        if (!canMoveTo(player, target)) {
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "OBSTACLE", player.getId(), null, false));
         }
-        player.setX(targetX);
-        player.setY(targetY);
+        player.setX(target.x());
+        player.setY(target.y());
 
         final GameMapData currentMap = worldManager.getMap(player.getMapId());
         final TriggerContext triggerContext = new TriggerContext(metroService);
-        final int finalTargetX = targetX;
-        final int finalTargetY = targetY;
-        currentMap.getDynamicTrigger(targetX, targetY, player.getLayerIndex())
+        currentMap.getDynamicTrigger(target.x(), target.y(), player.getLayerIndex())
                 .ifPresentOrElse(new Consumer<>() {
                                      @Override
                                      public void accept(TileTrigger tileTrigger) {
@@ -66,7 +67,7 @@ public class MovementService {
                         new Runnable() {
                             @Override
                             public void run() {
-                                currentMap.getMaybeTileTrigger(String.valueOf(currentMap.getLayer(player.getLayerIndex()).getSymbolAt(finalTargetX, finalTargetY)))
+                                currentMap.getMaybeTileTrigger(String.valueOf(currentMap.getLayer(player.getLayerIndex()).getSymbolAt(target.x(), target.y())))
                                         .ifPresent(tileTrigger -> tileTrigger.onEnter(player, triggerContext));
                             }
                         });
@@ -74,12 +75,12 @@ public class MovementService {
     }
 
     /// Checks if a player can move to target coordinates.
-    public boolean canMoveTo(Player player, int targetX, int targetY) {
+    public boolean canMoveTo(Player player, Vector2 target) {
         return worldManager.isWalkable(
                 player.getMapId(),
                 player.getLayerIndex(),
-                targetX,
-                targetY
+                target.x(),
+                target.y()
         );
     }
 }

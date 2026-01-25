@@ -5,7 +5,7 @@ import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.item.ItemFactory;
 import cz.matysekxx.aftermathserver.core.world.triggers.Link;
 import cz.matysekxx.aftermathserver.core.world.triggers.TeleportTrigger;
-import cz.matysekxx.aftermathserver.util.Coordination;
+import cz.matysekxx.aftermathserver.util.Vector3;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -49,21 +49,21 @@ public class MapParser {
 
     private void processLinks(GameMapData mapData, Map<Integer, ParsedMapLayer> layers) {
         if (mapData.getLinks() == null || mapData.getLinks().isEmpty()) return;
-        final Map<String, List<Coordination>> globalMarkers = new HashMap<>();
+        final Map<String, List<Vector3>> globalMarkers = new HashMap<>();
         for (ParsedMapLayer layer : layers.values()) {
             layer.getMarkers().forEach((key, value) ->
                     globalMarkers.computeIfAbsent(key, k -> new ArrayList<>()).addAll(value)
             );
         }
         for (Link link : mapData.getLinks()) {
-            final List<Coordination> sources = globalMarkers.get(link.from());
-            final List<Coordination> destinations = globalMarkers.get(link.to());
+            final List<Vector3> sources = globalMarkers.get(link.from());
+            final List<Vector3> destinations = globalMarkers.get(link.to());
             if (sources == null || destinations == null || destinations.isEmpty()) {
                 log.warn("Invalid link in map {}: {} -> {}", mapData.getId(), link.from(), link.to());
                 continue;
             }
-            final Coordination dest = destinations.getFirst();
-            for (Coordination src : sources) {
+            final Vector3 dest = destinations.getFirst();
+            for (Vector3 src : sources) {
                 final TeleportTrigger trigger = new TeleportTrigger(dest.x(), dest.y(), dest.z());
                 mapData.getDynamicTriggers().put(src, trigger);
             }

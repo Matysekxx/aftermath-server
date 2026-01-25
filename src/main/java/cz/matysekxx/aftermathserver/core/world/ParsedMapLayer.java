@@ -1,7 +1,7 @@
 package cz.matysekxx.aftermathserver.core.world;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import cz.matysekxx.aftermathserver.util.Coordination;
+import cz.matysekxx.aftermathserver.util.Vector3;
 import lombok.Getter;
 
 import java.util.*;
@@ -14,11 +14,11 @@ public class ParsedMapLayer {
     private final TileType[][] tiles;
     private final char[][] symbols;
     @JsonIgnore
-    private final Map<String, List<Coordination>> markers;
+    private final Map<String, List<Vector3>> markers;
     private final int width;
     private final int height;
 
-    private ParsedMapLayer(TileType[][] tiles, char[][] symbols, Map<String, List<Coordination>> markers) {
+    private ParsedMapLayer(TileType[][] tiles, char[][] symbols, Map<String, List<Vector3>> markers) {
         this.tiles = tiles;
         this.symbols = symbols;
         this.height = tiles.length;
@@ -34,10 +34,10 @@ public class ParsedMapLayer {
 
         final TileType[][] tiles = new TileType[height][width];
         final char[][] symbols = new char[height][width];
-        final Map<String, List<Coordination>> markers = new HashMap<>();
+        final Map<String, List<Vector3>> markers = new HashMap<>();
 
         for (int y = 0; y < height; y++) {
-            String line = lines[y];
+            final String line = lines[y];
             boolean inQuotes = false;
             for (int x = 0; x < width; x++) {
                 char c = ' ';
@@ -51,7 +51,7 @@ public class ParsedMapLayer {
                 final TileType type = registry.getType(c);
                 if (!inQuotes && c != '"' && type == TileType.UNKNOWN && c != ' ') {
                     markers.computeIfAbsent(String.valueOf(c), k -> new ArrayList<>())
-                            .add(new Coordination(x, y, layerIndex));
+                            .add(new Vector3(x, y, layerIndex));
                     tiles[y][x] = registry.getType('.');
                 } else {
                     tiles[y][x] = type;

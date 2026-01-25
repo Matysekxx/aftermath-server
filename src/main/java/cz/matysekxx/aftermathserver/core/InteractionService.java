@@ -6,6 +6,9 @@ import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
+import cz.matysekxx.aftermathserver.util.Vector2;
+import cz.matysekxx.aftermathserver.util.Vector3;
+import cz.matysekxx.aftermathserver.util.MathUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -42,16 +45,14 @@ public class InteractionService {
             return;
         }
 
-        if (Math.abs(player.getX() - target.getX()) > 1 || Math.abs(player.getY() - target.getY()) > 1) {
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "You are too far away", player.getId(), player.getMapId(), false));
-        }
-
-        final InteractionLogic interactionLogic = logicMap.get(target.getAction());
-        if (interactionLogic != null) {
-            final Collection<GameEvent> events = interactionLogic.interact(target, player);
-            if (events != null) {
-                events.forEach(gameEventQueue::enqueue);
+        final int distance = MathUtil.getChebyshevDistance(new Vector2(player.getX(), player.getY()), new Vector2(target.getX(), target.getY()));
+        if (distance <= 1) {
+            final InteractionLogic interactionLogic = logicMap.get(target.getAction());
+            if (interactionLogic != null) {
+                final Collection<GameEvent> events = interactionLogic.interact(target, player);
+                if (events != null) events.forEach(gameEventQueue::enqueue);
             }
-        }
+        } else gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "You are too far away", player.getId(), player.getMapId(), false));
+        
     }
 }

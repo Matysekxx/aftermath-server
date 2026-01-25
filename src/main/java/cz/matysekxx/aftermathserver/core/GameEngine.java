@@ -17,7 +17,7 @@ import cz.matysekxx.aftermathserver.dto.MoveRequest;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
-import cz.matysekxx.aftermathserver.util.Coordination;
+import cz.matysekxx.aftermathserver.util.Vector3;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -91,8 +91,8 @@ public class GameEngine {
         final PlayerClassConfig classConfig = settings.getClasses().get(className);
 
         final GameMapData startingMap = worldManager.getMap(mapId);
-        Coordination spawn = startingMap.getMetroSpawn(settings.getLineId());
-        if (spawn == null) spawn = new Coordination(10, 10, 0);
+        Vector3 spawn = startingMap.getMetroSpawn(settings.getLineId());
+        if (spawn == null) spawn = new Vector3(10, 10, 0);
 
         final Player newPlayer = new Player(
                 sessionId,

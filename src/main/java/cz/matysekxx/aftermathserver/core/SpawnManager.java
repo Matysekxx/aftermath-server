@@ -9,7 +9,7 @@ import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
-import cz.matysekxx.aftermathserver.util.Coordination;
+import cz.matysekxx.aftermathserver.util.Vector3;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,7 +30,7 @@ public class SpawnManager {
     private final ItemFactory itemFactory;
     private final NpcFactory npcFactory;
     private final NpcTable npcTable;
-    private final Map<String, List<Coordination>> reachableTilesCache = new ConcurrentHashMap<>();
+    private final Map<String, List<Vector3>> reachableTilesCache = new ConcurrentHashMap<>();
 
 
     public SpawnManager(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, ItemFactory itemFactory, NpcFactory npcFactory, NpcTable npcTable) {
@@ -48,7 +48,7 @@ public class SpawnManager {
     ///
     /// @param mapId The ID of the map for which we want to get spawnable positions.
     /// @return A list of coordinates where it is safe to spawn objects.
-    private List<Coordination> getReachableTiles(String mapId) {
+    private List<Vector3> getReachableTiles(String mapId) {
         return reachableTilesCache.computeIfAbsent(mapId, s -> floodFill(worldManager.getMap(s)));
     }
 
@@ -59,13 +59,13 @@ public class SpawnManager {
     /// @param mapId The ID of the target map.
     /// @param count The number of NPCs to spawn.
     public void spawnRandomNpcs(String mapId, int count) {
-        final List<Coordination> reachableTiles = getReachableTiles(mapId);
+        final List<Vector3> reachableTiles = getReachableTiles(mapId);
         final List<NpcTemplate>templates = npcTable.getDefinitions();
         if (reachableTiles.isEmpty() || templates == null || templates.isEmpty()) return;
         for (int i = 0; i < count; i++) {
-            final Coordination coordination = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
+            final Vector3 vector3 = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
             final NpcTemplate template = templates.get(ThreadLocalRandom.current().nextInt(templates.size()));
-            final Npc npc = npcFactory.createNpc(template.getId(), coordination.x(),  coordination.y(), coordination.z(), mapId);
+            final Npc npc = npcFactory.createNpc(template.getId(), vector3.x(),  vector3.y(), vector3.z(), mapId);
             final GameMapData mapData = worldManager.getMap(mapId);
             mapData.addNpc(npc);
         }
@@ -77,13 +77,13 @@ public class SpawnManager {
     /// @param npcTemplateId The ID of the NPC template (e.g., "mutant_rat").
     /// @param count The number of instances to spawn.
     public void spawnSpecificNpc(String mapId, String npcTemplateId, int count) {
-        final List<Coordination> reachableTiles = getReachableTiles(mapId);
+        final List<Vector3> reachableTiles = getReachableTiles(mapId);
         final GameMapData mapData = worldManager.getMap(mapId);
         if (reachableTiles.isEmpty()) return;
         for (int i = 0; i < count; i++) {
-            final Coordination coordination = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
+            final Vector3 vector3 = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
             final NpcTemplate template = npcTable.getTemplate(npcTemplateId);
-            final Npc npc = npcFactory.createNpc(template.getId(), coordination.x(),  coordination.y(), coordination.z(), mapId);
+            final Npc npc = npcFactory.createNpc(template.getId(), vector3.x(),  vector3.y(), vector3.z(), mapId);
             mapData.addNpc(npc);
         }
     }
