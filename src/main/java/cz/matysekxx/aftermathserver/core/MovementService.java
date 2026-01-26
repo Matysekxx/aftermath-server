@@ -6,6 +6,7 @@ import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import cz.matysekxx.aftermathserver.core.world.triggers.TriggerContext;
+import cz.matysekxx.aftermathserver.dto.MapViewportPayload;
 import cz.matysekxx.aftermathserver.dto.MoveRequest;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
@@ -75,6 +76,11 @@ public class MovementService {
                         });
 
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), player.getMapId(), false));
+
+        final var viewport = MapViewportPayload.of(
+                currentMap, player.getX(), player.getY(), GameEngine.VIEWPORT_RANGE_X, GameEngine.VIEWPORT_RANGE_Y
+        );
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, viewport, player.getId(), player.getMapId(), false));
     }
 
     /// Checks if a player can move to target coordinates.
