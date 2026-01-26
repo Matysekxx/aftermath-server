@@ -2,7 +2,6 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
-import cz.matysekxx.aftermathserver.core.model.entity.Entity;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
@@ -13,7 +12,7 @@ import cz.matysekxx.aftermathserver.core.world.MapType;
 import cz.matysekxx.aftermathserver.core.world.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.dto.ChatRequest;
-import cz.matysekxx.aftermathserver.dto.LoginOptionsResponse;
+import cz.matysekxx.aftermathserver.dto.*;
 import cz.matysekxx.aftermathserver.dto.LoginRequest;
 import cz.matysekxx.aftermathserver.dto.NpcDto;
 import cz.matysekxx.aftermathserver.dto.SpawnPointInfo;
@@ -46,6 +45,10 @@ public class GameEngine {
     private final InteractionService interactionService;
     private final EconomyService economyService;
     private final SpawnManager spawnManager;
+
+    /// Viewport constants for map rendering (radius from center)
+    public static final int VIEWPORT_RANGE_X = 40;
+    public static final int VIEWPORT_RANGE_Y = 20;
 
     private long tickCounter = 0;
     private static final int TICKS_PER_DAY = 1200;
@@ -116,7 +119,7 @@ public class GameEngine {
         );
         players.put(sessionId, newPlayer);
 
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, worldManager.getMap(mapId), sessionId, mapId, false));
+        enqueueViewport(newPlayer, startingMap);
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(mapId).getObjects(), sessionId, mapId, false));
 
         final List<NpcDto> npcs = new ArrayList<>();
@@ -264,6 +267,14 @@ public class GameEngine {
         map.addObject(corpse);
         player.getInventory().clear();
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_GAME_OVER, player, player.getId(), player.getMapId(), false));
+    }
+
+    /// Helper to generate and enqueue a viewport update for a player.
+    private void enqueueViewport(Player player, GameMapData mapData) {
+        final MapViewportPayload viewport = MapViewportPayload.of(
+                mapData, player.getX(), player.getY(), VIEWPORT_RANGE_X, VIEWPORT_RANGE_Y
+        );
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, viewport, player.getId(), player.getMapId(), false));
     }
 
     /// Retrieves a player instance by their unique session ID.
