@@ -1,9 +1,6 @@
 package cz.matysekxx.aftermathserver.core.model.entity;
 
-import cz.matysekxx.aftermathserver.core.model.behavior.AggressiveBehavior;
-import cz.matysekxx.aftermathserver.core.model.behavior.Behavior;
-import cz.matysekxx.aftermathserver.core.model.behavior.PatrolBehavior;
-import cz.matysekxx.aftermathserver.core.model.behavior.StationaryBehavior;
+import cz.matysekxx.aftermathserver.core.model.behavior.*;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.item.ItemFactory;
 import org.springframework.stereotype.Service;
@@ -40,6 +37,7 @@ public class NpcFactory {
             case "AGGRESSIVE" -> new AggressiveBehavior();
             case "PATROL" -> new PatrolBehavior();
             case "STATIONARY" -> new StationaryBehavior();
+            case "WANDERING" -> new WanderingBehavior();
             default -> throw new IllegalStateException("Unexpected value: " + template.getBehavior());
         };
         final String instanceId = template.getId() + "_" + UUID.randomUUID().toString().substring(0,8);

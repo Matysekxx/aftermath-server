@@ -2,6 +2,7 @@ package cz.matysekxx.aftermathserver.core.model.entity;
 
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.behavior.Behavior;
+import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,5 +40,10 @@ public class Npc extends Entity {
     public Npc(String id, String name, int x, int y, int layerIndex, String mapId, int maxHp, Behavior behavior) {
         super(x, y, layerIndex, mapId, id, name, maxHp, maxHp, State.ALIVE);
         this.behavior = behavior;
+    }
+
+    public void update(GameMapData gameMapData) {
+        behavior.performAction(this, gameMapData);
+        //TODO: pridat chovani npc
     }
 }

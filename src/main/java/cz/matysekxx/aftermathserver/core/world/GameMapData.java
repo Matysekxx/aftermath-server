@@ -79,4 +79,10 @@ public class GameMapData {
     public Vector3 getMetroSpawn(String lineId) {
         return spawns.get(lineId);
     }
+
+    public boolean isWalkable(int x, int y, int z) {
+        final ParsedMapLayer parsedLayer = parsedLayers.get(z);
+        if (parsedLayer == null) return false;
+        return parsedLayer.getTileAt(x, y).isWalkable();
+    }
 }

@@ -11,6 +11,7 @@ import cz.matysekxx.aftermathserver.dto.NpcDto;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
+import cz.matysekxx.aftermathserver.util.Vector3;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -79,7 +80,7 @@ public class MetroService {
                 return;
             }
             final GameMapData targetMap = worldManager.getMap(targetMapId);
-            var spawn = targetMap.getMetroSpawn(lineId);
+            final Vector3 spawn = targetMap.getMetroSpawn(lineId);
 
             if (spawn != null) {
                 final String startMapId = player.getMapId();

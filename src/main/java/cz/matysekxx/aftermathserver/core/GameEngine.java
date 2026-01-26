@@ -26,9 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /// Core engine managing the game state and loop.
@@ -135,9 +133,7 @@ public class GameEngine {
             final NpcDto npcDto = new NpcDto(npc.getId(), npc.getName(), npc.getType(), npc.getX(), npc.getY(), npc.getHp(), npc.getMaxHp(), npc.isAggressive());
             npcs.add(npcDto);
         }
-
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, npcs, sessionId, mapId, false));
-
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, mapId, false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, newPlayer, sessionId, mapId, false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, newPlayer, sessionId, mapId, false));
@@ -195,7 +191,8 @@ public class GameEngine {
         if (tickCounter % TICKS_PER_DAY == 0) {
             processDailyCycle();
         }
-        updatePlayers();
+        final Set<String> activeMaps = updatePlayers();
+        updateNpcs(activeMaps);
     }
 
     private void spawnNpc() {
@@ -207,10 +204,21 @@ public class GameEngine {
         }
     }
 
+    private void updateNpcs(Set<String> activeMaps) {
+        for (GameMapData map : worldManager.getMaps()) {
+            if (activeMaps.contains(map.getId())) {
+                for (Npc npc : map.getNpcs()) {
+                    npc.update(map);
+                }
+            }
+        }
+    }
+
     /// Updates the state of all active players.
     ///
     /// Applies environmental effects and checks for death conditions.
-    private void updatePlayers() {
+    private Set<String> updatePlayers() {
+        final Set<String> activeMapIds = new HashSet<>();
         for (Player player : players.values()) {
             if (player == null || player.getState() == State.DEAD || player.getState() == State.TRAVELLING) continue;
             final boolean statsChanged = statsService.applyStats(player);
@@ -218,10 +226,12 @@ public class GameEngine {
                 handlePlayerDeath(player);
                 continue;
             }
+            activeMapIds.add(player.getMapId());
             if (statsChanged || player.getRads() > 0)
                 gameEventQueue.enqueue(
                         GameEvent.create(EventType.SEND_STATS, player, player.getId(), player.getMapId(), false));
         }
+        return activeMapIds;
     }
 
     /// Handles the end-of-day logic.

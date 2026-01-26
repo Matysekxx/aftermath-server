@@ -41,9 +41,7 @@ public class ParsedMapLayer {
             boolean inQuotes = false;
             for (int x = 0; x < width; x++) {
                 char c = ' ';
-                if (x < line.length()) {
-                    c = line.charAt(x);
-                }
+                if (x < line.length()) c = line.charAt(x);
                 symbols[y][x] = c;
                 if (c == '"') {
                     inQuotes = !inQuotes;

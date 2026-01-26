@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class AftermathServerApplication {
     public static void main(String[] args) {
-        UseAction useAction = new UseAction();
         SpringApplication.run(AftermathServerApplication.class, args);
     }
 
