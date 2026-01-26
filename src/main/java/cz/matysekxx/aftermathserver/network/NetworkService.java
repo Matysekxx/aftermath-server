@@ -153,7 +153,7 @@ public class NetworkService {
             final String json = objectMapper.writeValueAsString(WebSocketResponse.of("NPCS_UPDATE", npcs));
             if (isBroadcast) {
                 broadcastToMap(json, mapId);
-            } else sendToClient(json, sessionId);
+            } else sendJson(sessionId, "NPCS_UPDATE", npcs);
         } catch (JsonProcessingException e) {
             log.error("Error serializing NPCs: {}", e.getMessage());
         }

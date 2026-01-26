@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/// Handles `SEND_NPCS` events.
+/// Handles `SEND_NPCS` events by dispatching them to the NetworkService.
 @Component
 public class SendNpcsEventHandler extends  GameEventHandler {
-    protected SendNpcsEventHandler(@Lazy NetworkService networkService) {
+    public SendNpcsEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }
 
@@ -20,7 +20,6 @@ public class SendNpcsEventHandler extends  GameEventHandler {
         return EventType.SEND_NPCS;
     }
 
-    /// Sends the list of NPCs to the client.
     @Override
     public void handleEvent(GameEvent event) {
         if (event.payload() instanceof List<?> list){

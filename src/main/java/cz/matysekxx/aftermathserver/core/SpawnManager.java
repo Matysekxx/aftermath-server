@@ -5,7 +5,10 @@ import cz.matysekxx.aftermathserver.core.model.entity.NpcFactory;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTable;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTemplate;
 import cz.matysekxx.aftermathserver.core.model.item.ItemFactory;
+import cz.matysekxx.aftermathserver.core.model.item.ItemTable;
+import cz.matysekxx.aftermathserver.core.model.item.ItemTemplate;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.core.world.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
@@ -30,16 +33,18 @@ public class SpawnManager {
     private final ItemFactory itemFactory;
     private final NpcFactory npcFactory;
     private final NpcTable npcTable;
+    private final ItemTable itemTable;
     private final Map<String, List<Vector3>> reachableTilesCache = new ConcurrentHashMap<>();
 
 
-    public SpawnManager(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, ItemFactory itemFactory, NpcFactory npcFactory, NpcTable npcTable) {
+    public SpawnManager(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, ItemFactory itemFactory, NpcFactory npcFactory, NpcTable npcTable, ItemTable itemTable) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
         this.itemFactory = itemFactory;
         this.npcFactory = npcFactory;
         this.npcTable = npcTable;
+        this.itemTable = itemTable;
     }
 
     /// Retrieves the list of reachable tiles for a specific map.
@@ -52,6 +57,12 @@ public class SpawnManager {
         return reachableTilesCache.computeIfAbsent(mapId, s -> floodFill(worldManager.getMap(s)));
     }
 
+    /// Returns the number of reachable tiles on a map.
+    /// Useful for calculating dynamic entity limits based on map size.
+    public int getReachableTileCount(String mapId) {
+        return getReachableTiles(mapId).size();
+    }
+
     /// Spawns a specified number of random NPCs on the given map.
     ///
     /// Selects random reachable tiles to ensure NPCs are not stuck in walls.
@@ -62,11 +73,11 @@ public class SpawnManager {
         final List<Vector3> reachableTiles = getReachableTiles(mapId);
         final List<NpcTemplate>templates = npcTable.getDefinitions();
         if (reachableTiles.isEmpty() || templates == null || templates.isEmpty()) return;
+        final GameMapData mapData = worldManager.getMap(mapId);
         for (int i = 0; i < count; i++) {
             final Vector3 vector3 = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
             final NpcTemplate template = templates.get(ThreadLocalRandom.current().nextInt(templates.size()));
             final Npc npc = npcFactory.createNpc(template.getId(), vector3.x(),  vector3.y(), vector3.z(), mapId);
-            final GameMapData mapData = worldManager.getMap(mapId);
             mapData.addNpc(npc);
         }
     }
@@ -95,6 +106,18 @@ public class SpawnManager {
     /// @param mapId The ID of the target map.
     /// @param density The density of loot (e.g., items per 100 tiles).
     public void spawnRandomLoot(String mapId, double density) {
-        //TODO: pridat logiku pro  nahodne pridani itemu na mapu
+        final List<Vector3> reachableTiles = getReachableTiles(mapId);
+        final List<ItemTemplate> templates = itemTable.getDefinitions();
+        if (reachableTiles.isEmpty() || templates == null || templates.isEmpty()) return;
+
+        final GameMapData map = worldManager.getMap(mapId);
+        final int count = (int) (reachableTiles.size() * density);
+
+        for (int i = 0; i < count; i++) {
+            final Vector3 tile = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
+            final ItemTemplate template = templates.get(ThreadLocalRandom.current().nextInt(templates.size()));
+            final MapObject lootBag = mapObjectFactory.createLootBag(template.getId(), 1, tile.x(), tile.y());
+            map.addObject(lootBag);
+        }
     }
 }
