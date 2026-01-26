@@ -1,12 +1,14 @@
 package cz.matysekxx.aftermathserver.core.logic.metro;
 
 import cz.matysekxx.aftermathserver.core.EconomyService;
+import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.entity.State;
 import cz.matysekxx.aftermathserver.core.model.metro.MetroStation;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
+import cz.matysekxx.aftermathserver.dto.MapViewportPayload;
 import cz.matysekxx.aftermathserver.dto.NpcDto;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
@@ -102,7 +104,12 @@ public class MetroService {
                 }
                 final int distance = (startIndex != -1 && targetIndex != -1) ? Math.abs(targetIndex - startIndex) : 1;
                 economyService.recordActivityCost(player, 15 * Math.max(1, distance));
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, targetMap, player.getId(), null, false));
+
+                final var viewport = MapViewportPayload.of(
+                        targetMap, player.getX(), player.getY(), GameEngine.VIEWPORT_RANGE_X, GameEngine.VIEWPORT_RANGE_Y
+                );
+                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, viewport, player.getId(), player.getMapId(), false));
+
                 gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, targetMap.getObjects(), player.getId(), targetMapId, false));
 
                 final List<NpcDto> npcs = new ArrayList<>();

@@ -47,7 +47,7 @@ public class GameEngine {
     private final SpawnManager spawnManager;
 
     /// Viewport constants for map rendering (radius from center)
-    public static final int VIEWPORT_RANGE_X = 40;
+    public static final int VIEWPORT_RANGE_X = 60;
     public static final int VIEWPORT_RANGE_Y = 20;
 
     private long tickCounter = 0;
