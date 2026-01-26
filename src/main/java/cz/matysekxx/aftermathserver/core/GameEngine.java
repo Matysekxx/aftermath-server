@@ -21,7 +21,8 @@ import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Vector3;
-import jakarta.annotation.PostConstruct;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -53,8 +54,8 @@ public class GameEngine {
     private long tickCounter = 0;
     private static final int TICKS_PER_DAY = 1200;
 
-    /// Target density: 1 NPC per 100 reachable tiles (0.05)
-    private static final double NPC_DENSITY = 0.05;
+    /// Target density: 1 NPC per 100 reachable tiles (0.0005)
+    private static final double NPC_DENSITY = 0.0005;
     private static final int DAILY_RESPAWN_COUNT = 3;
 
     public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService, SpawnManager spawnManager) {
@@ -70,7 +71,7 @@ public class GameEngine {
     }
 
     /// Initializes world content such as NPCs.
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void initializeWorld() {
         log.info("Initializing world content...");
         initialSpawnNpc();
@@ -224,7 +225,7 @@ public class GameEngine {
 
     private void spawnItems() {
         for (GameMapData map : worldManager.getMaps()) {
-            final double density = map.getType() == MapType.HAZARD_ZONE ? 0.005 : 0.001;
+            final double density = map.getType() == MapType.HAZARD_ZONE ? 0.0005 : 0.0001;
             spawnManager.spawnRandomLoot(map.getId(), density);
             log.info("Spawned loot on map: {} with density {}", map.getId(), density);
         }
