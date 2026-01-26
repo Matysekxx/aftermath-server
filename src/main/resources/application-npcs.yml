@@ -22,7 +22,7 @@ game:
         maxHp: 45
         behavior: "AGGRESSIVE"
         loot:
-          - id: "scrap"
+          - id: "scrap_metal"
             quantity: 2
 
       - id: "feral_ghoul"

@@ -6,6 +6,7 @@ spring:
       - "classpath:items-consumables.yml"
       - "classpath:items-weapons.yml"
       - "classpath:items-resources.yml"
+      - "classpath:application-npcs.yml"
 game:
   tick-rate: 500
   starting-map-id: "nadrazi-veleslavin"

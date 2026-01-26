@@ -32,3 +32,11 @@ game:
         maxStack: 10
         weight: 0.2
         price: 20
+
+      - id: "meat"
+        name: "Mutant Meat"
+        description: "Stringy, radioactive meat. Better than starving."
+        type: RESOURCE
+        maxStack: 10
+        weight: 0.3
+        price: 4
