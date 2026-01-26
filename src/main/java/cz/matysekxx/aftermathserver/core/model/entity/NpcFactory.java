@@ -37,7 +37,7 @@ public class NpcFactory {
             case "AGGRESSIVE" -> new AggressiveBehavior();
             case "PATROL" -> new PatrolBehavior();
             case "STATIONARY" -> new StationaryBehavior();
-            case "WANDERING" -> new WanderingBehavior();
+            case "IDLE" -> new IdleBehavior();
             default -> throw new IllegalStateException("Unexpected value: " + template.getBehavior());
         };
         final String instanceId = template.getId() + "_" + UUID.randomUUID().toString().substring(0,8);
