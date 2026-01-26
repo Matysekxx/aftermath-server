@@ -42,8 +42,7 @@ public class Npc extends Entity {
         this.behavior = behavior;
     }
 
-    public void update(GameMapData gameMapData) {
-        behavior.performAction(this, gameMapData);
-        //TODO: pridat chovani npc
+    public void update(GameMapData gameMapData, Collection<Player> players) {
+        behavior.update(this, gameMapData, players);
     }
 }

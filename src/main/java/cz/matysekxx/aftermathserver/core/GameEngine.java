@@ -2,6 +2,7 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
+import cz.matysekxx.aftermathserver.core.model.entity.Entity;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
@@ -79,6 +80,7 @@ public class GameEngine {
         for (GameMapData map : worldManager.getMaps()) {
             if (map.getType() == MapType.SAFE_ZONE) {
                 maps.add(new SpawnPointInfo(map.getId(), map.getName()));
+                log.info("Adding safe zone map to login options: {}", map.getId());
             }
         }
 
@@ -202,11 +204,15 @@ public class GameEngine {
     }
 
     private void updateNpcs(Set<String> activeMaps) {
+        final Map<String, List<Player>> playersByMap = new HashMap<>();
+        for (Player player : players.values()) {
+            playersByMap.computeIfAbsent(player.getMapId(), k -> new ArrayList<>()).add(player);
+        }
+
         for (GameMapData map : worldManager.getMaps()) {
             if (activeMaps.contains(map.getId())) {
-                for (Npc npc : map.getNpcs()) {
-                    npc.update(map);
-                }
+                final List<Player> playersOnMap = playersByMap.getOrDefault(map.getId(), List.of());
+                map.getNpcs().forEach(npc -> npc.update(map, playersOnMap));
             }
         }
     }
