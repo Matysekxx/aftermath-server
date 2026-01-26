@@ -53,6 +53,10 @@ public class GameEngine {
     private long tickCounter = 0;
     private static final int TICKS_PER_DAY = 1200;
 
+    /// Target density: 1 NPC per 100 reachable tiles (0.05)
+    private static final double NPC_DENSITY = 0.05;
+    private static final int DAILY_RESPAWN_COUNT = 3;
+
     public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService, SpawnManager spawnManager) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
@@ -69,7 +73,7 @@ public class GameEngine {
     @PostConstruct
     public void initializeWorld() {
         log.info("Initializing world content...");
-        spawnNpc();
+        initialSpawnNpc();
         spawnItems();
     }
 
@@ -127,6 +131,7 @@ public class GameEngine {
             final NpcDto npcDto = NpcDto.fromEntity(npc);
             npcs.add(npcDto);
         }
+        log.info("Sending {} NPCs to player {} on map {}", npcs.size(), newPlayer.getName(), mapId);
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, npcs, sessionId, mapId, false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, mapId, false));
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, newPlayer, sessionId, mapId, false));
@@ -189,18 +194,37 @@ public class GameEngine {
         updateNpcs(activeMaps);
     }
 
-    private void spawnNpc() {
+    private void initialSpawnNpc() {
         for (GameMapData map : worldManager.getMaps()) {
             if (map.getType() == MapType.HAZARD_ZONE) {
-                spawnManager.spawnRandomNpcs(map.getId(), 5);
-                log.info("Spawned NPCs on map: {}", map.getId());
+                final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
+                final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY));
+                
+                spawnManager.spawnRandomNpcs(map.getId(), maxNpcs);
+                log.info("Initial spawn on map {}: {} NPCs (based on {} tiles)", map.getId(), maxNpcs, reachableTiles);
+            }
+        }
+    }
+
+    private void respawnNpcs() {
+        for (GameMapData map : worldManager.getMaps()) {
+            if (map.getType() == MapType.HAZARD_ZONE) {
+                final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
+                final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY));
+                final int currentCount = map.getNpcs().size();
+                
+                if (currentCount < maxNpcs) {
+                    int toSpawn = Math.min(DAILY_RESPAWN_COUNT, maxNpcs - currentCount);
+                    spawnManager.spawnRandomNpcs(map.getId(), toSpawn);
+                    log.info("Respawned {} NPCs on map {} (Limit: {})", toSpawn, map.getId(), maxNpcs);
+                }
             }
         }
     }
 
     private void spawnItems() {
         for (GameMapData map : worldManager.getMaps()) {
-            double density = map.getType() == MapType.HAZARD_ZONE ? 0.05 : 0.01;
+            final double density = map.getType() == MapType.HAZARD_ZONE ? 0.005 : 0.001;
             spawnManager.spawnRandomLoot(map.getId(), density);
             log.info("Spawned loot on map: {} with density {}", map.getId(), density);
         }
@@ -215,7 +239,15 @@ public class GameEngine {
         for (GameMapData map : worldManager.getMaps()) {
             if (activeMaps.contains(map.getId())) {
                 final List<Player> playersOnMap = playersByMap.getOrDefault(map.getId(), List.of());
+
                 map.getNpcs().forEach(npc -> npc.update(map, playersOnMap));
+
+                final List<NpcDto> npcDtos = new ArrayList<>();
+                for (Npc npc : map.getNpcs()) {
+                    final var npcDto = NpcDto.fromEntity(npc);
+                    npcDtos.add(npcDto);
+                }
+                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, npcDtos, null, map.getId(), true));
             }
         }
     }
@@ -251,6 +283,8 @@ public class GameEngine {
             gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MESSAGE,
                     "A new day has dawned. Daily living fees have been deducted.", player.getId(), null, false));
         }
+        respawnNpcs();
+        spawnItems();
     }
 
     /// Handles the logic when a player's health reaches zero.
