@@ -66,6 +66,7 @@ public class GameEngine {
     public void initializeWorld() {
         log.info("Initializing world content...");
         spawnNpc();
+        spawnItems();
     }
 
     /// Sends available login options (classes, maps) to the client.
@@ -75,11 +76,9 @@ public class GameEngine {
         final List<String> classes = classesMap != null ? new ArrayList<>(classesMap.keySet()) : new ArrayList<>();
         final List<SpawnPointInfo> maps = new ArrayList<>();
 
-        final List<String> allowedMaps = settings.getSpawnableMaps() != null ? settings.getSpawnableMaps() : List.of("nemocnice-motol");
-
-        for (String mapId : allowedMaps) {
-            if (worldManager.containsMap(mapId) && worldManager.getMap(mapId).getType() != MapType.HAZARD_ZONE) {
-                maps.add(new SpawnPointInfo(mapId, worldManager.getMap(mapId).getName()));
+        for (GameMapData map : worldManager.getMaps()) {
+            if (map.getType() == MapType.SAFE_ZONE) {
+                maps.add(new SpawnPointInfo(map.getId(), map.getName()));
             }
         }
 
@@ -191,6 +190,14 @@ public class GameEngine {
                 spawnManager.spawnRandomNpcs(map.getId(), 5);
                 log.info("Spawned NPCs on map: {}", map.getId());
             }
+        }
+    }
+
+    private void spawnItems() {
+        for (GameMapData map : worldManager.getMaps()) {
+            double density = map.getType() == MapType.HAZARD_ZONE ? 0.05 : 0.01;
+            spawnManager.spawnRandomLoot(map.getId(), density);
+            log.info("Spawned loot on map: {} with density {}", map.getId(), density);
         }
     }
 
