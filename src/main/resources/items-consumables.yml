@@ -18,3 +18,21 @@ game:
         maxStack: 10
         weight: 0.3
         price: 15
+
+      - id: "canned_food"
+        name: "Canned Beef"
+        description: "Old but edible canned meat."
+        type: CONSUMABLE
+        healAmount: 15
+        maxStack: 10
+        weight: 0.4
+        price: 10
+
+      - id: "vodka"
+        name: "Vodka"
+        description: "Reduces radiation."
+        type: CONSUMABLE
+        healAmount: 5
+        maxStack: 5
+        weight: 0.5
+        price: 40

@@ -18,3 +18,12 @@ game:
         maxStack: 1
         weight: 2.5
         price: 45
+
+      - id: "knife"
+        name: "Combat Knife"
+        description: "Sharp military knife. Silent and deadly."
+        type: WEAPON
+        damage: 10
+        maxStack: 1
+        weight: 0.5
+        price: 80

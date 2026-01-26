@@ -16,3 +16,19 @@ game:
         maxStack: 20
         weight: 0.05
         price: 30
+
+      - id: "cloth"
+        name: "Cloth"
+        description: "Dirty rags. Useful for bandages."
+        type: RESOURCE
+        maxStack: 30
+        weight: 0.05
+        price: 2
+
+      - id: "chemicals"
+        name: "Chemicals"
+        description: "Unknown chemical substances."
+        type: RESOURCE
+        maxStack: 10
+        weight: 0.2
+        price: 20
