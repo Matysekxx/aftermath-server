@@ -19,10 +19,21 @@ public class ItemFactory {
     /// @param quantity The quantity.
     /// @return A new Item object.
     public Item createItem(String id, int quantity) {
-        final Item template = itemTable.getItemTemplate(id);
+        final ItemTemplate template = itemTable.getItemTemplate(id);
         if (template == null) {
             throw new IllegalArgumentException("Item template not found: " + id);
         }
-        return template.cloneWithQuantity(quantity);
+        return Item.builder()
+                .id(template.getId())
+                .name(template.getName())
+                .description(template.getDescription())
+                .quantity(quantity)
+                .maxStack(template.getMaxStack())
+                .weight(template.getWeight())
+                .type(template.getType())
+                .healAmount(template.getHealAmount())
+                .damage(template.getDamage())
+                .price(template.getPrice())
+                .build();
     }
 }

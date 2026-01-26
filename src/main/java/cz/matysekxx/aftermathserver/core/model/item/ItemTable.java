@@ -15,23 +15,27 @@ import java.util.stream.Collectors;
 @Configuration
 @ConfigurationProperties(prefix = "game.items")
 public class ItemTable {
-    private List<Item> resourceItems;
-    private List<Item> weaponItems;
-    private List<Item> consumableItems;
-    private Map<String, Item> itemsById = new HashMap<>();
+    private List<ItemTemplate> resourceItems;
+    private List<ItemTemplate> weaponItems;
+    private List<ItemTemplate> consumableItems;
+    private Map<String, ItemTemplate> itemsById = new HashMap<>();
 
     /// Initializes the lookup map after properties are set.
     @PostConstruct
     public void init() {
-        final Collection<Item> allItems = new ArrayList<>();
-        allItems.addAll(resourceItems);
-        allItems.addAll(weaponItems);
-        allItems.addAll(consumableItems);
-        itemsById = allItems.stream().collect(Collectors.toMap(Item::getId, item -> item));
+        final Collection<ItemTemplate> allItems = new ArrayList<>();
+        if (resourceItems != null) allItems.addAll(resourceItems);
+        if (weaponItems != null) allItems.addAll(weaponItems);
+        if (consumableItems != null) allItems.addAll(consumableItems);
+        itemsById = allItems.stream().collect(Collectors.toMap(ItemTemplate::getId, item -> item));
     }
 
     /// Retrieves an item template by its ID.
-    public Item getItemTemplate(String id) {
+    public ItemTemplate getItemTemplate(String id) {
         return itemsById.get(id);
+    }
+
+    public List<ItemTemplate> getDefinitions() {
+        return new ArrayList<>(itemsById.values());
     }
 }
