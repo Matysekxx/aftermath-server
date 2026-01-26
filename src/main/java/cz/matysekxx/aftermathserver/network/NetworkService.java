@@ -117,18 +117,7 @@ public class NetworkService {
     }
 
     void sendToClient(String payload, String sessionId) {
-        final TextMessage message = new TextMessage(payload);
-        final WebSocketSession session = sessions.get(sessionId);
-        if (session != null && session.isOpen()) {
-            try {
-                session.sendMessage(message);
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            } catch (IllegalStateException e) {
-                log.warn("Connection closed while sending message to {}: {}", sessionId, e.getMessage());
-                removeSession(sessionId);
-            }
-        }
+        sendJson(sessionId, "NOTIFICATION", payload);
     }
 
     void sendGameOver(String sessionId) {
@@ -188,7 +177,6 @@ public class NetworkService {
         if (session != null && session.isOpen()) {
             try {
                 final String json = objectMapper.writeValueAsString(WebSocketResponse.of(type, payload));
-                log.info("Sending JSON to {}: {}", sessionId, json);
                 session.sendMessage(new TextMessage(json));
             } catch (IOException e) {
                 log.error("Error sending message to {}: {}", sessionId, e.getMessage());
