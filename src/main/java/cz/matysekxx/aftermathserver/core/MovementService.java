@@ -49,6 +49,14 @@ public class MovementService {
 
         final Vector2 target = new Vector2(targetX, targetY);
 
+        if (!canMoveTo(player, target)) {
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "OBSTACLE", player.getId(), null, false));
+            return;
+        }
+
+        player.setX(target.x());
+        player.setY(target.y());
+
         final GameMapData currentMap = worldManager.getMap(player.getMapId());
         final TriggerContext triggerContext = new TriggerContext(metroService);
         currentMap.getDynamicTrigger(target.x(), target.y(), player.getLayerIndex())
@@ -66,13 +74,6 @@ public class MovementService {
                             }
                         });
 
-        if (!canMoveTo(player, target)) {
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "OBSTACLE", player.getId(), null, false));
-            return;
-        }
-
-        player.setX(target.x());
-        player.setY(target.y());
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), player.getMapId(), false));
     }
 
