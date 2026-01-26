@@ -28,7 +28,11 @@ public class ParsedMapLayer {
 
     /// Parses a string content into a map layer using the registry.
     public static ParsedMapLayer parse(String content, TileRegistry registry, int layerIndex) {
-        final String[] lines = content.split("\\R");
+        final String[] rawLines = content.split("\\R");
+        final String[] lines = Arrays.stream(rawLines)
+                .map(String::stripTrailing)
+                .toArray(String[]::new);
+
         final int height = lines.length;
         final int width = Arrays.stream(lines).mapToInt(String::length).max().orElse(0);
 
@@ -40,19 +44,23 @@ public class ParsedMapLayer {
             final String line = lines[y];
             boolean inQuotes = false;
             for (int x = 0; x < width; x++) {
-                char c = ' ';
-                if (x < line.length()) c = line.charAt(x);
-                symbols[y][x] = c;
-                if (c == '"') {
-                    inQuotes = !inQuotes;
-                }
-                final TileType type = registry.getType(c);
-                if (!inQuotes && c != '"' && type == TileType.UNKNOWN && c != ' ') {
-                    markers.computeIfAbsent(String.valueOf(c), k -> new ArrayList<>())
-                            .add(new Vector3(x, y, layerIndex));
-                    tiles[y][x] = registry.getType('.');
+                if (x < line.length()) {
+                    char c = line.charAt(x);
+                    symbols[y][x] = c;
+                    if (c == '"') {
+                        inQuotes = !inQuotes;
+                    }
+                    final TileType type = registry.getType(c);
+                    if (!inQuotes && c != '"' && type == TileType.UNKNOWN && c != ' ') {
+                        markers.computeIfAbsent(String.valueOf(c), k -> new ArrayList<>())
+                                .add(new Vector3(x, y, layerIndex));
+                        tiles[y][x] = registry.getType('.');
+                    } else {
+                        tiles[y][x] = type;
+                    }
                 } else {
-                    tiles[y][x] = type;
+                    symbols[y][x] = ' ';
+                    tiles[y][x] = TileType.VOID;
                 }
             }
         }
