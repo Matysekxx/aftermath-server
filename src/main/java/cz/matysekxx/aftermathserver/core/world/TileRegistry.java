@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /// Registry mapping characters in map files to `TileType` definitions.
@@ -16,7 +17,7 @@ import java.util.Map;
 @Configuration
 @ConfigurationProperties(prefix = "game.tiles")
 public class TileRegistry {
-    private Collection<TileDefinition> definitions;
+    private List<TileDefinition> definitions;
     private Map<Character, TileType> mapping = new HashMap<>();
 
     @PostConstruct
