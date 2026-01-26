@@ -1,6 +1,7 @@
 package cz.matysekxx.aftermathserver.dto;
 
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.core.world.ParsedMapLayer;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class MapViewportPayload {
     private Map<Integer, List<String>> layers;
 
     public static MapViewportPayload of(GameMapData map, int px, int py, int rx, int ry) {
-        MapViewportPayload payload = new MapViewportPayload();
+        final MapViewportPayload payload = new MapViewportPayload();
         payload.setMapName(map.getName());
         payload.setCenterX(px);
         payload.setCenterY(py);
@@ -27,16 +28,22 @@ public class MapViewportPayload {
         payload.setRangeY(ry);
 
         final Map<Integer, List<String>> slicedLayers = new HashMap<>();
-        for (Integer layerIdx : map.getParsedLayers().keySet()) {
+        for (Map.Entry<Integer, ParsedMapLayer> entry : map.getParsedLayers().entrySet()) {
             final List<String> rows = new ArrayList<>();
+            final ParsedMapLayer layer = entry.getValue();
+            
             for (int y = py - ry; y <= py + ry; y++) {
                 final StringBuilder sb = new StringBuilder();
                 for (int x = px - rx; x <= px + rx; x++) {
-                    sb.append(map.getLayer(layerIdx).getSymbolAt(x, y));
+                    if (x < 0 || y < 0 || x >= layer.getWidth() || y >= layer.getHeight()) {
+                        sb.append(' ');
+                    } else {
+                        sb.append(layer.getSymbolAt(x, y));
+                    }
                 }
                 rows.add(sb.toString());
             }
-            slicedLayers.put(layerIdx, rows);
+            slicedLayers.put(entry.getKey(), rows);
         }
         payload.setLayers(slicedLayers);
         return payload;
