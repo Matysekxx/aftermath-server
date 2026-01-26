@@ -103,6 +103,7 @@ public class GameEngine {
             className = settings.getDefaultClass();
         }
 
+        assert settings.getClasses() != null;
         final PlayerClassConfig classConfig = settings.getClasses().get(className);
 
         final GameMapData startingMap = worldManager.getMap(mapId);
@@ -119,7 +120,7 @@ public class GameEngine {
 
         final List<NpcDto> npcs = new ArrayList<>();
         for (Npc npc : worldManager.getMap(mapId).getNpcs()) {
-            final NpcDto npcDto = new NpcDto(npc.getId(), npc.getName(), npc.getType(), npc.getX(), npc.getY(), npc.getHp(), npc.getMaxHp(), npc.isAggressive());
+            final NpcDto npcDto = NpcDto.fromEntity(npc);
             npcs.add(npcDto);
         }
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, npcs, sessionId, mapId, false));

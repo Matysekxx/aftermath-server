@@ -107,7 +107,7 @@ public class MetroService {
 
                 final List<NpcDto> npcs = new ArrayList<>();
                 for (Npc npc : targetMap.getNpcs()) {
-                    final NpcDto npcDto = new NpcDto(npc.getId(), npc.getName(), npc.getType(), npc.getX(), npc.getY(), npc.getHp(), npc.getMaxHp(), npc.isAggressive());
+                    final NpcDto npcDto = NpcDto.fromEntity(npc);
                     npcs.add(npcDto);
                 }
                 gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, npcs, player.getId(), targetMapId, false));
