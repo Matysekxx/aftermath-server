@@ -109,20 +109,9 @@ public class GameEngine {
         Vector3 spawn = startingMap.getMetroSpawn(settings.getLineId());
         if (spawn == null) spawn = new Vector3(10, 10, 0);
 
-        final Player newPlayer = new Player(
-                sessionId,
-                request.getUsername(),
-                spawn.x(),
-                spawn.y(),
-                classConfig.getMaxHp(),
-                classConfig.getInventoryCapacity(),
-                classConfig.getMaxWeight(),
-                classConfig.getRadsLimit()
+        final Player newPlayer = new Player(sessionId, request.getUsername(),
+                spawn, classConfig, mapId, className
         );
-        newPlayer.setLayerIndex(spawn.z());
-        newPlayer.setId(sessionId);
-        newPlayer.setMapId(mapId);
-        newPlayer.setRole(className);
         players.put(sessionId, newPlayer);
 
         gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, worldManager.getMap(mapId), sessionId, mapId, false));

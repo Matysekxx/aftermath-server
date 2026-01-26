@@ -1,5 +1,7 @@
 package cz.matysekxx.aftermathserver.core.model.entity;
 
+import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
+import cz.matysekxx.aftermathserver.util.Vector3;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,12 +20,19 @@ public class Player extends Entity {
     private int pendingCosts;
 
     /// Creates a new Player instance.
-    public Player(String id, String username, int x, int y, int maxHp,
-                  int inventoryCapacity, double maxWeight, int radsLimit
+    public Player(String id, String username, Vector3 spawn,
+                  PlayerClassConfig playerClassConfig, String mapId,
+                  String role
     ) {
-        super(x, y, 0, "default", id, username, maxHp, maxHp, State.ALIVE);
-        this.radsLimit = radsLimit;
-        this.inventory = new Inventory(inventoryCapacity, maxWeight);
+        super(spawn.x(), spawn.y(), spawn.z(), mapId, id, username,
+                playerClassConfig.getMaxHp(), playerClassConfig.getMaxHp(),
+                State.ALIVE
+        );
+        this.radsLimit = playerClassConfig.getRadsLimit();
+        this.inventory = new Inventory(playerClassConfig.getInventoryCapacity(),
+                playerClassConfig.getMaxWeight()
+        );
+        this.role = role;
     }
 
     /// Increases radiation level, capped at the limit.
