@@ -1,6 +1,7 @@
 package cz.matysekxx.aftermathserver.network;
 
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.dto.MapViewportPayload;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.context.annotation.Lazy;
@@ -21,8 +22,8 @@ public class MapDataEventHandler extends GameEventHandler {
 
     @Override
     public void handleEvent(GameEvent event) {
-        if (event.payload() instanceof GameMapData gameMapData) {
-            networkService.sendMapData(event.targetSessionId(), gameMapData);
+        if (event.payload() instanceof MapViewportPayload viewport) {
+            networkService.sendMapData(event.targetSessionId(), viewport);
         }
     }
 }

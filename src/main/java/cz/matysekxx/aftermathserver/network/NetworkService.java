@@ -132,12 +132,8 @@ public class NetworkService {
         sendJson(p.getId(), "INVENTORY_UPDATE", p.getInventory().getSlots());
     }
 
-    void sendMapData(String sessionId, Object payload) {
-        if (payload instanceof MapViewportPayload viewport) {
-            sendJson(sessionId, "MAP_VIEWPORT", viewport);
-        } else if (payload instanceof GameMapData map) {
-            sendJson(sessionId, "MAP_LOAD", MapLoadPayload.of(map));
-        }
+    void sendMapData(String sessionId, MapViewportPayload payload) {
+        sendJson(sessionId, "MAP_VIEWPORT", payload);
     }
 
     void broadcastMapObjects(List<MapObject> objects, String mapId) {
