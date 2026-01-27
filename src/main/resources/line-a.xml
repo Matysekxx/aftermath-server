@@ -8,6 +8,9 @@
 
     <bean id="baseStationA" class="cz.matysekxx.aftermathserver.core.model.metro.MetroStation" abstract="true"/>
 
+
+    <bean id="zlicin-a" parent="baseStationA" p:id="zlicin" name="Zličín"/>
+    <bean id="bila-hora" parent="baseStationA" p:id="bila-hora" name="Bílá Hora"/>
     <bean id="nemocnice-motol" parent="baseStationA" p:id="nemocnice-motol" p:name="Nemocnice Motol"/>
     <bean id="petriny" parent="baseStationA" p:id="petriny" p:name="Petřiny"/>
     <bean id="nadrazi-veleslavin" parent="baseStationA" p:id="nadrazi-veleslavin" p:name="Veleslavín"/>
