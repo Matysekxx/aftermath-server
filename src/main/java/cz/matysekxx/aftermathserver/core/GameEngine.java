@@ -225,9 +225,18 @@ public class GameEngine {
 
     private void spawnItems() {
         for (GameMapData map : worldManager.getMaps()) {
-            final double density = map.getType() == MapType.HAZARD_ZONE ? 0.0005 : 0.0001;
-            spawnManager.spawnRandomLoot(map.getId(), density);
-            log.info("Spawned loot on map: {} with density {}", map.getId(), density);
+            final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
+            double density = map.getType() == MapType.HAZARD_ZONE ? 0.0005 : 0.0001;
+            int count = (int) (reachableTiles * density);
+
+            if (map.getType() == MapType.SAFE_ZONE) {
+                count = Math.max(4, count);
+            } else {
+                count = Math.max(8, count);
+            }
+
+            spawnManager.spawnRandomLoot(map.getId(), count);
+            log.info("Spawned {} loot items on map: {} (density {})", count, map.getId(), density);
         }
     }
 

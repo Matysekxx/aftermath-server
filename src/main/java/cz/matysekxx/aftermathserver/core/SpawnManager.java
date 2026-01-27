@@ -104,15 +104,13 @@ public class SpawnManager {
     /// Uses the ItemFactory to generate items and places them on valid tiles.
     ///
     /// @param mapId The ID of the target map.
-    /// @param density The density of loot (e.g., items per 100 tiles).
-    public void spawnRandomLoot(String mapId, double density) {
+    /// @param count The number of items to spawn.
+    public void spawnRandomLoot(String mapId, int count) {
         final List<Vector3> reachableTiles = getReachableTiles(mapId);
         final List<ItemTemplate> templates = itemTable.getDefinitions();
         if (reachableTiles.isEmpty() || templates == null || templates.isEmpty()) return;
 
         final GameMapData map = worldManager.getMap(mapId);
-        final int count = (int) (reachableTiles.size() * density);
-
         for (int i = 0; i < count; i++) {
             final Vector3 tile = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
             final ItemTemplate template = templates.get(ThreadLocalRandom.current().nextInt(templates.size()));
