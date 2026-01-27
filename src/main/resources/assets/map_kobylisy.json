@@ -1,0 +1,26 @@
+{
+  "id": "jiriho-z-podebrad",
+  "name": "Jiřího z Poděbrad",
+  "type": "HAZARD_ZONE",
+  "environment": {
+    "radiation": 5,
+    "darkness_level": 2
+  },
+  "layout": {
+    "0": "assets/maps_c/map_kobylisy.txt"
+  },
+  "objects": [
+  ],
+  "tileTriggers": {
+    "-": {
+      "lineId": "line_c"
+    },
+    "~": {
+      "lineId": "line_f"
+    }
+  },
+  "spawnMarkers": {
+    "@": "line_c",
+    "$": "line_f"
+  }
+}

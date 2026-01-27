@@ -41,6 +41,6 @@
   ],
   "spawnMarkers": {
     "@": "line_b",
-    "#": "line_c"
+    "$": "line_c"
   }
 }
