@@ -17,12 +17,8 @@
       "lineId": "line_a"
     }
   },
-  "spawns": {
-    "line_a": {
-      "x": 121,
-      "y": 14,
-      "z": 0
-    }
+  "spawnMarkers": {
+    "@": "line_a"
   }
 }
   

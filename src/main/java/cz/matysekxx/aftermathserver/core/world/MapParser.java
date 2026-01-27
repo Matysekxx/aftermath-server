@@ -23,7 +23,6 @@ import java.util.*;
 public class MapParser {
     private final TileRegistry tileRegistry;
     private final ObjectMapper objectMapper = new ObjectMapper();
-
     private final ItemFactory itemFactory;
 
     public MapParser(TileRegistry tileRegistry, ItemFactory itemFactory) {
@@ -37,7 +36,7 @@ public class MapParser {
         try (final InputStream is = resource.getInputStream()) {
             final GameMapData mapData = objectMapper.readValue(is, GameMapData.class);
             processMapObjects(mapData);
-            final Map<Integer, ParsedMapLayer> layers = parseLayoutLayers(mapData.getLayout());
+            final Map<Integer, ParsedMapLayer> layers = parseLayoutLayers(mapData);
             mapData.setParsedLayers(layers);
 
             processLinks(mapData, layers);
@@ -70,12 +69,13 @@ public class MapParser {
         }
     }
 
-    private Map<Integer, ParsedMapLayer> parseLayoutLayers(Map<Integer, String> layoutFiles) throws IOException {
+    private Map<Integer, ParsedMapLayer> parseLayoutLayers(GameMapData mapData) throws IOException {
+        Map<Integer, String> layoutFiles = mapData.getLayout();
         if (layoutFiles == null) return Map.of();
 
         final Map<Integer, ParsedMapLayer> layers = new HashMap<>();
         for (Map.Entry<Integer, String> entry : layoutFiles.entrySet()) {
-            layers.put(entry.getKey(), parseFile(entry));
+            layers.put(entry.getKey(), parseFile(entry, mapData));
         }
         return Collections.unmodifiableMap(layers);
     }
@@ -94,16 +94,16 @@ public class MapParser {
         }
     }
 
-    private ParsedMapLayer parseFile(Map.Entry<Integer, String> entry) throws IOException {
+    private ParsedMapLayer parseFile(Map.Entry<Integer, String> entry, GameMapData mapData) throws IOException {
         final ClassPathResource resource = new ClassPathResource(entry.getValue());
         try (final InputStream is = resource.getInputStream()) {
             final String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-            return ParsedMapLayer.parse(content, tileRegistry, entry.getKey());
+            return ParsedMapLayer.parse(content, tileRegistry, entry.getKey(), mapData);
         }
     }
 
     /// Parses a string content into a map layer.
     public ParsedMapLayer parseString(String content) {
-        return ParsedMapLayer.parse(content, tileRegistry, 0);
+        return ParsedMapLayer.parse(content, tileRegistry, 0, null);
     }
 }

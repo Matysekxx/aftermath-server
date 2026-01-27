@@ -41,7 +41,7 @@ class FloodFillTest {
             "#####";
 
         GameMapData map = new GameMapData();
-        ParsedMapLayer layer = ParsedMapLayer.parse(layout, registry, 0);
+        ParsedMapLayer layer = ParsedMapLayer.parse(layout, registry, 0,  map);
         map.setParsedLayers(Map.of(0, layer));
         map.setSpawns(Map.of("start", new Vector3(2, 2, 0)));
 
@@ -61,7 +61,7 @@ class FloodFillTest {
             "###";
 
         GameMapData map = new GameMapData();
-        ParsedMapLayer layer = ParsedMapLayer.parse(layout, registry, 0);
+        ParsedMapLayer layer = ParsedMapLayer.parse(layout, registry, 0, map);
         map.setParsedLayers(Map.of(0, layer));
         map.setSpawns(Map.of("start", new Vector3(1, 1, 0)));
 

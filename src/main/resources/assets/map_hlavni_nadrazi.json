@@ -14,11 +14,7 @@
   "tileTriggers": {
     "-": { "lineId": "line_c" }
   },
-  "spawns": {
-    "line_a": {
-      "x": 49,
-      "y": 18,
-      "z": 0
-    }
+  "spawnMarkers": {
+    "@": "line_c"
   }
 }

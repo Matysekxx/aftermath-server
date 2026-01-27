@@ -27,11 +27,7 @@
       "to": "▼"
     }
   ],
-  "spawns": {
-    "line_a": {
-      "x": 81,
-      "y": 9,
-      "z": 0
-    }
+  "spawnMarkers": {
+    "@": "line_a"
   }
 }

@@ -22,5 +22,8 @@
       "y": 24,
       "z": 0
     }
+  },
+  "spawnMarkers": {
+    "@": "line_a"
   }
 }

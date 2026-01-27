@@ -27,7 +27,6 @@ public class GameMapData {
     private String id;
     private String name;
     private MapType type;
-    private Map<String, Vector3> spawns = new HashMap<>();
     private Environment environment;
     private Map<Integer, String> layout = new HashMap<>();
     private Collection<MapObject> objects = new CopyOnWriteArrayList<>();
@@ -36,6 +35,9 @@ public class GameMapData {
     private Map<String, TileTrigger> tileTriggers = new HashMap<>();
     @JsonIgnore
     private Map<Vector3, TileTrigger> dynamicTriggers = new HashMap<>();
+    private Map<String, String> spawnMarkers = new HashMap<>();
+    @JsonIgnore
+    private Map<String, Vector3> spawns = new ConcurrentHashMap<>();
 
     private Collection<Link> links;
 
