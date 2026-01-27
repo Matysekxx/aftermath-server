@@ -1,26 +1,22 @@
 {
-  "id": "kobylisy",
-  "name": "Kobylisy",
+  "id": "ladvi",
+  "name": "Ládví",
   "type": "SAFE_ZONE",
   "environment": {
     "radiation": 5,
     "darkness_level": 2
   },
   "layout": {
-    "0": "assets/maps_c/map_kobylisy.txt"
+    "0": "assets/maps_c/map_ladvi.txt"
   },
   "objects": [
   ],
   "tileTriggers": {
     "-": {
       "lineId": "line_c"
-    },
-    "~": {
-      "lineId": "line_f"
     }
   },
   "spawnMarkers": {
-    "@": "line_c",
-    "$": "line_f"
+    "@": "line_c"
   }
 }

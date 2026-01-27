@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 /// Core engine managing the game state and loop.
 ///
@@ -116,8 +117,17 @@ public class GameEngine {
         final PlayerClassConfig classConfig = settings.getClasses().get(className);
 
         final GameMapData startingMap = worldManager.getMap(mapId);
-        Vector3 spawn = startingMap.getMetroSpawn(settings.getLineId());
-        if (spawn == null) spawn = new Vector3(10, 10, 0);
+
+        final Map<String, Vector3> availableSpawns = startingMap.getSpawns();
+        Vector3 spawn;
+        if (availableSpawns != null && !availableSpawns.isEmpty()) {
+            final List<Vector3> spawnList = new ArrayList<>(availableSpawns.values());
+            spawn = spawnList.get(ThreadLocalRandom.current().nextInt(spawnList.size()));
+            log.info("Player {} spawning at random marker on map {}: {}", request.getUsername(), mapId, spawn);
+        } else {
+            spawn = startingMap.getMetroSpawn(settings.getLineId());
+            if (spawn == null) spawn = new Vector3(10, 10, 0);
+        }
 
         final Player newPlayer = new Player(sessionId, request.getUsername(),
                 spawn, classConfig, mapId, className

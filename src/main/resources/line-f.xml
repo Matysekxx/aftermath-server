@@ -9,36 +9,38 @@
     <bean id="baseStationF" class="cz.matysekxx.aftermathserver.core.model.metro.MetroStation" abstract="true"/>
 
     <bean id="zbraslav" parent="baseStationF" p:id="zbraslav" p:name="Zbraslav"/>
-    <bean id="lahovice" parent="baseStationF" p:id="lahovice" p:name="Lahovice"/>
-    <bean id="nadrazi-modrany" parent="baseStationF" p:id="nadrazi-modrany" p:name="Nádraží Modřany"/>
-    <bean id="tylova-ctvrt" parent="baseStationF" p:id="tylova-ctvrt" p:name="Tylova čtvrť"/>
-    <bean id="dvorce-f" parent="baseStationF" p:id="dvorce" p:name="Dvorce"/>
+    <bean id="radotin" parent="baseStationF" p:id="radotin" p:name="Radotín"/>
+    <bean id="lochkov" parent="baseStationF" p:id="lochkov" p:name="Lochkov"/>
+    <bean id="silvenec" parent="baseStationF" p:id="silvenec" p:name="Silvenec"/>
+    <bean id="barrandov" parent="baseStationF" p:id="barrandov" p:name="Barrandov"/>
+    <bean id="hlubocepy" parent="baseStationF" p:id="hlubocepy" p:name="Hlubočepy"/>
     <bean id="smichovske-nadrazi" parent="baseStationF" p:id="smichovske-nadrazi" p:name="Smíchovské nádraží"/>
     <bean id="arbesovo-namesti" parent="baseStationF" p:id="arbesovo-namesti" p:name="Arbesovo náměstí"/>
-    <bean id="ujezd" parent="baseStationF" p:id="ujezd" p:name="Újezd"/>
     <bean id="malostranske-namesti" parent="baseStationF" p:id="malostranske-namesti" p:name="Malostranské náměstí"/>
-    <bean id="staromestska" parent="baseStationF" p:id="staromestska" p:name="Staroměstská"/>
-    <bean id="letna" parent="baseStationF" p:id="letna" p:name="Letná"/>
+    <bean id="malostranská-f" parent="baseStationF" p:id="malostranská" p:name="Malostranská"/>
+    <bean id="hradcanka-f" parent="baseStationF" p:id="hradcanska" p:name="Hradčanská"/>
+    <bean id="podbaba" parent="baseStationF" p:id="podbaba" p:name="Podbaba"/>
     <bean id="zoologicka-zahrada" parent="baseStationF" p:id="zoologicka-zahrada" p:name="Zoologická zahrada"/>
-    <bean id="bohnice" parent="baseStationF" p:id="bohnice" p:name="Bohnice"/>
     <bean id="krakov" parent="baseStationF" p:id="krakov" p:name="Krakov"/>
+    <bean id="bohnice" parent="baseStationF" p:id="bohnice" p:name="Bohnice"/>
     <bean id="kobylisy" parent="baseStationF" p:id="kobylisy" p:name="Kobylisy"/>
 
     <util:list id="line-f">
         <ref bean="zbraslav"/>
-        <ref bean="lahovice"/>
-        <ref bean="nadrazi-modrany"/>
-        <ref bean="tylova-ctvrt"/>
-        <ref bean="dvorce-f"/>
+        <ref bean="radotin"/>
+        <ref bean="lochkov"/>
+        <ref bean="silvenec"/>
+        <ref bean="barrandov"/>
+        <ref bean="hlubocepy"/>
         <ref bean="smichovske-nadrazi"/>
         <ref bean="arbesovo-namesti"/>
-        <ref bean="ujezd"/>
         <ref bean="malostranske-namesti"/>
-        <ref bean="staromestska"/>
-        <ref bean="letna"/>
+        <ref bean="malostranská-f"/>
+        <ref bean="hradcanka-f"/>
+        <ref bean="podbaba"/>
         <ref bean="zoologicka-zahrada"/>
-        <ref bean="bohnice"/>
         <ref bean="krakov"/>
+        <ref bean="bohnice"/>
         <ref bean="kobylisy"/>
     </util:list>
 
