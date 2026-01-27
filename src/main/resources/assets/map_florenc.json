@@ -1,0 +1,49 @@
+{
+  "id": "florenc",
+  "name": "Florenc",
+  "type": "SAFE_ZONE",
+  "environment": {
+    "radiation": 0,
+    "darkness_level": 2
+  },
+  "layout": {
+    "-1": "assets/maps_c/map_florenc-1.txt",
+    "0": "assets/maps_c/map_florenc0.txt",
+    "1": "assets/maps_c/map_florenc1.txt",
+    "2": "assets/maps_c/map_florenc2.txt"
+  },
+  "objects": [
+  ],
+  "tileTriggers": {
+    "-": {"lineId": "line_c"},
+    "~": {"lineId": "line_b"}
+  },
+  "links" : [
+    {
+      "from": "►",
+      "to": "◄"
+    }, {
+      "from": "◄",
+      "to": "►"
+    }, {
+      "from": "▲",
+      "to": "▼"
+    }, {
+      "from": "▼",
+      "to": "▲"
+    }, {
+      "from": "v",
+      "to": "^"
+    }, {
+      "from": "^",
+      "to": "v"
+    }
+  ],
+  "spawns": {
+    "line_a": {
+      "x": 188,
+      "y": 12,
+      "z": 1
+    }
+  }
+}
