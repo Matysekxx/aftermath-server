@@ -1,20 +1,20 @@
 {
-  "id": "petriny",
-  "name": "Petřiny",
+  "id": "vltavska",
+  "name": "Vltavská",
   "type": "HAZARD_ZONE",
   "environment": {
     "radiation": 5,
     "darkness_level": 2
   },
   "layout": {
-    "0": "assets/maps_a/map_petriny.txt"
+    "0": "assets/maps_c/map_vltavska0.txt"
   },
   "objects": [
 
   ],
   "tileTriggers": {
     "-": {
-      "lineId": "line_a"
+      "lineId": "line_c"
     }
   },
   "spawns": {
@@ -25,4 +25,3 @@
     }
   }
 }
-  
