@@ -18,7 +18,7 @@
     <bean id="staromestska-a" parent="baseStationA" p:id="staromestska" p:name="Staroměstská"/>
     <bean id="mustek-a" parent="baseStationA" p:id="mustek" p:name="Můstek"/>
     <bean id="muzeum-a" parent="baseStationA" p:id="muzeum" p:name="Muzeum"/>
-    <bean id="namesti-miru-a" parent="baseStationA" p:id="namesti_miru" p:name="Náměstí Míru"/>
+    <bean id="namesti-miru-a" parent="baseStationA" p:id="namesti-miru" p:name="Náměstí Míru"/>
     <bean id="jiriho-z-podebrad" parent="baseStationA" p:id="jiriho-z-podebrad" p:name="Jiřího z Poděbrad"/>
     <bean id="flora" parent="baseStationA" p:id="flora" p:name="Flora"/>
     <bean id="zelivskeho-a" parent="baseStationA" p:id="zelivskeho" p:name="Želivského"/>
