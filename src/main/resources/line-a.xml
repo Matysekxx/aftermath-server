@@ -29,6 +29,8 @@
     <bean id="skalka" parent="baseStationA" p:id="skalka" p:name="Skalka"/>
 
     <util:list id="line-a">
+        <ref bean="zlicin-a"/>
+        <ref bean="bila-hora"/>
         <ref bean="nemocnice-motol"/>
         <ref bean="petriny"/>
         <ref bean="nadrazi-veleslavin"/>

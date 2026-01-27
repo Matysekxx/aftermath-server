@@ -55,5 +55,6 @@
         <ref bean="strizkov"/>
         <ref bean="prosek"/>
         <ref bean="letnany"/>
+        <ref bean="cakovice"/>
     </util:list>
 </beans>
