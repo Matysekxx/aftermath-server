@@ -1,22 +1,22 @@
 {
-  "id": "dejvicka",
-  "name": "Dejvická",
+  "id": "flora",
+  "name": "Flora",
   "type": "HAZARD_ZONE",
   "environment": {
     "radiation": 5,
     "darkness_level": 2
   },
   "layout": {
-    "0": "assets/maps_a/map_dejvicka0.txt"
+    "0": "assets/maps_c/map_nadrazi_holesovice.txt"
   },
   "objects": [
   ],
   "tileTriggers": {
     "-": {
-      "lineId": "line_a"
+      "lineId": "line_c"
     }
   },
   "spawnMarkers": {
-    "@": "line_a"
+    "@": "line_c"
   }
 }
