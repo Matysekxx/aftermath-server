@@ -1,6 +1,7 @@
 package cz.matysekxx.aftermathserver.util;
 
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.core.world.TileType;
 import cz.matysekxx.aftermathserver.core.world.triggers.TeleportTrigger;
 
 import java.util.*;
@@ -60,6 +61,8 @@ public final class FloodFill {
 
     private static boolean isWalkable(GameMapData map, Vector3 c) {
         if (c.z() < 0 || c.z() >= map.getLayerCount()) return false;
+        final TileType tileType = map.getLayer(c.z()).getTileAt(c.x(), c.y());
+        if (tileType == TileType.WALL || tileType == TileType.VOID || tileType == TileType.DOOR) return false;
         return map.getLayer(c.z()).getTileAt(c.x(), c.y()).isWalkable();
     }
 }
