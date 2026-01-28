@@ -10,7 +10,9 @@
 
     <bean id="repy" parent="baseStationG" p:id="repy" p:name="Řepy"/>
     <bean id="na-fialce" parent="baseStationG" p:id="na-fialce" p:name="Na Fialce"/>
+    <bean id="homolka" parent="baseStationG" p:id="homolka" p:name="Homolka"/>
     <bean id="kotlarka" parent="baseStationG" p:id="kotlarka" p:name="Kotlářka"/>
+    <bean id="klamovka" parent="baseStationG" p:id="klamovka" p:name="Klamovka"/>
     <bean id="andel-g" parent="baseStationG" p:id="andel" p:name="Anděl"/>
     <bean id="karlovo-namesti-g" parent="baseStationG" p:id="karlovo-namesti" p:name="Karlovo náměstí"/>
     <bean id="i-p-pavlova-g" parent="baseStationG" p:id="i-p-pavlova" p:name="I. P. Pavlova"/>

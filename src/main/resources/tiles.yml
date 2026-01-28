@@ -39,8 +39,6 @@ game:
         type: DOOR
       - symbol: 'B'
         type: BED
-      - symbol: 'V'
-        type: ELEVATOR
       - symbol: 'C'
         type: COMPUTER
       - symbol: 'R'
@@ -56,6 +54,6 @@ game:
       - symbol: 'O'
         type: OVEN
       - symbol: '-'
-        type: FLOOR
+        type: FLOOR 
       - symbol: '~'
         type: FLOOR

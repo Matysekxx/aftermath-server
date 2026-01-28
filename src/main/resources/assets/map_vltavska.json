@@ -7,17 +7,24 @@
     "darkness_level": 2
   },
   "layout": {
+    "-1": "assets/maps_c/map_vltavska-1.txt",
     "0": "assets/maps_c/map_vltavska0.txt"
   },
   "objects": [
 
   ],
   "tileTriggers": {
-    "-": {
-      "lineId": "line_c"
-    }
+    "-": {"lineId": "line_c"},
+    "~": {"lineId": "line_e"}
   },
+  "links": [
+    {"from": "▲", "to": "►"},
+    {"from": "►", "to": "▲"},
+    {"from": "▼", "to": "◄"},
+    {"from": "◄", "to": "▼"}
+  ],
   "spawnMarkers": {
-    "@": "line_c"
+    "@": "line_c",
+    "$": "line_e"
   }
 }
