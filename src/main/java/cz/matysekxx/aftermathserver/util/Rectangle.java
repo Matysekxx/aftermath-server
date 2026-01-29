@@ -3,6 +3,10 @@ package cz.matysekxx.aftermathserver.util;
 
 /// @param x Rectangle top-left corner position x
 /// @param y Rectangle top-left corner position y
-/// @param w Rectangle width
-/// @param h Rectangle height
-public record Rectangle(int x, int y, int w, int h) {}
+/// @param width Rectangle width
+/// @param height Rectangle height
+public record Rectangle(int x, int y, int width, int height) {
+    public static Rectangle of(int x, int y, int width, int height)  {
+        return new Rectangle(x, y, width, height);
+    }
+}
