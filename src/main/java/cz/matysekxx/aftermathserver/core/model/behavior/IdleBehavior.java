@@ -13,7 +13,7 @@ public class IdleBehavior implements Behavior {
     @Override
     public void update(Npc npc, GameMapData map, Collection<Player> players) {
         if (ThreadLocalRandom.current().nextInt(100) < 10) {
-            final Direction dir = Direction.values()[ThreadLocalRandom.current().nextInt(Direction.values().length)];
+            final Direction dir = Direction.getRandomDirection();
             final int targetX = npc.getX() + dir.getDx();
             final int targetY = npc.getY() + dir.getDy();
 
