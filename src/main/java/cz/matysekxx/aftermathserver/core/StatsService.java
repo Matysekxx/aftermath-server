@@ -49,7 +49,6 @@ public class StatsService {
     /// Increases radiation levels and applies damage if the radiation limit is exceeded.
     ///
     /// @param player The player affected by radiation.
-    /// @param env The environmental settings of the current map.
     /// @return true if radiation increased or health decreased.
     private boolean applyRadiation(Player player) { //TODO: podle obtiznosti mapy pridavat hraci urcity pocet radiace
         player.setRads(player.getRads() + 1);
