@@ -1,10 +1,20 @@
 package cz.matysekxx.aftermathserver.core;
 
+import cz.matysekxx.aftermathserver.core.model.entity.Inventory;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
+import cz.matysekxx.aftermathserver.core.logic.items.ItemEffect;
+import cz.matysekxx.aftermathserver.core.model.item.Item;
+import cz.matysekxx.aftermathserver.core.model.item.ItemType;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapType;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
+import cz.matysekxx.aftermathserver.dto.UseRequest;
+import cz.matysekxx.aftermathserver.event.EventType;
+import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /// Service responsible for managing and applying periodic changes to player statistics.
 ///
@@ -13,9 +23,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class StatsService {
     private final WorldManager worldManager;
+    private final GameEventQueue gameEventQueue;
+    private final Map<String, ItemEffect> itemEffects;
 
-    public StatsService(WorldManager worldManager) {
+    public StatsService(WorldManager worldManager, GameEventQueue gameEventQueue, Map<String, ItemEffect> itemEffects) {
         this.worldManager = worldManager;
+        this.gameEventQueue = gameEventQueue;
+        this.itemEffects = itemEffects;
     }
 
     /// Applies environmental effects to a player based on the current map type.
@@ -57,5 +71,28 @@ public class StatsService {
             return true;
         }
         return false;
+    }
+
+    /// Processes the usage of a consumable item by delegating to the appropriate effect logic.
+    ///
+    /// @param player The player using the item.
+    /// @param useRequest The request containing inventory slot information.
+    public void useConsumable(Player player, UseRequest useRequest) {
+        final Inventory inventory = player.getInventory();
+        final Item item = inventory.getSlots().get(useRequest.getSlotIndex());
+
+        if (item == null || item.getType() != ItemType.CONSUMABLE) {
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Item cannot be used", player.getId(), null, false));
+            return;
+        }
+
+        if (item.getEffect() != null && itemEffects.containsKey(item.getEffect())) {
+            final boolean success = itemEffects.get(item.getEffect()).apply(player, item);
+            if (success) {
+                inventory.removeItem(useRequest.getSlotIndex(), 1);
+                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
+                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, player, player.getId(), player.getMapId(), false));
+            }
+        }
     }
 }
