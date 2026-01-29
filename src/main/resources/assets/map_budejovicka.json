@@ -1,0 +1,23 @@
+{
+  "id": "budejovicka",
+  "name": "Budějovická",
+  "type": "SAFE_ZONE",
+  "layout": {
+    "0": "assets/maps_c/map_budejovicka0.txt",
+    "1": "assets/maps_c/map_budejovicka1.txt"
+  },
+  "objects": [
+  ],
+  "tileTriggers": {
+    "-": {"lineId": "line_c"}
+  },
+  "links": [
+    {"from": "►", "to": "▲"},
+    {"from": "▲", "to": "►"},
+    {"from": "◄", "to": "▼"},
+    {"from": "▼", "to": "◄"}
+  ],
+  "spawnMarkers": {
+    "@": "line_c"
+  }
+}
