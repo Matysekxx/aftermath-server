@@ -27,7 +27,7 @@ public class GameMapData {
     private String id;
     private String name;
     private MapType type;
-    private Environment environment;
+    private int difficulty;
     private Map<Integer, String> layout = new HashMap<>();
     private Collection<MapObject> objects = new CopyOnWriteArrayList<>();
     private Collection<Npc> npcs = new CopyOnWriteArrayList<>();
