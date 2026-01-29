@@ -1,28 +1,31 @@
 game:
   items:
-    consumable-items:
-      - id: "medkit_basic"
-        name: "Basic Medkit"
-        description: "A small first aid kit with bandages and antiseptic."
+    consumableItems:
+      - id: "medkit"
+        name: "Medkit"
+        description: "Standard military medical kit."
         type: CONSUMABLE
-        healAmount: 30
+        effect: "HEAL"
+        healAmount: 50
         maxStack: 5
         weight: 0.5
-        price: 50
+        price: 40
 
-      - id: "water_bottle"
-        name: "Purified Water"
-        description: "Clean water in a plastic bottle."
+      - id: "antirad"
+        name: "Anti-Rad Injection"
+        description: "Reduces radiation levels immediately."
         type: CONSUMABLE
-        healAmount: 10
+        effect: "ANTIRAD"
+        healAmount: 30
         maxStack: 10
         weight: 0.3
-        price: 15
+        price: 35
 
       - id: "canned_food"
         name: "Canned Beef"
         description: "Old but edible canned meat."
         type: CONSUMABLE
+        effect: "HEAL"
         healAmount: 15
         maxStack: 10
         weight: 0.4
@@ -30,9 +33,20 @@ game:
 
       - id: "vodka"
         name: "Vodka"
-        description: "Reduces radiation."
+        description: "Reduces radiation but makes you dizzy."
         type: CONSUMABLE
+        effect: "ANTIRAD"
         healAmount: 5
         maxStack: 5
         weight: 0.5
         price: 40
+
+      - id: "filter"
+        name: "Gas Mask Filter"
+        description: "A fresh filter for your gas mask. Increases radiation resistance."
+        type: CONSUMABLE
+        effect: "FILTER"
+        healAmount: 50
+        maxStack: 5
+        weight: 0.2
+        price: 60
