@@ -2,6 +2,7 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
+import cz.matysekxx.aftermathserver.core.model.entity.Entity;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
@@ -48,6 +49,7 @@ public class GameEngine {
     private final EconomyService economyService;
     private final SpawnManager spawnManager;
     private final CombatService combatService;
+    private final SpatialService spatialService;
 
     /// Viewport constants for map rendering (radius from center)
     public static final int VIEWPORT_RANGE_X = 60;
@@ -60,7 +62,7 @@ public class GameEngine {
     private static final double NPC_DENSITY = 0.0005;
     private static final int DAILY_RESPAWN_COUNT = 3;
 
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService, SpawnManager spawnManager, CombatService combatService) {
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService, SpawnManager spawnManager, CombatService combatService, SpatialService spatialService) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
@@ -71,6 +73,7 @@ public class GameEngine {
         this.economyService = economyService;
         this.spawnManager = spawnManager;
         this.combatService = combatService;
+        this.spatialService = spatialService;
     }
 
     /// Initializes world content such as NPCs.
@@ -270,6 +273,11 @@ public class GameEngine {
                     npcDtos.add(npcDto);
                 }
                 gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, npcDtos, null, map.getId(), true));
+
+                final List<Entity> allEntities = new ArrayList<>();
+                allEntities.addAll(map.getNpcs());
+                allEntities.addAll(playersOnMap);
+                spatialService.rebuildIndex(map.getId(), allEntities);
             }
         }
     }
@@ -342,7 +350,7 @@ public class GameEngine {
     }
 
     public void processAttack(String sessionId, AttackRequest attackRequest) {
-        //TODO
+        combatService.handleAttack(players.get(sessionId), attackRequest);
     }
 
     public void processUse(String sessionId, UseRequest useRequest) {

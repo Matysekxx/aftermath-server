@@ -1,30 +1,102 @@
 package cz.matysekxx.aftermathserver.core;
 
+import cz.matysekxx.aftermathserver.core.model.entity.Entity;
+import cz.matysekxx.aftermathserver.core.model.entity.Inventory;
+import cz.matysekxx.aftermathserver.core.model.entity.Npc;
+import cz.matysekxx.aftermathserver.core.model.entity.Player;
+import cz.matysekxx.aftermathserver.core.model.item.Item;
+import cz.matysekxx.aftermathserver.core.model.item.ItemType;
+import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.core.world.MapObject;
+import cz.matysekxx.aftermathserver.core.world.MapObjectFactory;
+import cz.matysekxx.aftermathserver.core.world.WorldManager;
+import cz.matysekxx.aftermathserver.dto.AttackRequest;
+import cz.matysekxx.aftermathserver.dto.NpcDto;
+import cz.matysekxx.aftermathserver.event.EventType;
+import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
-import cz.matysekxx.aftermathserver.util.QuadTree;
-import jakarta.annotation.PostConstruct;
-import org.springframework.boot.autoconfigure.mail.MailProperties;
+import cz.matysekxx.aftermathserver.util.MathUtil;
+import cz.matysekxx.aftermathserver.util.Vector2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+import java.util.Optional;
 
 @Service
+@Slf4j
 public class CombatService {
+    private final WorldManager worldManager;
     private final GameEventQueue gameEventQueue;
-    private final Map<String, QuadTree>  quadTrees = new ConcurrentHashMap<>();
+    private final MapObjectFactory mapObjectFactory;
+    private final SpatialService spatialService;
 
-    //TODO: implementovat QuadTree
-    public CombatService(GameEventQueue gameEventQueue) {
+    public CombatService(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, SpatialService spatialService) {
+        this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
+        this.mapObjectFactory = mapObjectFactory;
+        this.spatialService = spatialService;
     }
 
-    @PostConstruct
-    public void init() {
+    public void handleAttack(Player player, AttackRequest attackRequest) {
+        final GameMapData map = worldManager.getMap(player.getMapId());
+        if (map == null) return;
 
+        final Optional<Npc> closestEntity = map.getNpcs().stream()
+                .filter(e -> e.getId().equals(attackRequest.getTargetId()))
+                .findFirst();
+        if (closestEntity.isEmpty()) {
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Target not found", player.getId(), null, false));
+            return;
+        }
+
+        final Npc target = closestEntity.get();
+        final int distance = MathUtil.getChebyshevDistance(
+                Vector2.of(player.getX(),  player.getY()),
+                Vector2.of(target.getX(), target.getY())
+        );
+
+        final Inventory inv = player.getInventory();
+        if (!inv.getSlots().containsKey(attackRequest.getWeaponIndex())) {
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "No weapon in selected slot", player.getId(), null, false));
+            return;
+        }
+
+        final Item weapon = inv.getSlots().get(attackRequest.getWeaponIndex());
+        if (weapon.getType() != ItemType.WEAPON) {
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "This item is not a weapon", player.getId(), null, false));
+            return;
+        }
+
+        final int weaponRange = weapon.getRange() != null ? weapon.getRange() : 1;
+        if (distance > weaponRange) {
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Target out of range", player.getId(), null, false));
+            return;
+        }
+
+        target.takeDamage(weapon.getDamage());
+        log.info("Player {} dealt {} damage to NPC {}", player.getName(), weapon.getDamage(), target.getName());
+
+        if (target.isDead()) handleNpcDeath(target, map, player.getId());
+        else {
+            final List<NpcDto> update = List.of(NpcDto.fromEntity(target));
+            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, update, null, map.getId(), true));
+        }
     }
 
+    private void handleNpcDeath(Npc npc, GameMapData map, String killerId) {
+        map.getNpcs().remove(npc);
+        if (npc.getLoot() != null) {
+            for (Item item : npc.getLoot()) {
+                final MapObject lootBag = mapObjectFactory.createLootBag(item.getId(), item.getQuantity(), npc.getX(), npc.getY());
+                map.addObject(lootBag);
+            }
+        }
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, map.getObjects(), null, map.getId(), true));
 
+        final List<NpcDto> remainingNpcs = map.getNpcs().stream().map(NpcDto::fromEntity).toList();
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, remainingNpcs, null, map.getId(), true));
 
+        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MESSAGE, "You killed " + npc.getName(), killerId, null, false));
+    }
 }
