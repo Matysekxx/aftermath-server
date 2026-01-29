@@ -2,10 +2,6 @@
   "id": "hlavni-nadrazi",
   "name": "Hlavní nádraží",
   "type": "HAZARD_ZONE",
-  "environment": {
-    "radiation": 5,
-    "darkness_level": 2
-  },
   "layout": {
     "0": "assets/maps_c/map_hlavni_nadrazi0.txt"
   },

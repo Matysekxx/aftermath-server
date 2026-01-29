@@ -2,10 +2,6 @@
   "id": "florenc",
   "name": "Florenc",
   "type": "SAFE_ZONE",
-  "environment": {
-    "radiation": 0,
-    "darkness_level": 2
-  },
   "layout": {
     "-1": "assets/maps_c/map_florenc-1.txt",
     "0": "assets/maps_c/map_florenc0.txt",

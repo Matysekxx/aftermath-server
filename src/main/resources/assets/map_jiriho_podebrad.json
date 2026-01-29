@@ -2,10 +2,6 @@
   "id": "jiriho-z-podebrad",
   "name": "Jiřího z Poděbrad",
   "type": "HAZARD_ZONE",
-  "environment": {
-    "radiation": 5,
-    "darkness_level": 2
-  },
   "layout": {
     "0": "assets/maps_a/map_jiriho_podebrad0.txt"
   },

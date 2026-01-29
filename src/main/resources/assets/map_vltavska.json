@@ -2,10 +2,6 @@
   "id": "vltavska",
   "name": "Vltavská",
   "type": "HAZARD_ZONE",
-  "environment": {
-    "radiation": 5,
-    "darkness_level": 2
-  },
   "layout": {
     "-1": "assets/maps_c/map_vltavska-1.txt",
     "0": "assets/maps_c/map_vltavska0.txt"

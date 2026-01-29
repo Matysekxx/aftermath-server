@@ -2,10 +2,6 @@
   "id": "petriny",
   "name": "Petřiny",
   "type": "HAZARD_ZONE",
-  "environment": {
-    "radiation": 5,
-    "darkness_level": 2
-  },
   "layout": {
     "0": "assets/maps_a/map_petriny.txt"
   },

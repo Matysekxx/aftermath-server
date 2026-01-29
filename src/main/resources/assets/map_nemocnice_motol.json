@@ -2,10 +2,6 @@
   "id": "nemocnice-motol",
   "name": "Nemocnice Motol",
   "type": "SAFE_ZONE",
-  "environment": {
-    "radiation": 0,
-    "darkness_level": 1
-  },
   "layout": {
     "0": "assets/maps_a/map_nemocnice_motol0.txt"
   },
