@@ -1,7 +1,6 @@
 package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
-import cz.matysekxx.aftermathserver.core.world.Environment;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapType;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
@@ -25,9 +24,8 @@ public class StatsService {
     /// @return true if any statistics were changed, false otherwise.
     public boolean applyStats(Player player) {
         final GameMapData map = worldManager.getMap(player.getMapId());
-        final Environment env = map.getEnvironment();
         return switch (map.getType()) {
-            case MapType.HAZARD_ZONE -> applyRadiation(player, env);
+            case MapType.HAZARD_ZONE -> applyRadiation(player);
             case MapType.SAFE_ZONE -> applyRegeneration(player);
         };
     }
@@ -53,13 +51,11 @@ public class StatsService {
     /// @param player The player affected by radiation.
     /// @param env The environmental settings of the current map.
     /// @return true if radiation increased or health decreased.
-    private boolean applyRadiation(Player player, Environment env) {
-        if (env.getRadiation() > 0) {
-            player.setRads(player.getRads() + env.getRadiation());
-            if (player.getRads() > player.getRadsLimit()) {
-                player.setHp(player.getHp() - 1);
-                return true;
-            }
+    private boolean applyRadiation(Player player) { //TODO: podle obtiznosti mapy pridavat hraci urcity pocet radiace
+        player.setRads(player.getRads() + 1);
+        if (player.getRads() > player.getRadsLimit()) {
+            player.setHp(player.getHp() - 1);
+            return true;
         }
         return false;
     }
