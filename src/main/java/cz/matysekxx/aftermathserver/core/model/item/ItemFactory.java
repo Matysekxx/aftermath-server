@@ -34,6 +34,7 @@ public class ItemFactory {
                 .healAmount(template.getHealAmount())
                 .damage(template.getDamage())
                 .price(template.getPrice())
+                .effect(template.getEffect())
                 .build();
     }
 }

@@ -16,4 +16,5 @@ public class ItemTemplate {
     private Integer healAmount;
     private Integer damage;
     private Integer price;
+    private String effect;
 }

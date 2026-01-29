@@ -34,6 +34,7 @@ public class Item {
     private Integer damage;
     /// Value in game currency.
     private Integer price;
+    private String effect;
 
     /// Calculates the total weight of the item stack.
     public final double getTotalWeight() {
@@ -43,10 +44,5 @@ public class Item {
     /// Creates a copy of this item with a specific quantity.
     public Item cloneWithQuantity(int quantity) {
         return this.toBuilder().quantity(quantity).build();
-    }
-
-    /// Applies the item's effect to the player.
-    public void use(Player player) {
-        //TODO: implementovat logiku pouziti itemu
     }
 }
