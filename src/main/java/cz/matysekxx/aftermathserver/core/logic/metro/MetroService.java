@@ -10,8 +10,7 @@ import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.dto.MapViewportPayload;
 import cz.matysekxx.aftermathserver.dto.NpcDto;
-import cz.matysekxx.aftermathserver.event.EventType;
-import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import lombok.extern.slf4j.Slf4j;
@@ -55,14 +54,14 @@ public class MetroService {
 
         if (availableDestinations == null) {
             log.error("Metro line not found: {}", lineId);
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Metro line not found", player.getId(), null, false));
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Metro line not found", player.getId()));
             return;
         }
 
         player.setState(State.TRAVELLING);
         final Map.Entry<String, List<MetroStation>> payload = Map.entry(lineId, availableDestinations);
         gameEventQueue.enqueue(
-                GameEvent.create(EventType.OPEN_METRO_UI, payload, player.getId(), null, false)
+                GameEventFactory.sendMetroUiEvent(payload, player.getId())
         );
     }
 
@@ -78,7 +77,7 @@ public class MetroService {
         try {
             if (!worldManager.containsMap(targetMapId)) {
                 log.error("Target map not found: {}", targetMapId);
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Travel failed: " + targetMapId, player.getId(), null, false));
+                gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Travel failed: " + targetMapId, player.getId()));
                 return;
             }
             final GameMapData targetMap = worldManager.getMap(targetMapId);
@@ -108,27 +107,27 @@ public class MetroService {
                 final var viewport = MapViewportPayload.of(
                         targetMap, player.getX(), player.getY(), GameEngine.VIEWPORT_RANGE_X, GameEngine.VIEWPORT_RANGE_Y
                 );
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, viewport, player.getId(), player.getMapId(), false));
+                gameEventQueue.enqueue(GameEventFactory.sendMapDataEvent(viewport, player.getId()));
 
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, targetMap.getObjects(), player.getId(), targetMapId, false));
+                gameEventQueue.enqueue(GameEventFactory.sendMapObjectsToPlayer(targetMap.getObjects(), player.getId()));
 
                 final List<NpcDto> npcs = new ArrayList<>();
                 for (Npc npc : targetMap.getNpcs()) {
                     final NpcDto npcDto = NpcDto.fromEntity(npc);
                     npcs.add(npcDto);
                 }
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, npcs, player.getId(), targetMapId, false));
+                gameEventQueue.enqueue(GameEventFactory.sendNpcsToPlayer(npcs, player.getId()));
 
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), null, false));
+                gameEventQueue.enqueue(GameEventFactory.sendPositionEvent(player));
             } else {
                 log.error("Metro spawn not found for map: {} and line: {}", targetMapId, lineId);
                 player.setState(State.ALIVE);
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Travel failed: Destination spawn missing", player.getId(), null, false));
+                gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Travel failed: Destination spawn missing", player.getId()));
             }
         } catch (Exception e) {
             log.error("Error during travel to map: {}", targetMapId, e);
             player.setState(State.ALIVE);
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Travel failed: " + e.getMessage(), player.getId(), null, false));
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Travel failed: " + e.getMessage(), player.getId()));
         }
     }
 

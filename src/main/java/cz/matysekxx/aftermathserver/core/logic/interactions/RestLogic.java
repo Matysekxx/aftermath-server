@@ -4,6 +4,7 @@ import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -26,6 +27,6 @@ public class RestLogic implements InteractionLogic{
     public Collection<GameEvent> interact(MapObject target, Player player) {
         player.setHp(player.getMaxHp());
         player.setRads(0);
-        return List.of(GameEvent.create(EventType.SEND_STATS, player, player.getId(), player.getMapId(), false));
+        return List.of(GameEventFactory.sendStatsEvent(player));
     }
 }

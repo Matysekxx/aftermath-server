@@ -3,8 +3,8 @@ package cz.matysekxx.aftermathserver.core.logic.interactions;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
-import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class LootLogic implements InteractionLogic {
     @Override
     public synchronized Collection<GameEvent> interact(MapObject target, Player player) {
         if (target.getItems().isEmpty()) {
-            return List.of(GameEvent.create(EventType.SEND_MESSAGE, target.getDescription() + " - It is empty", player.getId(), null, false));
+            return List.of(GameEventFactory.sendMessageEvent(target.getDescription() + " - It is empty", player.getId()));
         }
 
         final StringBuilder message = new StringBuilder(target.getDescription() + "\nYou found:");
@@ -45,8 +45,8 @@ public class LootLogic implements InteractionLogic {
         }
 
         final Collection<GameEvent> events = new ArrayList<>();
-        events.add(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
-        events.add(GameEvent.create(EventType.SEND_MESSAGE, message.toString(), player.getId(), null, false));
+        events.add(GameEventFactory.sendInventoryEvent(player));
+        events.add(GameEventFactory.sendMessageEvent(message.toString(), player.getId()));
 
         return events;
     }

@@ -8,8 +8,7 @@ import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import cz.matysekxx.aftermathserver.core.world.triggers.TriggerContext;
 import cz.matysekxx.aftermathserver.dto.MapViewportPayload;
 import cz.matysekxx.aftermathserver.dto.MoveRequest;
-import cz.matysekxx.aftermathserver.event.EventType;
-import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Direction;
 import cz.matysekxx.aftermathserver.util.Vector2;
@@ -51,7 +50,7 @@ public class MovementService {
         final Vector2 target = new Vector2(targetX, targetY);
 
         if (!canMoveTo(player, target)) {
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "OBSTACLE", player.getId(), null, false));
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("OBSTACLE", player.getId()));
             return;
         }
 
@@ -75,12 +74,12 @@ public class MovementService {
                             }
                         });
 
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, player, player.getId(), player.getMapId(), false));
+        gameEventQueue.enqueue(GameEventFactory.sendPositionEvent(player));
 
         final var viewport = MapViewportPayload.of(
                 currentMap, player.getX(), player.getY(), GameEngine.VIEWPORT_RANGE_X, GameEngine.VIEWPORT_RANGE_Y
         );
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, viewport, player.getId(), player.getMapId(), false));
+        gameEventQueue.enqueue(GameEventFactory.sendMapDataEvent(viewport, player.getId()));
     }
 
     /// Checks if a player can move to target coordinates.

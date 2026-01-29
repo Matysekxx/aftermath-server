@@ -1,6 +1,5 @@
 package cz.matysekxx.aftermathserver.core;
 
-import cz.matysekxx.aftermathserver.core.model.entity.Entity;
 import cz.matysekxx.aftermathserver.core.model.entity.Inventory;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
@@ -12,8 +11,7 @@ import cz.matysekxx.aftermathserver.core.world.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.dto.AttackRequest;
 import cz.matysekxx.aftermathserver.dto.NpcDto;
-import cz.matysekxx.aftermathserver.event.EventType;
-import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.MathUtil;
 import cz.matysekxx.aftermathserver.util.Vector2;
@@ -46,7 +44,7 @@ public class CombatService {
                 .filter(e -> e.getId().equals(attackRequest.getTargetId()))
                 .findFirst();
         if (closestEntity.isEmpty()) {
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Target not found", player.getId(), null, false));
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Target not found", player.getId()));
             return;
         }
 
@@ -58,19 +56,19 @@ public class CombatService {
 
         final Inventory inv = player.getInventory();
         if (!inv.getSlots().containsKey(attackRequest.getWeaponIndex())) {
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "No weapon in selected slot", player.getId(), null, false));
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Invalid weapon index", player.getId()));
             return;
         }
 
         final Item weapon = inv.getSlots().get(attackRequest.getWeaponIndex());
         if (weapon.getType() != ItemType.WEAPON) {
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "This item is not a weapon", player.getId(), null, false));
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("This item is not a weapon", player.getId()));
             return;
         }
 
         final int weaponRange = weapon.getRange() != null ? weapon.getRange() : 1;
         if (distance > weaponRange) {
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Target out of range", player.getId(), null, false));
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Weapon range exceeded", player.getId()));
             return;
         }
 
@@ -80,7 +78,7 @@ public class CombatService {
         if (target.isDead()) handleNpcDeath(target, map, player.getId());
         else {
             final List<NpcDto> update = List.of(NpcDto.fromEntity(target));
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, update, null, map.getId(), true));
+            gameEventQueue.enqueue(GameEventFactory.broadcastNpcs(update, map.getId()));
         }
     }
 
@@ -92,11 +90,11 @@ public class CombatService {
                 map.addObject(lootBag);
             }
         }
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, map.getObjects(), null, map.getId(), true));
+        gameEventQueue.enqueue(GameEventFactory.broadcastMapObjects(map.getObjects(), map.getId()));
 
         final List<NpcDto> remainingNpcs = map.getNpcs().stream().map(NpcDto::fromEntity).toList();
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, remainingNpcs, null, map.getId(), true));
+        gameEventQueue.enqueue(GameEventFactory.broadcastNpcs(remainingNpcs, map.getId()));
 
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MESSAGE, "You killed " + npc.getName(), killerId, null, false));
+        gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("You killed " + npc.getName(), killerId));
     }
 }

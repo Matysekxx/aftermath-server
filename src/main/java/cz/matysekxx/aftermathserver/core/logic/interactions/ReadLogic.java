@@ -2,8 +2,8 @@ package cz.matysekxx.aftermathserver.core.logic.interactions;
 
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
-import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -16,6 +16,6 @@ import java.util.List;
 public class ReadLogic implements InteractionLogic {
     @Override
     public Collection<GameEvent> interact(MapObject target, Player player) {
-        return List.of(GameEvent.create(EventType.SEND_MESSAGE, target.getDescription(), player.getId(), null, false));
+        return List.of(GameEventFactory.sendMessageEvent(target.getDescription(), player.getId()));
     }
 }

@@ -3,8 +3,8 @@ package cz.matysekxx.aftermathserver.core;
 import cz.matysekxx.aftermathserver.core.logic.interactions.InteractionLogic;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
-import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Vector2;
 import cz.matysekxx.aftermathserver.util.Vector3;
@@ -41,7 +41,7 @@ public class InteractionService {
     /// @param target The object being interacted with.
     public void processInteraction(Player player, MapObject target) {
         if (target == null) {
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Object not found", player.getId(), player.getMapId(), false));
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Object not found", player.getId()));
             return;
         }
 
@@ -52,7 +52,7 @@ public class InteractionService {
                 final Collection<GameEvent> events = interactionLogic.interact(target, player);
                 if (events != null) events.forEach(gameEventQueue::enqueue);
             }
-        } else gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "You are too far away", player.getId(), player.getMapId(), false));
+        } else gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You are too far away", player.getId()));
         
     }
 }

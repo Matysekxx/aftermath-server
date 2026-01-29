@@ -20,6 +20,7 @@ import cz.matysekxx.aftermathserver.dto.SpawnPointInfo;
 import cz.matysekxx.aftermathserver.dto.MoveRequest;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -101,7 +102,7 @@ public class GameEngine {
         final LoginOptionsResponse response = new LoginOptionsResponse(classes, maps);
         log.info("Prepared LoginOptionsResponse: classes={}, maps={}", classes.size(), maps.size());
         log.info("Enqueuing SEND_LOGIN_OPTIONS event for session: {}", sessionId);
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_LOGIN_OPTIONS, response, sessionId, null, false));
+        gameEventQueue.enqueue(GameEventFactory.sendLoginOptionsEvent(response, sessionId));
     }
 
     /// Adds a new player session to the game.
@@ -140,7 +141,7 @@ public class GameEngine {
         players.put(sessionId, newPlayer);
 
         enqueueViewport(newPlayer, startingMap);
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, worldManager.getMap(mapId).getObjects(), sessionId, mapId, false));
+        gameEventQueue.enqueue(GameEventFactory.sendMapObjectsToPlayer(worldManager.getMap(mapId).getObjects(), sessionId));
 
         final List<NpcDto> npcs = new ArrayList<>();
         for (Npc npc : worldManager.getMap(mapId).getNpcs()) {
@@ -148,10 +149,10 @@ public class GameEngine {
             npcs.add(npcDto);
         }
         log.info("Sending {} NPCs to player {} on map {}", npcs.size(), newPlayer.getName(), mapId);
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, npcs, sessionId, mapId, false));
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, newPlayer, sessionId, mapId, false));
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, newPlayer, sessionId, mapId, false));
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_PLAYER_POSITION, newPlayer, sessionId, mapId, false));
+        gameEventQueue.enqueue(GameEventFactory.sendNpcsToPlayer(npcs, sessionId));
+        gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(newPlayer));
+        gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(newPlayer));
+        gameEventQueue.enqueue(GameEventFactory.sendPositionEvent(newPlayer));
     }
 
     /// Removes a player session.
@@ -168,9 +169,7 @@ public class GameEngine {
 
     /// Processes a chat message request.
     public void handleChatMessage(ChatRequest chatData, String id) {
-        gameEventQueue.enqueue(
-                GameEvent.create(EventType.BROADCAST_CHAT_MSG, chatData, id, getPlayerMapId(id), true)
-        );
+        gameEventQueue.enqueue(GameEventFactory.broadcastChatMsgEvent(chatData, getPlayerMapId(id)));
     }
 
     /// Processes a movement request.
@@ -194,9 +193,9 @@ public class GameEngine {
             final GameMapData map = worldManager.getMap(player.getMapId());
             final MapObject lootBag = mapObjectFactory.createLootBag(item.getId(), amount, player.getX(), player.getY());
             map.addObject(lootBag);
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_OBJECTS, map.getObjects(), null, player.getMapId(), true));
-        }, () -> gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Item not found or invalid amount", playerId, null, false)));
+            gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(player));
+            gameEventQueue.enqueue(GameEventFactory.broadcastMapObjects(map.getObjects(), player.getMapId()));
+        }, () -> gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Item not found or invalid amount", playerId)));
     }
 
     /// Main game loop executed periodically.
@@ -272,7 +271,7 @@ public class GameEngine {
                     final var npcDto = NpcDto.fromEntity(npc);
                     npcDtos.add(npcDto);
                 }
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_NPCS, npcDtos, null, map.getId(), true));
+                gameEventQueue.enqueue(GameEventFactory.broadcastNpcs(npcDtos, map.getId()));
 
                 final List<Entity> allEntities = new ArrayList<>();
                 allEntities.addAll(map.getNpcs());
@@ -296,8 +295,7 @@ public class GameEngine {
             }
             activeMapIds.add(player.getMapId());
             if (statsChanged || player.getRads() > 0)
-                gameEventQueue.enqueue(
-                        GameEvent.create(EventType.SEND_STATS, player, player.getId(), player.getMapId(), false));
+                gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
         }
         return activeMapIds;
     }
@@ -310,8 +308,7 @@ public class GameEngine {
         for (Player player : players.values()) {
             if (player.getState() == State.DEAD) continue;
             economyService.processDailyDebt(player);
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MESSAGE,
-                    "A new day has dawned. Daily living fees have been deducted.", player.getId(), null, false));
+            gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("A new day has dawned. Daily living fees have been deducted.", player.getId()));
         }
         respawnNpcs();
         spawnItems();
@@ -330,7 +327,7 @@ public class GameEngine {
         final MapObject corpse = mapObjectFactory.createPlayerCorpse(player);
         map.addObject(corpse);
         player.getInventory().clear();
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_GAME_OVER, player, player.getId(), player.getMapId(), false));
+        gameEventQueue.enqueue(GameEventFactory.sendGameOverEvent(player));
     }
 
     /// Helper to generate and enqueue a viewport update for a player.
@@ -338,7 +335,7 @@ public class GameEngine {
         final MapViewportPayload viewport = MapViewportPayload.of(
                 mapData, player.getX(), player.getY(), VIEWPORT_RANGE_X, VIEWPORT_RANGE_Y
         );
-        gameEventQueue.enqueue(GameEvent.create(EventType.SEND_MAP_DATA, viewport, player.getId(), player.getMapId(), false));
+        gameEventQueue.enqueue(GameEventFactory.sendMapDataEvent(viewport, player.getId()));
     }
 
     /// Retrieves a player instance by their unique session ID.

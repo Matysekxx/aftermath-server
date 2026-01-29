@@ -4,14 +4,12 @@ import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcFactory;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTable;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTemplate;
-import cz.matysekxx.aftermathserver.core.model.item.ItemFactory;
 import cz.matysekxx.aftermathserver.core.model.item.ItemTable;
 import cz.matysekxx.aftermathserver.core.model.item.ItemTemplate;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.core.world.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
-import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import org.springframework.stereotype.Service;
 
@@ -28,20 +26,16 @@ import static cz.matysekxx.aftermathserver.util.FloodFill.floodFill;
 @Service
 public class SpawnManager {
     private final WorldManager worldManager;
-    private final GameEventQueue gameEventQueue;
     private final MapObjectFactory mapObjectFactory;
-    private final ItemFactory itemFactory;
     private final NpcFactory npcFactory;
     private final NpcTable npcTable;
     private final ItemTable itemTable;
     private final Map<String, List<Vector3>> reachableTilesCache = new ConcurrentHashMap<>();
 
 
-    public SpawnManager(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, ItemFactory itemFactory, NpcFactory npcFactory, NpcTable npcTable, ItemTable itemTable) {
+    public SpawnManager(WorldManager worldManager, MapObjectFactory mapObjectFactory, NpcFactory npcFactory, NpcTable npcTable, ItemTable itemTable) {
         this.worldManager = worldManager;
-        this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
-        this.itemFactory = itemFactory;
         this.npcFactory = npcFactory;
         this.npcTable = npcTable;
         this.itemTable = itemTable;
@@ -114,7 +108,7 @@ public class SpawnManager {
         for (int i = 0; i < count; i++) {
             final Vector3 tile = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
             final ItemTemplate template = templates.get(ThreadLocalRandom.current().nextInt(templates.size()));
-            final MapObject lootBag = mapObjectFactory.createLootBag(template.getId(), 1, tile.x(), tile.y());
+            final MapObject lootBag = mapObjectFactory.createLootBag(template.getId(), ThreadLocalRandom.current().nextInt(1,3), tile.x(), tile.y());
             map.addObject(lootBag);
         }
     }

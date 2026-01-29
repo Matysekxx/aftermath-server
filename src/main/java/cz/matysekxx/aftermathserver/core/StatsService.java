@@ -10,7 +10,7 @@ import cz.matysekxx.aftermathserver.core.world.MapType;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.dto.UseRequest;
 import cz.matysekxx.aftermathserver.event.EventType;
-import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import org.springframework.stereotype.Service;
 
@@ -82,7 +82,7 @@ public class StatsService {
         final Item item = inventory.getSlots().get(useRequest.getSlotIndex());
 
         if (item == null || item.getType() != ItemType.CONSUMABLE) {
-            gameEventQueue.enqueue(GameEvent.create(EventType.SEND_ERROR, "Item cannot be used", player.getId(), null, false));
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Item cannot be used", player.getId()));
             return;
         }
 
@@ -90,8 +90,8 @@ public class StatsService {
             final boolean success = itemEffects.get(item.getEffect()).apply(player, item);
             if (success) {
                 inventory.removeItem(useRequest.getSlotIndex(), 1);
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), player.getMapId(), false));
-                gameEventQueue.enqueue(GameEvent.create(EventType.SEND_STATS, player, player.getId(), player.getMapId(), false));
+                gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(player));
+                gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
             }
         }
     }
