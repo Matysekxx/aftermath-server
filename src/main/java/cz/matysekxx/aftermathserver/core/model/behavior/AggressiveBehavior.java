@@ -8,7 +8,6 @@ import cz.matysekxx.aftermathserver.util.Vector2;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.function.Consumer;
 
 /// Hostile behavior that chases and attacks the nearest player.
 public class AggressiveBehavior implements Behavior {

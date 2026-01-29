@@ -8,7 +8,9 @@
   "objects": [
   ],
   "tileTriggers": {
-    "-": { "lineId": "line_c" }
+    "-": {
+      "lineId": "line_c"
+    }
   },
   "spawnMarkers": {
     "@": "line_c"

@@ -1,7 +1,8 @@
 package cz.matysekxx.aftermathserver.util;
 
 public final class MathUtil {
-    private MathUtil() {}
+    private MathUtil() {
+    }
 
     /// Calculates the Manhattan distance (|dx| + |dy|).
     /// Ideal for grid-based movement (no diagonals).

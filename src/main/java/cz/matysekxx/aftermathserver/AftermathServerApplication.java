@@ -1,6 +1,5 @@
 package cz.matysekxx.aftermathserver;
 
-import cz.matysekxx.aftermathserver.action.UseAction;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;

@@ -1,7 +1,7 @@
 package cz.matysekxx.aftermathserver.core.model.entity;
 
-import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.behavior.Behavior;
+import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import lombok.Getter;
 import lombok.Setter;

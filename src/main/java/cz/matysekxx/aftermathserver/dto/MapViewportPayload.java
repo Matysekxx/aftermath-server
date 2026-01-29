@@ -31,7 +31,7 @@ public class MapViewportPayload {
         for (Map.Entry<Integer, ParsedMapLayer> entry : map.getParsedLayers().entrySet()) {
             final List<String> rows = new ArrayList<>();
             final ParsedMapLayer layer = entry.getValue();
-            
+
             for (int y = py - ry; y <= py + ry; y++) {
                 final StringBuilder sb = new StringBuilder();
                 for (int x = px - rx; x <= px + rx; x++) {

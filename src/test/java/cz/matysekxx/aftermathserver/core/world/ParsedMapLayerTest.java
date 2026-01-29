@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ParsedMapLayerTest {
 
@@ -35,10 +36,10 @@ class ParsedMapLayerTest {
 
     @Test
     void testTrailingSpacesAreConvertedToVoid() {
-        String content = 
-            "#####\n" +
-            "# . #    \n" +
-            "#####";
+        String content =
+                "#####\n" +
+                        "# . #    \n" +
+                        "#####";
 
         ParsedMapLayer layer = ParsedMapLayer.parse(content, registry, 0, null);
 
@@ -65,10 +66,10 @@ class ParsedMapLayerTest {
         markers.put("@", "line_a");
         mapData.setSpawnMarkers(markers);
 
-        String content = 
-            "###\n" +
-            "#@#\n" +
-            "###";
+        String content =
+                "###\n" +
+                        "#@#\n" +
+                        "###";
 
         ParsedMapLayer layer = ParsedMapLayer.parse(content, registry, 0, mapData);
 

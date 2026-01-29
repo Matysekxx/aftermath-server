@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 
 /// Service responsible for handling player movement logic.
 ///
-/// It validates movement requests, checks for collisions with obstacles, 
+/// It validates movement requests, checks for collisions with obstacles,
 /// updates player positions, and triggers tile-based events (like teleports or metro entry).
 @Service
 public class MovementService {
@@ -34,10 +34,10 @@ public class MovementService {
 
     /// Processes a movement request for a player.
     ///
-    /// Calculates the target position, checks for walkability, updates the player's 
+    /// Calculates the target position, checks for walkability, updates the player's
     /// coordinates, and executes any triggers present on the destination tile.
     ///
-    /// @param player The player attempting to move.
+    /// @param player      The player attempting to move.
     /// @param moveRequest The DTO containing the movement direction.
     public void movementProcess(Player player, MoveRequest moveRequest) {
         int targetX = player.getX();

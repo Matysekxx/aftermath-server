@@ -22,13 +22,13 @@ public class NpcFactory {
 
     /// Creates a new NPC instance based on a template ID.
     ///
-    /// @param id The template ID defined in configuration (e.g., "mutant_rat").
-    /// @param x The X coordinate on the map.
-    /// @param y The Y coordinate on the map.
+    /// @param id         The template ID defined in configuration (e.g., "mutant_rat").
+    /// @param x          The X coordinate on the map.
+    /// @param y          The Y coordinate on the map.
     /// @param layerIndex The layer index (Z coordinate).
-    /// @param mapId The ID of the map where the NPC is spawned.
+    /// @param mapId      The ID of the map where the NPC is spawned.
     /// @return A fully initialized Npc entity with behavior and loot.
-    public Npc createNpc(String id, int x,  int y, int layerIndex, String mapId) {
+    public Npc createNpc(String id, int x, int y, int layerIndex, String mapId) {
         final NpcTemplate template = npcTable.getTemplate(id);
         if (template == null) {
             throw new IllegalArgumentException("Unknown NPC template: " + id);
@@ -40,7 +40,7 @@ public class NpcFactory {
             case "IDLE" -> new IdleBehavior();
             default -> throw new IllegalStateException("Unexpected value: " + template.getBehavior());
         };
-        final String instanceId = template.getId() + "_" + UUID.randomUUID().toString().substring(0,8);
+        final String instanceId = template.getId() + "_" + UUID.randomUUID().toString().substring(0, 8);
         final Npc npc = new Npc(
                 instanceId,
                 template.getName(),

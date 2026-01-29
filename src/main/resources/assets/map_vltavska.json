@@ -7,17 +7,32 @@
     "0": "assets/maps_c/map_vltavska0.txt"
   },
   "objects": [
-
   ],
   "tileTriggers": {
-    "-": {"lineId": "line_c"},
-    "~": {"lineId": "line_e"}
+    "-": {
+      "lineId": "line_c"
+    },
+    "~": {
+      "lineId": "line_e"
+    }
   },
   "links": [
-    {"from": "▲", "to": "►"},
-    {"from": "►", "to": "▲"},
-    {"from": "▼", "to": "◄"},
-    {"from": "◄", "to": "▼"}
+    {
+      "from": "▲",
+      "to": "►"
+    },
+    {
+      "from": "►",
+      "to": "▲"
+    },
+    {
+      "from": "▼",
+      "to": "◄"
+    },
+    {
+      "from": "◄",
+      "to": "▼"
+    }
   ],
   "spawnMarkers": {
     "@": "line_c",

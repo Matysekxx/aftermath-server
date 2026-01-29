@@ -13,7 +13,8 @@ import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -65,22 +66,22 @@ public class SpawnManager {
     /// @param count The number of NPCs to spawn.
     public void spawnRandomNpcs(String mapId, int count) {
         final List<Vector3> reachableTiles = getReachableTiles(mapId);
-        final List<NpcTemplate>templates = npcTable.getDefinitions();
+        final List<NpcTemplate> templates = npcTable.getDefinitions();
         if (reachableTiles.isEmpty() || templates == null || templates.isEmpty()) return;
         final GameMapData mapData = worldManager.getMap(mapId);
         for (int i = 0; i < count; i++) {
             final Vector3 vector3 = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
             final NpcTemplate template = templates.get(ThreadLocalRandom.current().nextInt(templates.size()));
-            final Npc npc = npcFactory.createNpc(template.getId(), vector3.x(),  vector3.y(), vector3.z(), mapId);
+            final Npc npc = npcFactory.createNpc(template.getId(), vector3.x(), vector3.y(), vector3.z(), mapId);
             mapData.addNpc(npc);
         }
     }
 
     /// Spawns a specific type of NPC on the map.
     ///
-    /// @param mapId The ID of the target map.
+    /// @param mapId         The ID of the target map.
     /// @param npcTemplateId The ID of the NPC template (e.g., "mutant_rat").
-    /// @param count The number of instances to spawn.
+    /// @param count         The number of instances to spawn.
     public void spawnSpecificNpc(String mapId, String npcTemplateId, int count) {
         final List<Vector3> reachableTiles = getReachableTiles(mapId);
         final GameMapData mapData = worldManager.getMap(mapId);
@@ -88,7 +89,7 @@ public class SpawnManager {
         for (int i = 0; i < count; i++) {
             final Vector3 vector3 = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
             final NpcTemplate template = npcTable.getTemplate(npcTemplateId);
-            final Npc npc = npcFactory.createNpc(template.getId(), vector3.x(),  vector3.y(), vector3.z(), mapId);
+            final Npc npc = npcFactory.createNpc(template.getId(), vector3.x(), vector3.y(), vector3.z(), mapId);
             mapData.addNpc(npc);
         }
     }
@@ -108,7 +109,7 @@ public class SpawnManager {
         for (int i = 0; i < count; i++) {
             final Vector3 tile = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
             final ItemTemplate template = templates.get(ThreadLocalRandom.current().nextInt(templates.size()));
-            final MapObject lootBag = mapObjectFactory.createLootBag(template.getId(), ThreadLocalRandom.current().nextInt(1,3), tile.x(), tile.y());
+            final MapObject lootBag = mapObjectFactory.createLootBag(template.getId(), ThreadLocalRandom.current().nextInt(1, 3), tile.x(), tile.y());
             map.addObject(lootBag);
         }
     }

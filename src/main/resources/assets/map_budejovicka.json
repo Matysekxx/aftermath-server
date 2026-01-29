@@ -9,13 +9,27 @@
   "objects": [
   ],
   "tileTriggers": {
-    "-": {"lineId": "line_c"}
+    "-": {
+      "lineId": "line_c"
+    }
   },
   "links": [
-    {"from": "►", "to": "▲"},
-    {"from": "▲", "to": "►"},
-    {"from": "◄", "to": "▼"},
-    {"from": "▼", "to": "◄"}
+    {
+      "from": "►",
+      "to": "▲"
+    },
+    {
+      "from": "▲",
+      "to": "►"
+    },
+    {
+      "from": "◄",
+      "to": "▼"
+    },
+    {
+      "from": "▼",
+      "to": "◄"
+    }
   ],
   "spawnMarkers": {
     "@": "line_c"

@@ -2,7 +2,6 @@ package cz.matysekxx.aftermathserver.core.logic.interactions;
 
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
-import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,7 @@ import java.util.List;
 /// When a player interacts with a "REST" object (like a bed), their health is fully restored,
 /// radiation is cleared, and their position is synchronized with the object.
 @Component("REST")
-public class RestLogic implements InteractionLogic{
+public class RestLogic implements InteractionLogic {
     /// Executes the rest interaction.
     ///
     /// Fully heals the player, removes all radiation, and moves the player to the target's coordinates.

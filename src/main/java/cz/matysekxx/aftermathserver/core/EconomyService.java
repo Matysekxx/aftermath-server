@@ -1,7 +1,7 @@
 package cz.matysekxx.aftermathserver.core;
 
-import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
+import cz.matysekxx.aftermathserver.core.model.item.Item;
 import org.springframework.stereotype.Service;
 
 /// Service responsible for managing the game's economic systems.
@@ -52,7 +52,7 @@ public class EconomyService {
     /// Checks if a player has enough credits to afford a specific cost.
     ///
     /// @param player The player to check.
-    /// @param cost The required amount of credits.
+    /// @param cost   The required amount of credits.
     /// @return true if the player's credits are greater than or equal to the cost.
     public boolean canAfford(Player player, int cost) {
         return player.getCredits() >= cost;
@@ -85,7 +85,7 @@ public class EconomyService {
     ///
     /// This may eventually take into account player skills, reputation, or item condition.
     ///
-    /// @param item The item being sold.
+    /// @param item   The item being sold.
     /// @param player The player selling the item.
     /// @return The calculated credit value.
     public int calculateSellPrice(Item item, Player player) {

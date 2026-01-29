@@ -4,28 +4,17 @@ import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
 import cz.matysekxx.aftermathserver.core.model.entity.Entity;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
-import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.entity.State;
-import cz.matysekxx.aftermathserver.core.world.GameMapData;
-import cz.matysekxx.aftermathserver.core.world.MapObject;
-import cz.matysekxx.aftermathserver.core.world.MapType;
-import cz.matysekxx.aftermathserver.core.world.MapObjectFactory;
-import cz.matysekxx.aftermathserver.core.world.WorldManager;
-import cz.matysekxx.aftermathserver.dto.ChatRequest;
+import cz.matysekxx.aftermathserver.core.model.item.Item;
+import cz.matysekxx.aftermathserver.core.world.*;
 import cz.matysekxx.aftermathserver.dto.*;
-import cz.matysekxx.aftermathserver.dto.LoginRequest;
-import cz.matysekxx.aftermathserver.dto.NpcDto;
-import cz.matysekxx.aftermathserver.dto.SpawnPointInfo;
-import cz.matysekxx.aftermathserver.dto.MoveRequest;
-import cz.matysekxx.aftermathserver.event.EventType;
-import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Vector3;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +28,13 @@ import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
 @Service
 public class GameEngine {
+    /// Viewport constants for map rendering (radius from center)
+    public static final int VIEWPORT_RANGE_X = 60;
+    public static final int VIEWPORT_RANGE_Y = 20;
+    private static final int TICKS_PER_DAY = 1200;
+    /// Target density: 1 NPC per 100 reachable tiles (0.0005)
+    private static final double NPC_DENSITY = 0.0005;
+    private static final int DAILY_RESPAWN_COUNT = 3;
     private final ConcurrentHashMap<String, Player> players = new ConcurrentHashMap<>();
     private final WorldManager worldManager;
     private final GameEventQueue gameEventQueue;
@@ -51,17 +47,7 @@ public class GameEngine {
     private final SpawnManager spawnManager;
     private final CombatService combatService;
     private final SpatialService spatialService;
-
-    /// Viewport constants for map rendering (radius from center)
-    public static final int VIEWPORT_RANGE_X = 60;
-    public static final int VIEWPORT_RANGE_Y = 20;
-
     private long tickCounter = 0;
-    private static final int TICKS_PER_DAY = 1200;
-
-    /// Target density: 1 NPC per 100 reachable tiles (0.0005)
-    private static final double NPC_DENSITY = 0.0005;
-    private static final int DAILY_RESPAWN_COUNT = 3;
 
     public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService, SpawnManager spawnManager, CombatService combatService, SpatialService spatialService) {
         this.worldManager = worldManager;
@@ -214,7 +200,7 @@ public class GameEngine {
             if (map.getType() == MapType.HAZARD_ZONE) {
                 final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
                 final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY));
-                
+
                 spawnManager.spawnRandomNpcs(map.getId(), maxNpcs);
                 log.info("Initial spawn on map {}: {} NPCs (based on {} tiles)", map.getId(), maxNpcs, reachableTiles);
             }
@@ -227,7 +213,7 @@ public class GameEngine {
                 final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
                 final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY));
                 final int currentCount = map.getNpcs().size();
-                
+
                 if (currentCount < maxNpcs) {
                     int toSpawn = Math.min(DAILY_RESPAWN_COUNT, maxNpcs - currentCount);
                     spawnManager.spawnRandomNpcs(map.getId(), toSpawn);

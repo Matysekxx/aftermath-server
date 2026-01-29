@@ -11,16 +11,38 @@
   "objects": [
   ],
   "tileTriggers": {
-    "-": {"lineId": "line_c"},
-    "~": {"lineId": "line_b"}
+    "-": {
+      "lineId": "line_c"
+    },
+    "~": {
+      "lineId": "line_b"
+    }
   },
-  "links" : [
-    {"from": "►", "to": "◄"},
-    {"from": "◄", "to": "►"},
-    {"from": "▲", "to": "▼"},
-    {"from": "▼", "to": "▲"},
-    {"from": "V", "to": "^"},
-    {"from": "^", "to": "V"}
+  "links": [
+    {
+      "from": "►",
+      "to": "◄"
+    },
+    {
+      "from": "◄",
+      "to": "►"
+    },
+    {
+      "from": "▲",
+      "to": "▼"
+    },
+    {
+      "from": "▼",
+      "to": "▲"
+    },
+    {
+      "from": "V",
+      "to": "^"
+    },
+    {
+      "from": "^",
+      "to": "V"
+    }
   ],
   "spawnMarkers": {
     "@": "line_b",

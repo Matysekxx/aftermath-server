@@ -1,8 +1,8 @@
 package cz.matysekxx.aftermathserver.core.world;
 
+import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.item.ItemFactory;
-import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

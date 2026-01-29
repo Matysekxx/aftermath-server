@@ -6,9 +6,8 @@ import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
-import cz.matysekxx.aftermathserver.util.Vector2;
-import cz.matysekxx.aftermathserver.util.Vector3;
 import cz.matysekxx.aftermathserver.util.MathUtil;
+import cz.matysekxx.aftermathserver.util.Vector2;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -16,7 +15,7 @@ import java.util.Map;
 
 /// Service responsible for coordinating interactions between players and map objects.
 ///
-/// It validates the physical possibility of an interaction (distance checks) and 
+/// It validates the physical possibility of an interaction (distance checks) and
 /// delegates the specific logic to the appropriate [InteractionLogic] implementation.
 @Service
 public class InteractionService {
@@ -25,7 +24,7 @@ public class InteractionService {
 
     /// Constructs the InteractionService.
     ///
-    /// @param logicMap A map of interaction keys (e.g., "LOOT", "READ") to their logic handlers.
+    /// @param logicMap       A map of interaction keys (e.g., "LOOT", "READ") to their logic handlers.
     /// @param gameEventQueue The queue used to dispatch events resulting from interactions.
     public InteractionService(Map<String, InteractionLogic> logicMap, GameEventQueue gameEventQueue) {
         this.logicMap = logicMap;
@@ -34,7 +33,7 @@ public class InteractionService {
 
     /// Processes an interaction between a player and a target object.
     ///
-    /// Validates that the target exists and is within range (1 tile). If valid, 
+    /// Validates that the target exists and is within range (1 tile). If valid,
     /// executes the logic associated with the object's action type.
     ///
     /// @param player The player performing the action.
@@ -53,6 +52,6 @@ public class InteractionService {
                 if (events != null) events.forEach(gameEventQueue::enqueue);
             }
         } else gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You are too far away", player.getId()));
-        
+
     }
 }

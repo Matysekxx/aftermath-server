@@ -25,8 +25,7 @@ public class OpenMetroUIEventHandler extends GameEventHandler {
     @Override
     public void handleEvent(GameEvent event) {
         if (event.payload() instanceof Map.Entry<?, ?> entry) {
-            @SuppressWarnings("unchecked")
-            final Map.Entry<String, List<MetroStation>> stations = (Map.Entry<String, List<MetroStation>>) entry;
+            @SuppressWarnings("unchecked") final Map.Entry<String, List<MetroStation>> stations = (Map.Entry<String, List<MetroStation>>) entry;
             networkService.sendUIList(stations, event.targetSessionId());
         }
     }

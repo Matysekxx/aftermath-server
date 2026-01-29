@@ -1,15 +1,14 @@
 package cz.matysekxx.aftermathserver.core;
 
+import cz.matysekxx.aftermathserver.core.logic.items.ItemEffect;
 import cz.matysekxx.aftermathserver.core.model.entity.Inventory;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
-import cz.matysekxx.aftermathserver.core.logic.items.ItemEffect;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.item.ItemType;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapType;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.dto.UseRequest;
-import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import org.springframework.stereotype.Service;
@@ -75,7 +74,7 @@ public class StatsService {
 
     /// Processes the usage of a consumable item by delegating to the appropriate effect logic.
     ///
-    /// @param player The player using the item.
+    /// @param player     The player using the item.
     /// @param useRequest The request containing inventory slot information.
     public void useConsumable(Player player, UseRequest useRequest) {
         final Inventory inventory = player.getInventory();

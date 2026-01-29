@@ -50,7 +50,7 @@ public class CombatService {
 
         final Npc target = closestEntity.get();
         final int distance = MathUtil.getChebyshevDistance(
-                Vector2.of(player.getX(),  player.getY()),
+                Vector2.of(player.getX(), player.getY()),
                 Vector2.of(target.getX(), target.getY())
         );
 

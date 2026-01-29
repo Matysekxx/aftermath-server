@@ -1,11 +1,17 @@
 package cz.matysekxx.aftermathserver.util;
 
-import cz.matysekxx.aftermathserver.core.world.*;
+import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.core.world.ParsedMapLayer;
+import cz.matysekxx.aftermathserver.core.world.TileRegistry;
+import cz.matysekxx.aftermathserver.core.world.TileType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.Map;
+
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class FloodFillTest {
 
@@ -33,15 +39,15 @@ class FloodFillTest {
     @Test
     void testFloodFillStaysInsideWalls() {
 
-        String layout = 
-            "#####\n" +
-            "#...#\n" +
-            "#.@.#\n" +
-            "#...#\n" +
-            "#####";
+        String layout =
+                "#####\n" +
+                        "#...#\n" +
+                        "#.@.#\n" +
+                        "#...#\n" +
+                        "#####";
 
         GameMapData map = new GameMapData();
-        ParsedMapLayer layer = ParsedMapLayer.parse(layout, registry, 0,  map);
+        ParsedMapLayer layer = ParsedMapLayer.parse(layout, registry, 0, map);
         map.setParsedLayers(Map.of(0, layer));
         map.setSpawns(Map.of("start", new Vector3(2, 2, 0)));
 
@@ -55,10 +61,10 @@ class FloodFillTest {
 
     @Test
     void testFloodFillDoesNotSpreadToVoid() {
-        String layout = 
-            "###\n" +
-            "#.\n" +
-            "###";
+        String layout =
+                "###\n" +
+                        "#.\n" +
+                        "###";
 
         GameMapData map = new GameMapData();
         ParsedMapLayer layer = ParsedMapLayer.parse(layout, registry, 0, map);

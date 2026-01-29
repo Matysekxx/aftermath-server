@@ -10,7 +10,7 @@ import java.util.List;
 
 /// Handles `SEND_NPCS` events by dispatching them to the NetworkService.
 @Component
-public class SendNpcsEventHandler extends  GameEventHandler {
+public class SendNpcsEventHandler extends GameEventHandler {
     public SendNpcsEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }
@@ -22,9 +22,8 @@ public class SendNpcsEventHandler extends  GameEventHandler {
 
     @Override
     public void handleEvent(GameEvent event) {
-        if (event.payload() instanceof List<?> list){
-            @SuppressWarnings("unchecked")
-            final List<NpcDto> npcs = (List<NpcDto>) list;
+        if (event.payload() instanceof List<?> list) {
+            @SuppressWarnings("unchecked") final List<NpcDto> npcs = (List<NpcDto>) list;
             networkService.sendNpcs(event.targetSessionId(), event.mapId(), event.isBroadcast(), npcs);
         }
     }
