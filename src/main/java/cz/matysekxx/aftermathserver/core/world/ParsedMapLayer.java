@@ -26,12 +26,15 @@ public class ParsedMapLayer {
         this.markers = markers;
     }
 
-    /// Parses a string content into a map layer using the registry.
-    public static ParsedMapLayer parse(String content, TileRegistry registry, int layerIndex, GameMapData mapData) {
-        final String[] rawLines = content.split("\\R");
-        final String[] lines = Arrays.stream(rawLines)
+    private static String[] getLinesFromContent(String content) {
+        return Arrays.stream(content.split("//R"))
                 .map(String::stripTrailing)
                 .toArray(String[]::new);
+    }
+
+    /// Parses a string content into a map layer using the registry.
+    public static ParsedMapLayer parse(String content, TileRegistry registry, int layerIndex, GameMapData mapData) {
+        final String[] lines = getLinesFromContent(content);
 
         final int height = lines.length;
         final int width = Arrays.stream(lines).mapToInt(String::length).max().orElse(0);
@@ -47,7 +50,8 @@ public class ParsedMapLayer {
                 if (x < line.length()) {
                     final char c = line.charAt(x);
                     final String charStr = String.valueOf(c);
-                    if (mapData != null && mapData.getSpawnMarkers() != null && mapData.getSpawnMarkers().containsKey(charStr)) {
+                    if (mapData != null && mapData.getSpawnMarkers() != null &&
+                            mapData.getSpawnMarkers().containsKey(charStr)) {
                         final String lineId = mapData.getSpawnMarkers().get(charStr);
                         mapData.getSpawns().put(lineId, new Vector3(x, y, layerIndex));
                         symbols[y][x] = '.';
