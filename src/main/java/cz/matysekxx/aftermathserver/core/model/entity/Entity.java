@@ -1,12 +1,13 @@
 package cz.matysekxx.aftermathserver.core.model.entity;
 
+import cz.matysekxx.aftermathserver.util.Spatial;
 import lombok.Data;
 
 /// Abstract base class for all dynamic entities in the game world.
 ///
 /// Includes Players and NPCs. Handles position, health, and state.
 @Data
-public abstract class Entity {
+public abstract class Entity implements Spatial {
     protected int x;
     protected int y;
     protected int layerIndex;
