@@ -3,6 +3,8 @@ package cz.matysekxx.aftermathserver.util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /// Represents cardinal directions for movement in the game world.
 ///
 /// Each direction provides the delta change for X and Y coordinates.
@@ -18,4 +20,8 @@ public enum Direction {
     private final int dx;
     /// The change in Y coordinate.
     private final int dy;
+
+    public static Direction getRandomDirection() {
+        return values()[ThreadLocalRandom.current().nextInt(values().length)];
+    }
 }
