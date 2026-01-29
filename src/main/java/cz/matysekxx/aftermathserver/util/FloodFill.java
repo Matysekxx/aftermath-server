@@ -32,7 +32,7 @@ public final class FloodFill {
 
         while (!queue.isEmpty()) {
             final Vector3 current = queue.poll();
-            for (Vector3 neighbor : getNeighbors(current)) {
+            for (Vector3 neighbor : getNeighborsWithPrecision(current, map)) {
                 if (isWalkable(map, neighbor) && visited.add(neighbor)) {
                     queue.add(neighbor);
                 }
@@ -50,12 +50,16 @@ public final class FloodFill {
         return new ArrayList<>(visited);
     }
 
+    private static List<Vector3> getNeighborsWithPrecision(Vector3 center, GameMapData mapData) {
+        return getNeighbors(center).stream().filter(pos -> isWalkable(mapData, pos)).toList();
+    }
+
     private static List<Vector3> getNeighbors(Vector3 c) {
         return List.of(
-                new Vector3(c.x(), c.y() - 1, c.z()),
-                new Vector3(c.x(), c.y() + 1, c.z()),
-                new Vector3(c.x() - 1, c.y(), c.z()),
-                new Vector3(c.x() + 1, c.y(), c.z())
+                Vector3.of(c.x(), c.y() - 1, c.z()),
+                Vector3.of(c.x(), c.y() + 1, c.z()),
+                Vector3.of(c.x() - 1, c.y(), c.z()),
+                Vector3.of(c.x() + 1, c.y(), c.z())
         );
     }
 
