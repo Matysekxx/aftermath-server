@@ -7,6 +7,7 @@ game:
         type: WEAPON
         damage: 5
         maxStack: 1
+        range: 1
         weight: 1.5
         price: 10
 
@@ -16,6 +17,7 @@ game:
         type: WEAPON
         damage: 15
         maxStack: 1
+        range: 8
         weight: 1.0
         price: 150
 
@@ -25,6 +27,7 @@ game:
         type: WEAPON
         damage: 30
         maxStack: 1
+        range: 12
         weight: 3.5
         price: 400
 
@@ -34,6 +37,7 @@ game:
         type: WEAPON
         damage: 40
         maxStack: 1
+        range: 4
         weight: 2.5
         price: 350
 
@@ -43,5 +47,6 @@ game:
         type: WEAPON
         damage: 10
         maxStack: 1
+        range: 1
         weight: 0.5
         price: 80

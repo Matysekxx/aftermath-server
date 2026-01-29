@@ -32,6 +32,8 @@ public class Item {
     private Integer healAmount;
     /// Damage dealt (if weapon).
     private Integer damage;
+    private Integer range;
+
     /// Value in game currency.
     private Integer price;
     private String effect;

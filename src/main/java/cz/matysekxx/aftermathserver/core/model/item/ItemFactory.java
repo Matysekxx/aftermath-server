@@ -33,6 +33,7 @@ public class ItemFactory {
                 .type(template.getType())
                 .healAmount(template.getHealAmount())
                 .damage(template.getDamage())
+                .range(template.getRange())
                 .price(template.getPrice())
                 .effect(template.getEffect())
                 .build();
