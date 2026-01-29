@@ -47,6 +47,7 @@ public class GameEngine {
     private final InteractionService interactionService;
     private final EconomyService economyService;
     private final SpawnManager spawnManager;
+    private final CombatService combatService;
 
     /// Viewport constants for map rendering (radius from center)
     public static final int VIEWPORT_RANGE_X = 60;
@@ -59,7 +60,7 @@ public class GameEngine {
     private static final double NPC_DENSITY = 0.0005;
     private static final int DAILY_RESPAWN_COUNT = 3;
 
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService, SpawnManager spawnManager) {
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService, SpawnManager spawnManager, CombatService combatService) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
@@ -69,6 +70,7 @@ public class GameEngine {
         this.interactionService = interactionService;
         this.economyService = economyService;
         this.spawnManager = spawnManager;
+        this.combatService = combatService;
     }
 
     /// Initializes world content such as NPCs.
@@ -337,5 +339,13 @@ public class GameEngine {
     /// @return The Player object, or null if not found.
     public Player getPlayerById(String playerId) {
         return players.get(playerId);
+    }
+
+    public void processAttack(String sessionId, AttackRequest attackRequest) {
+        //TODO
+    }
+
+    public void processUse(String sessionId, UseRequest useRequest) {
+        statsService.useConsumable(players.get(sessionId), useRequest);
     }
 }
