@@ -54,15 +54,17 @@ public class CombatService {
                 Vector2.of(target.getX(), target.getY())
         );
 
-        final Inventory inv = player.getInventory();
-        if (!inv.getSlots().containsKey(attackRequest.getWeaponIndex())) {
-            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Invalid weapon index", player.getId()));
+        final Integer equippedSlot = player.getEquippedWeaponSlot();
+        if (equippedSlot == null) {
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You don't have any weapon equipped!", player.getId()));
             return;
         }
 
-        final Item weapon = inv.getSlots().get(attackRequest.getWeaponIndex());
-        if (weapon.getType() != ItemType.WEAPON) {
-            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("This item is not a weapon", player.getId()));
+        final Inventory inv = player.getInventory();
+        final Item weapon = inv.getSlots().get(equippedSlot);
+
+        if (weapon == null || weapon.getType() != ItemType.WEAPON) {
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Equipped item is not a valid weapon", player.getId()));
             return;
         }
 

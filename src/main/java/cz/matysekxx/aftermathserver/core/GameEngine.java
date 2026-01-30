@@ -7,6 +7,7 @@ import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.entity.State;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
+import cz.matysekxx.aftermathserver.core.model.item.ItemType;
 import cz.matysekxx.aftermathserver.core.world.*;
 import cz.matysekxx.aftermathserver.dto.*;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
@@ -340,5 +341,19 @@ public class GameEngine {
 
     public void processUse(String sessionId, UseRequest useRequest) {
         statsService.useConsumable(players.get(sessionId), useRequest);
+    }
+
+    public void processEquip(String sessionId, EquipRequest equipRequest) {
+        final Player player = players.get(sessionId);
+        if (player == null) return;
+
+        final Item item = player.getInventory().getSlots().get(equipRequest.getSlotIndex());
+        if (item != null && item.getType() == ItemType.WEAPON) {
+            player.setEquippedWeaponSlot(equipRequest.getSlotIndex());
+            log.info("Player {} equipped {}", player.getName(), item.getName());
+            gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Equipped: " + item.getName(), sessionId));
+        } else {
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Cannot equip this item", sessionId));
+        }
     }
 }
