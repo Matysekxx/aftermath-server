@@ -2,6 +2,7 @@
   "id": "hlavni-nadrazi",
   "name": "Hlavní nádraží",
   "type": "HAZARD_ZONE",
+  "difficulty": 3,
   "layout": {
     "0": "assets/maps_c/map_hlavni_nadrazi0.txt"
   },

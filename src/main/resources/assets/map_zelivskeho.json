@@ -2,6 +2,7 @@
   "id": "zelivskeho",
   "name": "Želivského",
   "type": "HAZARD_ZONE",
+  "difficulty": 3,
   "layout": {
     "0": "assets/maps_a/map_zelivskeho0.txt"
   },

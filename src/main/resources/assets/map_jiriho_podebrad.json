@@ -2,6 +2,7 @@
   "id": "jiriho-z-podebrad",
   "name": "Jiřího z Poděbrad",
   "type": "HAZARD_ZONE",
+  "difficulty": 3,
   "layout": {
     "0": "assets/maps_a/map_jiriho_podebrad0.txt"
   },

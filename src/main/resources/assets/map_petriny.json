@@ -2,6 +2,7 @@
   "id": "petriny",
   "name": "Petřiny",
   "type": "HAZARD_ZONE",
+  "difficulty": 2,
   "layout": {
     "0": "assets/maps_a/map_petriny.txt"
   },

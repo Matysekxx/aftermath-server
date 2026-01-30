@@ -2,6 +2,7 @@
   "id": "borislavka",
   "name": "Bořislavka",
   "type": "HAZARD_ZONE",
+  "difficulty": 2,
   "layout": {
     "0": "assets/maps_a/map_borislavka0.txt"
   },

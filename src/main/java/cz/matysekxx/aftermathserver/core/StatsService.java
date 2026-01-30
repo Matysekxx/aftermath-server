@@ -38,7 +38,7 @@ public class StatsService {
     public boolean applyStats(Player player) {
         final GameMapData map = worldManager.getMap(player.getMapId());
         return switch (map.getType()) {
-            case MapType.HAZARD_ZONE -> applyRadiation(player);
+            case MapType.HAZARD_ZONE -> applyRadiation(player, map);
             case MapType.SAFE_ZONE -> applyRegeneration(player);
         };
     }
@@ -62,14 +62,15 @@ public class StatsService {
     /// Increases radiation levels and applies damage if the radiation limit is exceeded.
     ///
     /// @param player The player affected by radiation.
+    /// @param map    The current map to get difficulty from.
     /// @return true if radiation increased or health decreased.
-    private boolean applyRadiation(Player player) { //TODO: podle obtiznosti mapy pridavat hraci urcity pocet radiace
-        player.setRads(player.getRads() + 1);
+    private boolean applyRadiation(Player player, GameMapData map) {
+        final int diff = Math.max(1, map.getDifficulty());
+        player.setRads(player.getRads() + diff);
         if (player.getRads() > player.getRadsLimit()) {
-            player.setHp(player.getHp() - 1);
-            return true;
+            player.setHp(player.getHp() - diff);
         }
-        return false;
+        return true;
     }
 
     /// Processes the usage of a consumable item by delegating to the appropriate effect logic.

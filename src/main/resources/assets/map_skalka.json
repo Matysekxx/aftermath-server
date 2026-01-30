@@ -2,6 +2,7 @@
   "id": "skalka",
   "name": "Skalka",
   "type": "HAZARD_ZONE",
+  "difficulty": 3,
   "layout": {
     "0": "assets/maps_a/map_skalka0.txt",
     "1": "assets/maps_a/map_skalka1.txt"

@@ -198,8 +198,9 @@ public class GameEngine {
     private void initialSpawnNpc() {
         for (GameMapData map : worldManager.getMaps()) {
             if (map.getType() == MapType.HAZARD_ZONE) {
+                final double difficultyMultiplier = 0.5 + (map.getDifficulty() * 0.5);
                 final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
-                final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY));
+                final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY * difficultyMultiplier));
 
                 spawnManager.spawnRandomNpcs(map.getId(), maxNpcs);
                 log.info("Initial spawn on map {}: {} NPCs (based on {} tiles)", map.getId(), maxNpcs, reachableTiles);
@@ -210,8 +211,9 @@ public class GameEngine {
     private void respawnNpcs() {
         for (GameMapData map : worldManager.getMaps()) {
             if (map.getType() == MapType.HAZARD_ZONE) {
+                final double difficultyMultiplier = 0.5 + (map.getDifficulty() * 0.5);
                 final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
-                final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY));
+                final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY * difficultyMultiplier));
                 final int currentCount = map.getNpcs().size();
 
                 if (currentCount < maxNpcs) {
@@ -226,7 +228,7 @@ public class GameEngine {
     private void spawnItems() {
         for (GameMapData map : worldManager.getMaps()) {
             final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
-            double density = map.getType() == MapType.HAZARD_ZONE ? 0.0005 : 0.0001;
+            final double density = map.getType() == MapType.HAZARD_ZONE ? (0.0005 * map.getDifficulty()) : 0.0001;
             int count = (int) (reachableTiles * density);
 
             if (map.getType() == MapType.SAFE_ZONE) {

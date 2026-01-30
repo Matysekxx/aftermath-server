@@ -2,6 +2,7 @@
   "id": "malostranska",
   "name": "Malostranská",
   "type": "HAZARD_ZONE",
+  "difficulty": 2,
   "layout": {
     "0": "assets/maps_a/map_malostranska0.txt"
   },

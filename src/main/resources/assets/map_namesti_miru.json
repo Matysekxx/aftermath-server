@@ -2,6 +2,7 @@
   "id": "namesti-miru",
   "name": "Náměstí Míru",
   "type": "HAZARD_ZONE",
+  "difficulty": 4,
   "layout": {
     "0": "assets/maps_a/map_namesti_miru0.txt"
   },

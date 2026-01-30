@@ -2,6 +2,7 @@
   "id": "flora",
   "name": "Flora",
   "type": "HAZARD_ZONE",
+  "difficulty": 3,
   "layout": {
     "0": "assets/maps_c/map_nadrazi_holesovice.txt"
   },

@@ -2,6 +2,7 @@
   "id": "dejvicka",
   "name": "Dejvická",
   "type": "HAZARD_ZONE",
+  "difficulty": 2,
   "layout": {
     "0": "assets/maps_a/map_dejvicka0.txt"
   },
