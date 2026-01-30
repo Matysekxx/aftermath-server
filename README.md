@@ -1,67 +1,111 @@
-# ☢️ The Aftermath: Post-Apocalyptic Prague (Server)
+<div align="center">
 
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
-![Status](https://img.shields.io/badge/Status-In_Development-yellow?style=for-the-badge)
+# ☢️ THE AFTERMATH ☢️
+### POST-APOCALYPTIC PRAGUE | SERVER CORE
 
-> **The Aftermath** je textová multiplayerová RPG hra zasazená do temné budoucnosti pražského metra.
+![Java](https://img.shields.io/badge/Java_21-F89820?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot_3-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![WebSocket](https://img.shields.io/badge/Event_Driven-Architecture-8A2BE2?style=for-the-badge&logo=apache-kafka&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
+
+<br>
+
+> *"Povrch je mrtvý. Budoucnost je v hlubinách."*
+
+**The Aftermath** je real-time multiplayerová RPG hra s TUI rozhraním, zasazená do temné budoucnosti pražského metra.
+Hráči musí přežít, splácet dluhy a bojovat o zdroje v nelítostném systému podzemních stanic.
+
+[Report Bug](https://github.com/Matysekxx/aftermath_server/issues) · [Request Feature](https://github.com/Matysekxx/aftermath_server/issues)
+
+</div>
+
+---
+
+### ⚠️ Status Projektu
+
+> **Tento repozitář obsahuje pouze SERVEROVOU ČÁST (Backend).**
 >
-> 🚧 **WIP:** Projekt je ve fázi vývoje.
-> 
-> ⚠️ **Poznámka:** Tento repozitář obsahuje **pouze serverovou část (Backend)**.
+> 🚧 **WIP:** Projekt je aktuálně ve fázi aktivního vývoje.
 
 ---
 
-## 📖 O projektu
+## 📖 Vize projektu
 
-Tento projekt vznikl jako školní práce na téma textové hry. Zadání jsem využil především k tomu, abych se naučil:
-* Navrhnout architekturu **klient-server**.
-* Pracovat s frameworkem **Spring Boot**.
-* Implementovat real-time komunikaci přes **WebSockety**.
+**The Aftermath** začal jako experiment s cílem posunout hranice toho, co dokáže "obyčejná" textová hra. Co původně vzniklo jako studium architektury klient-server, se rozrostlo v plnohodnotný herní ekosystém.
 
-### Příběh
-Rok **2100**. Povrch Prahy je po jaderné válce neobyvatelný. Poslední lidé přežívají v metru, kde vládne tvrdý systém dluhů. Hráči musí podnikat nebezpečné expedice, splácet dluhy Správě a čistit stanice od mutantů pro budoucí generace.
+Cílem projektu je vytvořit **robustní backend v Javě**, který zvládne simulovat žijící svět v reálném čase. Nejde jen o databázi, ale o komplexní engine, který počítá fyziku pohybu, řeší konflikty mezi hráči a spravuje ekonomiku metra – to vše komunikující přes WebSockety s vysokou frekvencí pro plynulý zážitek na straně klienta.
 
----
+### 🛠️ Technologické pilíře
+* **Moderní Java 21:** Využití nejnovějších features jazyka pro maximální efektivitu.
+* **Spring Boot 3:** Jádro aplikace zajišťující Dependency Injection a REST/WS vrstvu.
+* **Event-Driven Design:** Asynchronní zpracování herních událostí pro okamžitou odezvu.
 
-## ⚙️ Funkcionalita Serveru
-
-Backend funguje jako "Game Engine", který:
-* **Řídí hru:** Validuje tahy a souboje v reálném čase.
-* **Spravuje multiplayer:** Umožňuje interakci hráčů (chat, setkávání).
-* **Simuluje svět:** Udržuje stav lootu a nepřátel ve stanicích.
-* **Řídí ekonomiku:** Každých 24h strhává poplatky za přežití.
+### 📜 Příběhové pozadí
+Píše se rok **2100**. Po jaderné katastrofě se zbytky pražské populace stáhly do metra. Není to ale bezpečný úkryt – je to diktatura dluhů. Správa metra vyžaduje denní poplatky za kyslík a vodu. Kdo nezaplatí, je vyhoštěn na Povrch.
 
 ---
 
-## 🛠️ Technologie
+## ⚙️ Game Engine & Logika
 
-* **Java & Spring Boot** (Core, Web)
-* **WebSocket** (Real-time komunikace)
-* **Event-Driven Architecture**
+Server v této architektuře vystupuje jako autoritativní **Game Engine**. Klient (TUI) slouží pouze k vykreslování a odesílání vstupů. Veškerá logika a pravda o herním světě leží zde:
+
+* **⚡ Real-time Input Processing**
+    Server nečeká na textové příkazy. Okamžitě zpracovává stream stisknutých kláves z klienta, validuje kolize a vypočítává pohyb v reálném čase.
+
+* **🌍 Synchronizace Světa**
+    Zajišťuje konzistenci stavu pro všechny hráče. Pokud jeden hráč sebere předmět nebo zabije mutanta, změna se ihned projeví všem ostatním v dané stanici.
+
+* **💀 Ekonomika přežití**
+    Server udržuje perzistentní stav světa. Počítá spotřebu kyslíku, opotřebení filtrů a každých 24 hodin provádí "Zúčtování" – strhávání poplatků za přežití.
+
+* **🛡️ Anti-Cheat Validace**
+    Kontroluje, zda jsou tahy fyzikálně a logicky platné (dosah útoku, průchodnost terénem, cooldowny schopností).
 
 ---
 
-## 🖥️ Klient
+## 🖥️ Klient (C++ / TUI)
 
-Pro testování funkčnosti a hraní je k dispozici testovací klient napsaný v Pythonu:
-👉 **[Aftermath Client (Test)](https://github.com/Matysekxx/aftermath-client-test)**
+Server nemá vlastní grafické rozhraní. Hra využívá pokročilé **Text User Interface (TUI)**, které běží v konzoli, ale ovládá se jako moderní akční hra.
+
+<div align="center">
+
+## 👉 [STÁHNOUT AFTERMATH CLIENT (C++)](https://github.com/Matysekxx/aftermath_client) 👈
+*Nativní Windows klient zajišťující vykreslování TUI, hudbu a input handling.*
+
+</div>
 
 ---
 
 ## 🎮 Herní mechaniky
 
 ### Třídy postav
-| Třída | Bonusy |
-| :--- | :--- |
-| 💂 **Voják** | Vysoké HP a útok / Vyšší spotřeba kyslíku. |
-| 🎒 **Sběrač** | Velký inventář / Bonus na blízko. |
-| 🔭 **Průzkumník** | Odolnost proti radiaci / Šetří filtry. |
-| 🛡️ **Tank** | Max přežití a nosnost / Malý inventář. |
+Styl hry se odvíjí od zvolené třídy a jejích statistik:
 
-### Příkazy
-* `move [směr]` / `travel [stanice]` - Pohyb a cestování.
-* `attack [cíl]` - Boj.
-* `grab` / `drop` / `use` - Inventář.
-* `status` - Stav postavy a dluhu.
-* `chat [zpráva]` - Komunikace.
+| Ikona | Třída | HP | Atk | Specifikace |
+| :---: | :--- | :---: | :---: | :--- |
+| 💂 | **Voják** | ⭐⭐⭐ | ⭐⭐⭐ | Vysoké poškození, ale rychle spotřebovává kyslík. |
+| 🎒 | **Sběrač** | ⭐ | ⭐ | **2x větší inventář**. Bonus k útoku na blízko. |
+| 🔭 | **Průzkumník** | ⭐⭐ | ⭐⭐ | Imunita vůči lehké radiaci. Šetří filtry plynové masky. |
+| 🛡️ | **Tank** | ⭐⭐⭐⭐ | ⭐ | Maximální přežití a nosnost. Velmi malý inventář. |
+
+### ⌨️ Ovládání
+Hra využívá přímé ovládání klávesnicí pro plynulý zážitek:
+
+| Klávesa | Akce | Funkce |
+| :---: | :--- | :--- |
+| <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> | **Pohyb** | Navigace v prostoru stanice a mapy. |
+| <kbd>E</kbd> | **Interakce** | Sebrání lootu, otevření dveří, obchodování. |
+| <kbd>SPACE</kbd> | **Útok** | Souboj s nepřítelem v dosahu. |
+| <kbd>I</kbd> | **Inventář** | Správa batohu a vybavení. |
+| <kbd>T</kbd> | **Chat** | Komunikace s ostatními přeživšími. |
+| <kbd>ESC</kbd> | **Menu** | Nastavení nebo odhlášení ze hry. |
+
+---
+
+<div align="center">
+
+Created by **Matysekxx**
+<br>
+2025 - 2026
+
+</div>
