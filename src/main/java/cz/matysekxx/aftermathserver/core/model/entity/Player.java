@@ -18,6 +18,7 @@ public class Player extends Entity {
     private int credits;
     private int debt;
     private int pendingCosts;
+    private Integer equippedWeaponSlot;
 
     /// Creates a new Player instance.
     public Player(String id, String username, Vector3 spawn,
