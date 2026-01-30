@@ -40,11 +40,12 @@ class FloodFillTest {
     void testFloodFillStaysInsideWalls() {
 
         String layout =
-                "#####\n" +
-                        "#...#\n" +
-                        "#.@.#\n" +
-                        "#...#\n" +
-                        "#####";
+                """
+                        #####
+                        #...#
+                        #.@.#
+                        #...#
+                        #####""";
 
         GameMapData map = new GameMapData();
         ParsedMapLayer layer = ParsedMapLayer.parse(layout, registry, 0, map);
@@ -74,6 +75,6 @@ class FloodFillTest {
         List<Vector3> reachable = FloodFill.floodFill(map);
 
         assertEquals(1, reachable.size());
-        assertEquals(new Vector3(1, 1, 0), reachable.get(0));
+        assertEquals(new Vector3(1, 1, 0), reachable.getFirst());
     }
 }

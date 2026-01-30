@@ -45,6 +45,13 @@ public final class FloodFill {
                             if (isWalkable(map, dest) && visited.add(dest)) queue.add(dest);
                         }
                     });
+            map.getMaybeTileTrigger(String.valueOf(map.getLayer(current.z()).getSymbolAt(current.x(), current.y())))
+                    .ifPresent(trigger -> {
+                        if (trigger instanceof TeleportTrigger tp) {
+                            final Vector3 dest = new Vector3(tp.getTargetX(), tp.getTargetY(), tp.getTargetLayer());
+                            if (isWalkable(map, dest) && visited.add(dest)) queue.add(dest);
+                        }
+                    });
         }
 
         return new ArrayList<>(visited);
@@ -66,7 +73,7 @@ public final class FloodFill {
     private static boolean isWalkable(GameMapData map, Vector3 c) {
         if (c.z() < 0 || c.z() >= map.getLayerCount()) return false;
         final TileType tileType = map.getLayer(c.z()).getTileAt(c.x(), c.y());
-        if (tileType == TileType.WALL || tileType == TileType.VOID || tileType == TileType.DOOR) return false;
-        return map.getLayer(c.z()).getTileAt(c.x(), c.y()).isWalkable();
+        if (tileType == TileType.WALL || tileType == TileType.VOID) return false;
+        return tileType.isWalkable() || tileType == TileType.UNKNOWN;
     }
 }

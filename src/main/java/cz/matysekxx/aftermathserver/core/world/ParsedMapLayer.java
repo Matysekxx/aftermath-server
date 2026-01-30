@@ -27,7 +27,7 @@ public class ParsedMapLayer {
     }
 
     private static String[] getLinesFromContent(String content) {
-        return Arrays.stream(content.split("//R"))
+        return content.lines()
                 .map(String::stripTrailing)
                 .toArray(String[]::new);
     }
@@ -35,7 +35,6 @@ public class ParsedMapLayer {
     /// Parses a string content into a map layer using the registry.
     public static ParsedMapLayer parse(String content, TileRegistry registry, int layerIndex, GameMapData mapData) {
         final String[] lines = getLinesFromContent(content);
-
         final int height = lines.length;
         final int width = Arrays.stream(lines).mapToInt(String::length).max().orElse(0);
 
