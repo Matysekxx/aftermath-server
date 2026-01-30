@@ -13,7 +13,7 @@ import java.util.List;
 ///
 /// Sends the description of an object (e.g., a sign or note) to the player.
 @Component("READ")
-public class ReadLogic implements InteractionLogic {
+public class ReadLogicObject implements ObjectInteractionLogic {
     @Override
     public Collection<GameEvent> interact(MapObject target, Player player) {
         return List.of(GameEventFactory.sendMessageEvent(target.getDescription(), player.getId()));

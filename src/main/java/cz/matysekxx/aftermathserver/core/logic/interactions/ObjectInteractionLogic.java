@@ -7,7 +7,7 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import java.util.Collection;
 
 /// Interface for defining interaction behavior with map objects.
-public interface InteractionLogic {
+public interface ObjectInteractionLogic {
     /// Performs the interaction logic.
     ///
     /// @param target The map object being interacted with.

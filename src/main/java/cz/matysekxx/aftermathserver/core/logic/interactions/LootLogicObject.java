@@ -15,7 +15,7 @@ import java.util.List;
 ///
 /// Transfers items from a container object to the player's inventory.
 @Component("LOOT")
-public class LootLogic implements InteractionLogic {
+public class LootLogicObject implements ObjectInteractionLogic {
     /// Executes the loot interaction.
     ///
     /// Checks if container is empty, moves items to player inventory if space allows,

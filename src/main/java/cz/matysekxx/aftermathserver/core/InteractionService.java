@@ -1,6 +1,6 @@
 package cz.matysekxx.aftermathserver.core;
 
-import cz.matysekxx.aftermathserver.core.logic.interactions.InteractionLogic;
+import cz.matysekxx.aftermathserver.core.logic.interactions.ObjectInteractionLogic;
 import cz.matysekxx.aftermathserver.core.model.entity.InteractionType;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
@@ -18,17 +18,17 @@ import java.util.Map;
 /// Service responsible for coordinating interactions between players and map objects.
 ///
 /// It validates the physical possibility of an interaction (distance checks) and
-/// delegates the specific logic to the appropriate [InteractionLogic] implementation.
+/// delegates the specific logic to the appropriate [ObjectInteractionLogic] implementation.
 @Service
 public class InteractionService {
-    private final Map<String, InteractionLogic> logicMap;
+    private final Map<String, ObjectInteractionLogic> logicMap;
     private final GameEventQueue gameEventQueue;
 
     /// Constructs the InteractionService.
     ///
     /// @param logicMap       A map of interaction keys (e.g., "LOOT", "READ") to their logic handlers.
     /// @param gameEventQueue The queue used to dispatch events resulting from interactions.
-    public InteractionService(Map<String, InteractionLogic> logicMap, GameEventQueue gameEventQueue) {
+    public InteractionService(Map<String, ObjectInteractionLogic> logicMap, GameEventQueue gameEventQueue) {
         this.logicMap = logicMap;
         this.gameEventQueue = gameEventQueue;
     }
@@ -48,9 +48,9 @@ public class InteractionService {
 
         final int distance = MathUtil.getChebyshevDistance(new Vector2(player.getX(), player.getY()), new Vector2(target.getX(), target.getY()));
         if (distance <= 1) {
-            final InteractionLogic interactionLogic = logicMap.get(target.getAction());
-            if (interactionLogic != null) {
-                final Collection<GameEvent> events = interactionLogic.interact(target, player);
+            final ObjectInteractionLogic objectInteractionLogic = logicMap.get(target.getAction());
+            if (objectInteractionLogic != null) {
+                final Collection<GameEvent> events = objectInteractionLogic.interact(target, player);
                 if (events != null) events.forEach(gameEventQueue::enqueue);
             }
         } else gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You are too far away", player.getId()));
