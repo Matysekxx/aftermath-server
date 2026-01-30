@@ -1,6 +1,8 @@
 package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.core.logic.interactions.InteractionLogic;
+import cz.matysekxx.aftermathserver.core.model.entity.InteractionType;
+import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.event.GameEvent;
@@ -53,5 +55,26 @@ public class InteractionService {
             }
         } else gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You are too far away", player.getId()));
 
+    }
+
+    public void processNpcInteraction(Player player, Npc npc) {
+        final int distance = MathUtil.getChebyshevDistance(
+          Vector2.of(player.getX(), player.getY()),
+          Vector2.of(npc.getX(), npc.getY())
+        );
+        if (distance > 2) {
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You are too far away", player.getId()));
+            return;
+        }
+
+        final InteractionType type = npc.getInteraction();
+        //TODO pouzit strategy pattern s EnumMap pro interakce mezi hracem a npc
+        switch (type) {
+            case TALK -> {}
+            case TRADE -> {}
+            case QUEST -> {}
+            case HEAL -> {}
+            default -> gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("This NPC has nothing to say", player.getId()));
+        }
     }
 }

@@ -168,8 +168,15 @@ public class GameEngine {
     public void processInteract(String id, String targetObjectId) {
         final Player player = players.get(id);
         final GameMapData map = worldManager.getMap(player.getMapId());
-        final MapObject target = map.getObject(targetObjectId);
-        interactionService.processInteraction(player, target);
+        final MapObject targetObject = map.getObject(targetObjectId);
+        if (targetObject != null) {
+            interactionService.processInteraction(player, targetObject);
+        }
+        map.getNpcs().stream().filter(npc -> npc.getId().equals(targetObjectId)).findFirst()
+                .ifPresentOrElse(
+                        npc -> interactionService.processNpcInteraction(player, npc),
+                        () -> gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Target not found", id))
+                );
     }
 
     /// Handles dropping an item from inventory.
