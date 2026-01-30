@@ -55,7 +55,8 @@ public class NpcFactory {
                 layerIndex,
                 mapId,
                 template.getMaxHp(),
-                behavior
+                behavior,
+                template.getInteraction()
         );
         npc.setType(template.getType());
         npc.setAggressive(template.isAggressive());

@@ -36,10 +36,12 @@ public class Npc extends Entity {
 
     /// ID of the dialogue tree associated with this NPC (if interactive).
     private String dialogueId;
+    private InteractionType interaction;
 
-    public Npc(String id, String name, int x, int y, int layerIndex, String mapId, int maxHp, Behavior behavior) {
+    public Npc(String id, String name, int x, int y, int layerIndex, String mapId, int maxHp, Behavior behavior, InteractionType interaction) {
         super(x, y, layerIndex, mapId, id, name, maxHp, maxHp, State.ALIVE);
         this.behavior = behavior;
+        this.interaction = interaction;
     }
 
     public void update(GameMapData gameMapData, Collection<Player> players) {
