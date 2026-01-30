@@ -1,4 +1,4 @@
-package cz.matysekxx.aftermathserver.core.logic.interactions;
+package cz.matysekxx.aftermathserver.core.logic.interactions.object;
 
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.world.MapObject;

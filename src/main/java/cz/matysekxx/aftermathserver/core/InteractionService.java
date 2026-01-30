@@ -1,6 +1,6 @@
 package cz.matysekxx.aftermathserver.core;
 
-import cz.matysekxx.aftermathserver.core.logic.interactions.ObjectInteractionLogic;
+import cz.matysekxx.aftermathserver.core.logic.interactions.object.ObjectInteractionLogic;
 import cz.matysekxx.aftermathserver.core.model.entity.InteractionType;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
