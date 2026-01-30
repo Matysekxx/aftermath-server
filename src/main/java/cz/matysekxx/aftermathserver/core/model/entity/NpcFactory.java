@@ -1,8 +1,10 @@
 package cz.matysekxx.aftermathserver.core.model.entity;
 
+import cz.matysekxx.aftermathserver.core.SpatialService;
 import cz.matysekxx.aftermathserver.core.model.behavior.*;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.item.ItemFactory;
+import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,10 +16,15 @@ import java.util.UUID;
 public class NpcFactory {
     private final NpcTable npcTable;
     private final ItemFactory itemFactory;
+    private final GameEventQueue gameEventQueue;
 
-    public NpcFactory(NpcTable npcTable, ItemFactory itemFactory) {
+    private final SpatialService spatialService;
+
+    public NpcFactory(NpcTable npcTable, ItemFactory itemFactory, GameEventQueue gameEventQueue, SpatialService spatialService) {
         this.npcTable = npcTable;
         this.itemFactory = itemFactory;
+        this.gameEventQueue = gameEventQueue;
+        this.spatialService = spatialService;
     }
 
     /// Creates a new NPC instance based on a template ID.
@@ -34,7 +41,7 @@ public class NpcFactory {
             throw new IllegalArgumentException("Unknown NPC template: " + id);
         }
         final Behavior behavior = switch (template.getBehavior().toUpperCase()) {
-            case "AGGRESSIVE" -> new AggressiveBehavior();
+            case "AGGRESSIVE" -> new AggressiveBehavior(gameEventQueue, spatialService);
             case "PATROL" -> new PatrolBehavior();
             case "STATIONARY" -> new StationaryBehavior();
             case "IDLE" -> new IdleBehavior();
