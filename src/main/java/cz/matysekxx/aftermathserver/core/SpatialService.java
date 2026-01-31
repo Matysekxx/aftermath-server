@@ -5,6 +5,7 @@ import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.util.Quadtree;
 import cz.matysekxx.aftermathserver.util.Rectangle;
 import cz.matysekxx.aftermathserver.util.Spatial;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class SpatialService {
     private final Map<String, Map<Integer, Quadtree<Spatial>>> spatialIndices = new ConcurrentHashMap<>();
     private final WorldManager worldManager;
 
-    public SpatialService(WorldManager worldManager) {
+    public SpatialService(@Lazy WorldManager worldManager) {
         this.worldManager = worldManager;
     }
 
