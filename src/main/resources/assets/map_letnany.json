@@ -1,0 +1,18 @@
+{
+  "id": "letnany",
+  "name": " Letňany",
+  "type": "SAFE_ZONE",
+  "layout": {
+    "0": "assets/maps_c/map_letnany0.txt"
+  },
+  "objects": [
+  ],
+  "tileTriggers": {
+    "-": {
+      "lineId": "line_c"
+    }
+  },
+  "spawnMarkers": {
+    "@": "line_c"
+  }
+}
