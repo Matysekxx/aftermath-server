@@ -1,0 +1,18 @@
+{
+  "id": "i-p-pavlova",
+  "name": "I. P. Pavlova",
+  "type": "HAZARD_ZONE",
+  "difficulty": 1,
+  "layout": {
+    "0": "assets/maps_c/map_i-p-pavlova.txt"
+  },
+  "objects": [],
+  "tileTriggers": {
+    "-": {"lineId": "line_a"},
+    "~": {"lineId": "line_g"}
+  },
+  "spawnMarkers": {
+    "@": "line_a",
+    "$": "line_g"
+  }
+}
