@@ -1,0 +1,43 @@
+game:
+  dialog:
+    dialog-map:
+      mr-cibulka:
+        - "Prague doesn't exist anymore!  This is a KGB-GRU virtual simulation run from a bunker in Beijing! Use your pendulum to find the exit pixel!"
+        - "Don't eat! Every ration is a Russian-Chinese psychotronic chip designed to turn your soul into a biological robot!  My pendulum sees the antenna in your soup!"
+        - "Mutants are just KGB agents in high-frequency costumes!  They aren't biting you, they are uploading GRU malware into your biopole! Wake up!"
+      the-commander:
+        - "Strategy is simple: Line E must remain operational at all costs to ensure our survival. If Anděl falls, the entire metro network follows."
+        - "I don't care about your stories; I only care about results and cleared maps. Check your filters and ammunition now, because the tunnels offer no second chances."
+        - "Your objective is the pacification of the target station and the recovery of essential materials. Report back once all mutant threats have been eliminated."
+      the-bartender:
+        - "Welcome to the end of the world. Sit down, unless you're too busy counting your scrap or praying to a God who clearly forgot about Line B."
+        - "I watched a merchant and a soldier walk into a radiation zone. The soldier died for glory, and the merchant probably sold the body for a discount on filters."
+        - "Careful with that drink; it’s stronger than a survivor's ego. You all look the same when the radiation starts melting your nose off." 
+      the-administrator:
+        - "Your balance is in the red, citizen. According to my records, you've been breathing more air than your current debt allowance permits."
+        - "Insolvency is a crime against the Metro Administration. Failure to pay your daily fees will result in the immediate cut-off of all life-support services."
+        - "Sign form 0-TP-V-RIT to authorize your soul's collateral for the next twenty-four hours. Precision in bureaucracy is the only thing keeping us alive."
+      the-engineer:
+        - "Look at your train! She’s crying because you treat her like a piece of scrap. She has a soul, and right now, she’s feeling very insulted."
+        - "I can fix the armor, but you must apologize to the engine first. She needs love, grease, and high-frequency components from Malešice."
+        - "Don't listen to the propaganda; machines have feelings too. One more trip into the toxic slime and she might just decide to quit on you."
+      the-smuggler:
+        - "Pst! You have something that officially 'doesn't exist'? The Administrator would fine you, but I know how to make it disappear for the right price."
+        - "Florenc is a labyrinth, my friend. Perfect for hiding things from the KGB... I mean, the Administration. Interested in some illegal contraband?"
+        - "I buy what the honest merchants fear to touch. High value, high risk, and absolutely no receipts. That's the Florenc way."
+      the-aviatik:
+        - "The Great Wings are calling from the hangars! Do you hear the whisper of the turbines, or is your spirit too grounded in this hole?"
+        - "I collect the relics of the sky. Bring me aircraft parts from the Ruzyň hangars, and I might show you how to truly fly above this misery."
+        - "Everything down here is heavy and dead. Up there, in the hangars, the light of the Old World still glimmers on the aluminum wings."
+      pendulum-cultist:
+        - "The Master is right! I swung my copper nut today, and it pointed directly at the Barman. He's definitely a GRU frequency-spy!"
+        - "Don't touch my alofoil hat! It’s the only thing stopping the Chinese satellites from downloading my biopole into their central mainframe!"
+        - "I’m not 'blundering' in the tunnels; I’m gathering 'Dust' because the Master says it’s the only physical matter the KGB cannot track!"
+      the-merchant:
+        - "I don't care if the world ended; business is business. Buy a filter now or pay for a funeral later—I offer discounts on neither."
+        - "You look like you've been rummaging through a mutant's stomach. Toss your scrap on the table and let's see if it's worth the oxygen you're wasting."
+        - "Filters, medkits, ammo—everything you need to die another day. Just don't ask where I got the scotch; you couldn't afford the answer."
+      the-doctor:
+        - "Stop twitching. If I wanted to listen to screaming, I’d move my clinic to a mutant nest. Now, let’s see how much of your skin is still yours."
+        - "You’re glowing, and not in a 'healthy glow' kind of way. Take this injection and try not to breathe near anyone you actually like for the next hour."
+        - "I can patch the hole in your chest, but I can't fix the stupidity that got you shot. That’ll be extra credits for the emotional trauma of treating you."

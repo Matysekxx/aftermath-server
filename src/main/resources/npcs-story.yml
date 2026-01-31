@@ -1,0 +1,38 @@
+game:
+  npcs:
+    definitions:
+      - id: "commander_andel"
+        name: "Commander (Anděl)"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 150
+        behavior: "STATIONARY"
+        interaction: "QUEST"
+        dialogId: "the-commander"
+
+      - id: "administrator_mustek"
+        name: "Administrator"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 80
+        behavior: "STATIONARY"
+        interaction: "TALK"
+        dialogId: "the-administrator"
+
+      - id: "engineer_malesice"
+        name: "The Engineer"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 100
+        behavior: "STATIONARY"
+        interaction: "TALK"
+        dialogId: "the-engineer"
+
+      - id: "aviatik_ruzyne"
+        name: "The Aviatik"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 90
+        behavior: "STATIONARY"
+        interaction: "TALK"
+        dialogId: "the-aviatik"

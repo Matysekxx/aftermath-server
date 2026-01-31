@@ -1,0 +1,29 @@
+game:
+  npcs:
+    definitions:
+      - id: "merchant_mustek"
+        name: "Merchant (Můstek)"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 100
+        behavior: "STATIONARY"
+        interaction: "TRADE"
+        dialogId: "the-merchant"
+
+      - id: "doctor_mustek"
+        name: "Doctor (Můstek)"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 100
+        behavior: "STATIONARY"
+        interaction: "HEAL"
+        dialogId: "the-doctor"
+
+      - id: "bartender_mustek"
+        name: "Bartender"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 100
+        behavior: "STATIONARY"
+        interaction: "TALK"
+        dialogId: "the-bartender"

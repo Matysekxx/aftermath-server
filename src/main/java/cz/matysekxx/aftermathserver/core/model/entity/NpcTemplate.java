@@ -26,6 +26,7 @@ public class NpcTemplate {
     /// Maximum health points.
     private int maxHp;
     private InteractionType interaction;
+    private String dialogId;
     /// List of items that can drop from this NPC.
     private List<Item> loot = new ArrayList<>();
 }
