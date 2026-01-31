@@ -1,5 +1,6 @@
 package cz.matysekxx.aftermathserver.core;
 
+import cz.matysekxx.aftermathserver.core.logic.interactions.npc.NpcInteractionLogic;
 import cz.matysekxx.aftermathserver.core.logic.interactions.object.ObjectInteractionLogic;
 import cz.matysekxx.aftermathserver.core.model.entity.InteractionType;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
@@ -13,6 +14,8 @@ import cz.matysekxx.aftermathserver.util.Vector2;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 /// Service responsible for coordinating interactions between players and map objects.
@@ -21,16 +24,18 @@ import java.util.Map;
 /// delegates the specific logic to the appropriate [ObjectInteractionLogic] implementation.
 @Service
 public class InteractionService {
-    private final Map<String, ObjectInteractionLogic> logicMap;
+    private final Map<String, ObjectInteractionLogic> objectInteractionLogicMap;
     private final GameEventQueue gameEventQueue;
+    private final Map<InteractionType, NpcInteractionLogic> npcInteractionLogicMap = new EnumMap<>(InteractionType.class);
 
     /// Constructs the InteractionService.
     ///
-    /// @param logicMap       A map of interaction keys (e.g., "LOOT", "READ") to their logic handlers.
+    /// @param objectInteractionLogicMap       A map of interaction keys (e.g., "LOOT", "READ") to their logic handlers.
     /// @param gameEventQueue The queue used to dispatch events resulting from interactions.
-    public InteractionService(Map<String, ObjectInteractionLogic> logicMap, GameEventQueue gameEventQueue) {
-        this.logicMap = logicMap;
+    public InteractionService(Map<String, ObjectInteractionLogic> objectInteractionLogicMap, GameEventQueue gameEventQueue, List<NpcInteractionLogic> npcInteractionLogicList) {
+        this.objectInteractionLogicMap = objectInteractionLogicMap;
         this.gameEventQueue = gameEventQueue;
+        npcInteractionLogicList.forEach(npcInteractionLogic -> npcInteractionLogicMap.put(npcInteractionLogic.getType(), npcInteractionLogic));
     }
 
     /// Processes an interaction between a player and a target object.
@@ -48,7 +53,7 @@ public class InteractionService {
 
         final int distance = MathUtil.getChebyshevDistance(new Vector2(player.getX(), player.getY()), new Vector2(target.getX(), target.getY()));
         if (distance <= 1) {
-            final ObjectInteractionLogic objectInteractionLogic = logicMap.get(target.getAction());
+            final ObjectInteractionLogic objectInteractionLogic = objectInteractionLogicMap.get(target.getAction());
             if (objectInteractionLogic != null) {
                 final Collection<GameEvent> events = objectInteractionLogic.interact(target, player);
                 if (events != null) events.forEach(gameEventQueue::enqueue);
@@ -68,13 +73,10 @@ public class InteractionService {
         }
 
         final InteractionType type = npc.getInteraction();
-        //TODO pouzit strategy pattern s EnumMap pro interakce mezi hracem a npc
-        switch (type) {
-            case TALK -> {}
-            case TRADE -> {}
-            case QUEST -> {}
-            case HEAL -> {}
-            default -> gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("This NPC has nothing to say", player.getId()));
+        if (npcInteractionLogicMap.containsKey(type)) {
+            final NpcInteractionLogic logic = npcInteractionLogicMap.get(type);
+            final Collection<GameEvent> events = logic.interact(npc, player);
+            if (events != null) events.forEach(gameEventQueue::enqueue);
         }
     }
 }
