@@ -36,6 +36,7 @@ public class GameMapData {
     @JsonIgnore
     private Map<Vector3, TileTrigger> dynamicTriggers = new HashMap<>();
     private Map<String, String> spawnMarkers = new HashMap<>();
+    private Map<String, String> npcMarkers = new HashMap<>();
     @JsonIgnore
     private Map<String, Vector3> spawns = new ConcurrentHashMap<>();
 
