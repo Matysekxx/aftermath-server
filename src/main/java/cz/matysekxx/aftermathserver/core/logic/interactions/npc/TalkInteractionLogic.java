@@ -1,9 +1,11 @@
 package cz.matysekxx.aftermathserver.core.logic.interactions.npc;
 
+import cz.matysekxx.aftermathserver.core.DialogRegistry;
 import cz.matysekxx.aftermathserver.core.model.entity.InteractionType;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.event.GameEvent;
+import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -11,9 +13,19 @@ import java.util.List;
 
 @Component
 public class TalkInteractionLogic implements NpcInteractionLogic {
+    private final DialogRegistry dialogRegistry;
+
+    public TalkInteractionLogic(DialogRegistry dialogRegistry) {
+        this.dialogRegistry = dialogRegistry;
+    }
+
     @Override
     public Collection<GameEvent> interact(Npc target, Player player) {
-        return List.of();
+        String text = dialogRegistry.getRandomDialog(target.getId());
+        if (text == null) {
+            text = "...";
+        }
+        return List.of(GameEventFactory.sendMessageEvent(target.getName() + ": " + text, player.getId()));
     }
 
     @Override
