@@ -15,15 +15,18 @@ public class ParsedMapLayer {
     private final char[][] symbols;
     @JsonIgnore
     private final Map<String, List<Vector3>> markers;
+    @JsonIgnore
+    private final  Map<Vector3, String> npcSpawns;
     private final int width;
     private final int height;
 
-    private ParsedMapLayer(TileType[][] tiles, char[][] symbols, Map<String, List<Vector3>> markers) {
+    private ParsedMapLayer(TileType[][] tiles, char[][] symbols, Map<String, List<Vector3>> markers, Map<Vector3, String> npcSpawns) {
         this.tiles = tiles;
         this.symbols = symbols;
         this.height = tiles.length;
         this.width = height > 0 ? tiles[0].length : 0;
         this.markers = markers;
+        this.npcSpawns = npcSpawns;
     }
 
     private static String[] getLinesFromContent(String content) {
@@ -41,6 +44,7 @@ public class ParsedMapLayer {
         final TileType[][] tiles = new TileType[height][width];
         final char[][] symbols = new char[height][width];
         final Map<String, List<Vector3>> markers = new HashMap<>();
+        final Map<Vector3, String> npcSpawns = new HashMap<>();
 
         for (int y = 0; y < height; y++) {
             final String line = lines[y];
@@ -53,6 +57,11 @@ public class ParsedMapLayer {
                             mapData.getSpawnMarkers().containsKey(charStr)) {
                         final String lineId = mapData.getSpawnMarkers().get(charStr);
                         mapData.getSpawns().put(lineId, new Vector3(x, y, layerIndex));
+                        symbols[y][x] = '.';
+                        tiles[y][x] = registry.getType('.');
+                    } else if (mapData != null && mapData.getNpcMarkers() != null && mapData.getNpcMarkers().containsKey(charStr)) {
+                        final String npcId = mapData.getNpcMarkers().get(charStr);
+                        npcSpawns.put(new Vector3(x, y, layerIndex), npcId);
                         symbols[y][x] = '.';
                         tiles[y][x] = registry.getType('.');
                     } else {
@@ -75,7 +84,7 @@ public class ParsedMapLayer {
                 }
             }
         }
-        return new ParsedMapLayer(tiles, symbols, markers);
+        return new ParsedMapLayer(tiles, symbols, markers, npcSpawns);
     }
 
     /// Gets the tile type at specific coordinates.

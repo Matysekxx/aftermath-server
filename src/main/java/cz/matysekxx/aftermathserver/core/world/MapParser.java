@@ -1,6 +1,8 @@
 package cz.matysekxx.aftermathserver.core.world;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.matysekxx.aftermathserver.core.model.entity.Npc;
+import cz.matysekxx.aftermathserver.core.model.entity.NpcFactory;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.item.ItemFactory;
 import cz.matysekxx.aftermathserver.core.world.triggers.Link;
@@ -24,10 +26,12 @@ public class MapParser {
     private final TileRegistry tileRegistry;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ItemFactory itemFactory;
+    private final NpcFactory npcFactory;
 
-    public MapParser(TileRegistry tileRegistry, ItemFactory itemFactory) {
+    public MapParser(TileRegistry tileRegistry, ItemFactory itemFactory, NpcFactory npcFactory) {
         this.tileRegistry = tileRegistry;
         this.itemFactory = itemFactory;
+        this.npcFactory = npcFactory;
     }
 
     /// Loads a map from a JSON file path.
@@ -91,6 +95,15 @@ public class MapParser {
                 fullItems.add(itemFactoryItem);
             }
             object.setItems(new ArrayList<>(fullItems));
+        }
+    }
+
+    private void processNpcSpawns(GameMapData mapData, Map<Integer, ParsedMapLayer> layers) {
+        for (ParsedMapLayer layer : layers.values()) {
+            layer.getNpcSpawns().forEach((pos, npcId) -> {
+                final Npc npc = npcFactory.createNpc(npcId, pos.x(), pos.y(), pos.z(), mapData.getId());
+                mapData.getNpcs().add(npc);
+            });
         }
     }
 

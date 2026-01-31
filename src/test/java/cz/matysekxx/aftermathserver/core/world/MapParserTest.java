@@ -25,7 +25,7 @@ class MapParserTest {
         testMapping.put('B', TileType.BED);
         testMapping.put('V', TileType.ELEVATOR);
         registry.setMapping(testMapping);
-        parser = new MapParser(registry, null);
+        parser = new MapParser(registry, null, null);
     }
 
     @Test
