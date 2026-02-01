@@ -38,7 +38,7 @@ public class StatsService {
     public boolean applyStats(Player player) {
         final GameMapData map = worldManager.getMap(player.getMapId());
         return switch (map.getType()) {
-            case MapType.HAZARD_ZONE -> applyRadiation(player, map);
+            case MapType.HAZARD_ZONE -> applyRadiation(player, map.getDifficulty());
             case MapType.SAFE_ZONE -> applyRegeneration(player);
         };
     }
@@ -64,11 +64,19 @@ public class StatsService {
     /// @param player The player affected by radiation.
     /// @param map    The current map to get difficulty from.
     /// @return true if radiation increased or health decreased.
-    private boolean applyRadiation(Player player, GameMapData map) {
-        final int diff = Math.max(1, map.getDifficulty());
-        player.setRads(player.getRads() + diff);
-        if (player.getRads() > player.getRadsLimit()) {
-            player.setHp(player.getHp() - diff);
+    private boolean applyRadiation(Player player, int difficulty) {
+        player.setRads(player.getRads() + difficulty);
+
+        int maskBonus = 0;
+        if (player.getEquippedMaskSlot() != null) {
+            final Item mask = player.getInventory().getSlots().get(player.getEquippedMaskSlot());
+            if (mask != null && mask.getHealAmount() != null) {
+                maskBonus = mask.getHealAmount();
+            }
+        }
+
+        if (player.getRads() > (player.getRadsLimit() + maskBonus)) {
+            player.setHp(player.getHp() - difficulty);
         }
         return true;
     }

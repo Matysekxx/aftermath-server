@@ -181,6 +181,8 @@ public class GameEngine {
             final MapObject lootBag = mapObjectFactory.createLootBag(item.getId(), amount, player.getX(), player.getY());
             lootBag.setZ(player.getLayerIndex());
             map.addObject(lootBag);
+            if (slotIndex == player.getEquippedWeaponSlot()) player.setEquippedWeaponSlot(null);
+            if (slotIndex == player.getEquippedMaskSlot()) player.setEquippedMaskSlot(null);
             gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(player));
             gameEventQueue.enqueue(GameEventFactory.broadcastMapObjects(map.getObjects(), player.getMapId()));
         }, () -> gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Item not found or invalid amount", playerId)));
@@ -350,12 +352,18 @@ public class GameEngine {
         if (player == null) return;
 
         final Item item = player.getInventory().getSlots().get(equipRequest.getSlotIndex());
-        if (item != null && item.getType() == ItemType.WEAPON) {
-            player.setEquippedWeaponSlot(equipRequest.getSlotIndex());
-            log.info("Player {} equipped {}", player.getName(), item.getName());
-            gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Equipped: " + item.getName(), sessionId));
-        } else {
-            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Cannot equip this item", sessionId));
+        if (item == null) return;
+
+        switch (item.getType()) {
+            case WEAPON -> {
+                player.setEquippedWeaponSlot(equipRequest.getSlotIndex());
+                gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Equipped: " + item.getName(), sessionId));
+            }
+            case MASK -> {
+                player.setEquippedMaskSlot(equipRequest.getSlotIndex());
+                gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Equipped Mask: " + item.getName(), sessionId));
+            }
+            case null, default -> gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Cannot equip this item", sessionId));
         }
     }
 }

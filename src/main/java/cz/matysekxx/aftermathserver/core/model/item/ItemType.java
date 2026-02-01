@@ -13,5 +13,6 @@ public enum ItemType {
     /// Items with high monetary value.
     VALUABLE,
     /// Items required for quests.
-    QUEST
+    QUEST,
+    MASK
 }

@@ -44,7 +44,7 @@ game:
       - id: "filter"
         name: "Gas Mask Filter"
         description: "A fresh filter for your gas mask. Increases radiation resistance."
-        type: CONSUMABLE
+        type: MASK
         effect: "FILTER"
         healAmount: 50
         maxStack: 5

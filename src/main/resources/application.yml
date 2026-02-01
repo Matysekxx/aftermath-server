@@ -12,5 +12,5 @@ spring:
       - "classpath:npcs-story.yml"
 game:
   tick-rate: 500
-  starting-map-id: "nadrazi-veleslavin"
+  starting-map-id: "nadrazi-veleslavin" #placeholder
   line-id: "line_a"
