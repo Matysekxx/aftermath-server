@@ -1,6 +1,9 @@
-package cz.matysekxx.aftermathserver.core.world;
+package cz.matysekxx.aftermathserver.core.world.parser;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.core.world.TileRegistry;
+import cz.matysekxx.aftermathserver.core.world.TileType;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import lombok.Getter;
 
@@ -18,7 +21,7 @@ public class ParsedMapLayer {
     @JsonIgnore
     private final Map<Vector3, String> npcSpawns;
     @JsonIgnore
-    private Map<Vector3, String> objectSpawns;
+    private final Map<Vector3, String> objectSpawns;
     private final int width;
     private final int height;
 

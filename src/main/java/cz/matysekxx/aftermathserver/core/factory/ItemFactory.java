@@ -1,5 +1,8 @@
-package cz.matysekxx.aftermathserver.core.model.item;
+package cz.matysekxx.aftermathserver.core.factory;
 
+import cz.matysekxx.aftermathserver.core.model.item.Item;
+import cz.matysekxx.aftermathserver.core.model.item.ItemTable;
+import cz.matysekxx.aftermathserver.core.model.item.ItemTemplate;
 import org.springframework.stereotype.Service;
 
 /// Factory for creating item instances.

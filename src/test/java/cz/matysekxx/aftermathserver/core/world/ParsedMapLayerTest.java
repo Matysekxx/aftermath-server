@@ -1,5 +1,6 @@
 package cz.matysekxx.aftermathserver.core.world;
 
+import cz.matysekxx.aftermathserver.core.world.parser.ParsedMapLayer;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

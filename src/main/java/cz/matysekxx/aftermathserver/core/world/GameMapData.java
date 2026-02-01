@@ -2,6 +2,7 @@ package cz.matysekxx.aftermathserver.core.world;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
+import cz.matysekxx.aftermathserver.core.world.parser.ParsedMapLayer;
 import cz.matysekxx.aftermathserver.core.world.triggers.Link;
 import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import cz.matysekxx.aftermathserver.util.Vector3;

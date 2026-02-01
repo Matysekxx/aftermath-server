@@ -1,14 +1,14 @@
 package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
-import cz.matysekxx.aftermathserver.core.model.entity.NpcFactory;
+import cz.matysekxx.aftermathserver.core.factory.NpcFactory;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTable;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTemplate;
 import cz.matysekxx.aftermathserver.core.model.item.ItemTable;
 import cz.matysekxx.aftermathserver.core.model.item.ItemTemplate;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
-import cz.matysekxx.aftermathserver.core.world.MapObjectFactory;
+import cz.matysekxx.aftermathserver.core.factory.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package cz.matysekxx.aftermathserver.util;
 
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
-import cz.matysekxx.aftermathserver.core.world.ParsedMapLayer;
+import cz.matysekxx.aftermathserver.core.world.parser.ParsedMapLayer;
 import cz.matysekxx.aftermathserver.core.world.TileRegistry;
 import cz.matysekxx.aftermathserver.core.world.TileType;
 import org.junit.jupiter.api.BeforeEach;

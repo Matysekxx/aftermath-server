@@ -21,4 +21,11 @@ public final class MathUtil {
     public static int getChebyshevDistance(Vector2 a, Vector2 b) {
         return Math.max(Math.abs(a.x() - b.x()), Math.abs(a.y() - b.y()));
     }
+
+    public static int getChebyshevDistance(Spatial s1, Spatial s2) {
+        return getChebyshevDistance(
+                new Vector2(s1.getX(), s1.getY()),
+                new Vector2(s2.getX(), s2.getY())
+        );
+    }
 }

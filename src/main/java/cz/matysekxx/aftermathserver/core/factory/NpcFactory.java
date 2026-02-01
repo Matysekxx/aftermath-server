@@ -1,9 +1,11 @@
-package cz.matysekxx.aftermathserver.core.model.entity;
+package cz.matysekxx.aftermathserver.core.factory;
 
 import cz.matysekxx.aftermathserver.core.SpatialService;
 import cz.matysekxx.aftermathserver.core.model.behavior.*;
+import cz.matysekxx.aftermathserver.core.model.entity.Npc;
+import cz.matysekxx.aftermathserver.core.model.entity.NpcTable;
+import cz.matysekxx.aftermathserver.core.model.entity.NpcTemplate;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
-import cz.matysekxx.aftermathserver.core.model.item.ItemFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import org.springframework.stereotype.Service;
 

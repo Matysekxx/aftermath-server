@@ -1,7 +1,7 @@
 package cz.matysekxx.aftermathserver.dto;
 
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
-import cz.matysekxx.aftermathserver.core.world.ParsedMapLayer;
+import cz.matysekxx.aftermathserver.core.world.parser.ParsedMapLayer;
 import lombok.Data;
 
 import java.util.ArrayList;

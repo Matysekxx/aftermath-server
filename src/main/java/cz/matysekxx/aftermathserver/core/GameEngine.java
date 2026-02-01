@@ -2,17 +2,15 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
+import cz.matysekxx.aftermathserver.core.factory.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.entity.State;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
-import cz.matysekxx.aftermathserver.core.model.item.ItemType;
 import cz.matysekxx.aftermathserver.core.world.*;
 import cz.matysekxx.aftermathserver.dto.*;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
-import cz.matysekxx.aftermathserver.util.MathUtil;
-import cz.matysekxx.aftermathserver.util.Vector2;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import cz.matysekxx.aftermathserver.util.Spatial;
 import lombok.extern.slf4j.Slf4j;
@@ -95,7 +93,7 @@ public class GameEngine {
     }
 
     /// Adds a new player session to the game.
-    public void addPlayer(String sessionId, LoginRequest request) {
+    public void addPlayer(String sessionId, LoginRequest request) { //TODO: presunout do nove tridy LoginService
         if (players.containsKey(sessionId)) return;
 
         String mapId = request.getStartingMapId();

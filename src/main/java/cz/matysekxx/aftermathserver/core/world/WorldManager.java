@@ -1,5 +1,7 @@
 package cz.matysekxx.aftermathserver.core.world;
 
+import cz.matysekxx.aftermathserver.core.world.parser.MapParser;
+import cz.matysekxx.aftermathserver.core.world.parser.ParsedMapLayer;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;

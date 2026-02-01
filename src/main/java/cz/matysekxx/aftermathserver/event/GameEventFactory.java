@@ -20,7 +20,6 @@ public class GameEventFactory {
     private GameEventFactory() {
     }
 
-
     /// Creates an event to update a specific player's inventory.
     public static GameEvent sendInventoryEvent(Player player) {
         return GameEvent.create(EventType.SEND_INVENTORY, player, player.getId(), null, false);
