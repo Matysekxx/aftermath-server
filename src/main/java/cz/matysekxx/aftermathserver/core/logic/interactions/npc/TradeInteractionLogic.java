@@ -13,7 +13,6 @@ import java.util.List;
 public class TradeInteractionLogic implements NpcInteractionLogic {
     @Override
     public Collection<GameEvent> interact(Npc target, Player player) {
-        //TODO: pridat poslani nabidky hraci
         return List.of();
     }
 

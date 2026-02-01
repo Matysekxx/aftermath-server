@@ -28,13 +28,16 @@ public class InteractionService {
     private final GameEventQueue gameEventQueue;
     private final Map<InteractionType, NpcInteractionLogic> npcInteractionLogicMap = new EnumMap<>(InteractionType.class);
 
+    private final SpatialService spatialService;
+
     /// Constructs the InteractionService.
     ///
     /// @param objectInteractionLogicMap       A map of interaction keys (e.g., "LOOT", "READ") to their logic handlers.
     /// @param gameEventQueue The queue used to dispatch events resulting from interactions.
-    public InteractionService(Map<String, ObjectInteractionLogic> objectInteractionLogicMap, GameEventQueue gameEventQueue, List<NpcInteractionLogic> npcInteractionLogicList) {
+    public InteractionService(Map<String, ObjectInteractionLogic> objectInteractionLogicMap, GameEventQueue gameEventQueue, List<NpcInteractionLogic> npcInteractionLogicList, SpatialService spatialService) {
         this.objectInteractionLogicMap = objectInteractionLogicMap;
         this.gameEventQueue = gameEventQueue;
+        this.spatialService = spatialService;
         npcInteractionLogicList.forEach(npcInteractionLogic -> npcInteractionLogicMap.put(npcInteractionLogic.getType(), npcInteractionLogic));
     }
 

@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Slf4j
-public class ConditionalTeleportTrigger extends TeleportTrigger { //TODO: cela refaktorizace teto tridy
+public class ConditionalTeleportTrigger extends TeleportTrigger {
     private String condition;
     @JsonIgnore
     private Predicate<Player> predicate;

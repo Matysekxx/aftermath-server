@@ -13,6 +13,7 @@ import cz.matysekxx.aftermathserver.dto.*;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Vector3;
+import cz.matysekxx.aftermathserver.util.Spatial;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -186,6 +187,7 @@ public class GameEngine {
         droppedItem.ifPresentOrElse(item -> {
             final GameMapData map = worldManager.getMap(player.getMapId());
             final MapObject lootBag = mapObjectFactory.createLootBag(item.getId(), amount, player.getX(), player.getY());
+            lootBag.setZ(player.getLayerIndex());
             map.addObject(lootBag);
             gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(player));
             gameEventQueue.enqueue(GameEventFactory.broadcastMapObjects(map.getObjects(), player.getMapId()));
@@ -269,9 +271,10 @@ public class GameEngine {
                 }
                 gameEventQueue.enqueue(GameEventFactory.broadcastNpcs(npcDtos, map.getId()));
 
-                final List<Entity> allEntities = new ArrayList<>();
+                final List<Spatial> allEntities = new ArrayList<>();
                 allEntities.addAll(map.getNpcs());
                 allEntities.addAll(playersOnMap);
+                allEntities.addAll(map.getObjects());
                 spatialService.rebuildIndex(map.getId(), allEntities);
             }
         }
