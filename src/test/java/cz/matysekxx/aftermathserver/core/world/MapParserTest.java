@@ -20,19 +20,16 @@ class MapParserTest {
         Map<Character, TileType> testMapping = new HashMap<>();
         testMapping.put('#', TileType.WALL);
         testMapping.put('.', TileType.FLOOR);
-        testMapping.put(' ', TileType.EMPTY);
         testMapping.put('=', TileType.DOOR);
         testMapping.put('B', TileType.BED);
-        testMapping.put('V', TileType.ELEVATOR);
         registry.setMapping(testMapping);
-        parser = new MapParser(registry, null, null);
+        parser = new MapParser(registry, null, null, null);
     }
 
     @Test
     void shouldMapDefaultChars() {
         assertEquals(TileType.WALL, registry.getType('#'));
         assertEquals(TileType.FLOOR, registry.getType('.'));
-        assertEquals(TileType.EMPTY, registry.getType(' '));
         assertEquals(TileType.DOOR, registry.getType('='));
         assertEquals(TileType.BED, registry.getType('B'));
     }
@@ -61,7 +58,6 @@ class MapParserTest {
         assertEquals(TileType.FLOOR, layer.getTileAt(1, 0));
         assertEquals(TileType.DOOR, layer.getTileAt(2, 0));
         assertEquals(TileType.BED, layer.getTileAt(0, 1));
-        assertEquals(TileType.ELEVATOR, layer.getTileAt(1, 1));
     }
 
     @Test

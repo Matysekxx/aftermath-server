@@ -27,11 +27,14 @@ public class MapParser {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ItemFactory itemFactory;
     private final NpcFactory npcFactory;
+    private final MapObjectFactory mapObjectFactory;
 
-    public MapParser(TileRegistry tileRegistry, ItemFactory itemFactory, NpcFactory npcFactory) {
+
+    public MapParser(TileRegistry tileRegistry, ItemFactory itemFactory, NpcFactory npcFactory, MapObjectFactory mapObjectFactory) {
         this.tileRegistry = tileRegistry;
         this.itemFactory = itemFactory;
         this.npcFactory = npcFactory;
+        this.mapObjectFactory = mapObjectFactory;
     }
 
     /// Loads a map from a JSON file path.
@@ -44,6 +47,8 @@ public class MapParser {
             mapData.setParsedLayers(layers);
 
             processLinks(mapData, layers);
+            processObjectSpawns(mapData, layers);
+            processNpcSpawns(mapData, layers);
 
             mapData.initializeCache();
             return mapData;
@@ -70,6 +75,20 @@ public class MapParser {
                 final TeleportTrigger trigger = new TeleportTrigger(dest.x(), dest.y(), dest.z());
                 mapData.getDynamicTriggers().put(src, trigger);
             }
+        }
+    }
+
+
+    private void processObjectSpawns(GameMapData mapData, Map<Integer, ParsedMapLayer> layers) {
+        for (ParsedMapLayer layer : layers.values()) {
+            layer.getObjectSpawns().forEach((pos, markerChar) -> {
+                final GameMapData.ObjectMarker markerDef = mapData.getObjectMarkers().get(markerChar);
+                if (markerDef != null) {
+                    final MapObject obj = mapObjectFactory.createStaticObject(
+                            markerDef.getType(), markerDef.getAction(), markerDef.getDescription(), pos);
+                    mapData.addObject(obj);
+                }
+            });
         }
     }
 

@@ -8,6 +8,7 @@ import cz.matysekxx.aftermathserver.util.Vector3;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,10 +38,19 @@ public class GameMapData {
     private Map<Vector3, TileTrigger> dynamicTriggers = new HashMap<>();
     private Map<String, String> spawnMarkers = new HashMap<>();
     private Map<String, String> npcMarkers = new HashMap<>();
+    private Map<String, ObjectMarker> objectMarkers = new HashMap<>();
     @JsonIgnore
     private Map<String, Vector3> spawns = new ConcurrentHashMap<>();
 
     private Collection<Link> links;
+
+    @Data
+    @NoArgsConstructor
+    public static class ObjectMarker {
+        private String type;
+        private String action;
+        private String description;
+    }
 
     /// Retrieves a specific layer by index.
     public ParsedMapLayer getLayer(int index) {

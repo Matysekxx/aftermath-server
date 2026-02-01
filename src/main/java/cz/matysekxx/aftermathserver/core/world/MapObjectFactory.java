@@ -3,6 +3,7 @@ package cz.matysekxx.aftermathserver.core.world;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.item.ItemFactory;
+import cz.matysekxx.aftermathserver.util.Vector3;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -50,6 +51,19 @@ public class MapObjectFactory {
         bag.setY(y);
         bag.getItems().add(itemFactory.createItem(itemId, quantity));
         return bag;
+    }
+
+    /// Creates a static map object from a marker definition.
+    public MapObject createStaticObject(String type, String action, String description, Vector3 pos) {
+        final MapObject obj = new MapObject();
+        obj.setId(type.toLowerCase() + "_" + UUID.randomUUID().toString().substring(0, 8));
+        obj.setType(type);
+        obj.setAction(action);
+        obj.setDescription(description);
+        obj.setX(pos.x());
+        obj.setY(pos.y());
+        obj.setZ(pos.z());
+        return obj;
     }
 
 }

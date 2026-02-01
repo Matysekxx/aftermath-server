@@ -39,20 +39,6 @@ game:
         type: DOOR
       - symbol: 'B'
         type: BED
-      - symbol: 'C'
-        type: COMPUTER
-      - symbol: 'R'
-        type: RADIO
-      - symbol: 'S'
-        type: SERVER
-      - symbol: 'A'
-        type: ARMORY
-      - symbol: 'W'
-        type: WEAPON
-      - symbol: 'F'
-        type: FOOD
-      - symbol: 'O'
-        type: OVEN
       - symbol: '-'
         type: FLOOR
       - symbol: '~'

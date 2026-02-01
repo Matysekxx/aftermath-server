@@ -6,26 +6,18 @@ import lombok.Getter;
 /// Defines the properties of a map tile.
 @Getter
 public enum TileType {
+    VOID(false, false, null),
     WALL(false, false, null),
     FLOOR(true, false, null),
-    EMPTY(true, false, null),
-    VOID(false, false, null),
+    METRO_TRACK(true, false, null),
 
     DOOR(true, true, "OPEN"),
+
     BED(false, true, "REST"),
-    ELEVATOR(true, true, "TRAVEL"),
+    CONTAINER(false, true, "LOOT"),
+    READABLE(false, true, "READ"),
 
-    COMPUTER(false, true, "READ"),
-    RADIO(false, true, "READ"),
-    SERVER(false, true, "READ"),
-
-    ARMORY(false, true, "LOOT"),
-    WEAPON(false, true, "LOOT"),
-    FOOD(false, true, "LOOT"),
-    OVEN(false, true, "LOOT"),
-
-    METRO_TRACK(true, false, null),
-    UNKNOWN(false, false, null);
+    UNKNOWN(true, false, null);
 
     private final boolean walkable;
     private final boolean interactable;

@@ -16,17 +16,20 @@ public class ParsedMapLayer {
     @JsonIgnore
     private final Map<String, List<Vector3>> markers;
     @JsonIgnore
-    private final  Map<Vector3, String> npcSpawns;
+    private final Map<Vector3, String> npcSpawns;
+    @JsonIgnore
+    private Map<Vector3, String> objectSpawns;
     private final int width;
     private final int height;
 
-    private ParsedMapLayer(TileType[][] tiles, char[][] symbols, Map<String, List<Vector3>> markers, Map<Vector3, String> npcSpawns) {
+    private ParsedMapLayer(TileType[][] tiles, char[][] symbols, Map<String, List<Vector3>> markers, Map<Vector3, String> npcSpawns, Map<Vector3, String> objectSpawns) {
         this.tiles = tiles;
         this.symbols = symbols;
         this.height = tiles.length;
         this.width = height > 0 ? tiles[0].length : 0;
         this.markers = markers;
         this.npcSpawns = npcSpawns;
+        this.objectSpawns = objectSpawns;
     }
 
     private static String[] getLinesFromContent(String content) {
@@ -41,50 +44,84 @@ public class ParsedMapLayer {
         final int height = lines.length;
         final int width = Arrays.stream(lines).mapToInt(String::length).max().orElse(0);
 
-        final TileType[][] tiles = new TileType[height][width];
-        final char[][] symbols = new char[height][width];
-        final Map<String, List<Vector3>> markers = new HashMap<>();
-        final Map<Vector3, String> npcSpawns = new HashMap<>();
+        final ParseContext ctx = new ParseContext(width, height, registry, layerIndex, mapData);
 
         for (int y = 0; y < height; y++) {
-            final String line = lines[y];
-            boolean inQuotes = false;
-            for (int x = 0; x < width; x++) {
-                if (x < line.length()) {
-                    final char c = line.charAt(x);
-                    final String charStr = String.valueOf(c);
-                    if (mapData != null && mapData.getSpawnMarkers() != null &&
-                            mapData.getSpawnMarkers().containsKey(charStr)) {
-                        final String lineId = mapData.getSpawnMarkers().get(charStr);
-                        mapData.getSpawns().put(lineId, new Vector3(x, y, layerIndex));
-                        symbols[y][x] = '.';
-                        tiles[y][x] = registry.getType('.');
-                    } else if (mapData != null && mapData.getNpcMarkers() != null && mapData.getNpcMarkers().containsKey(charStr)) {
-                        final String npcId = mapData.getNpcMarkers().get(charStr);
-                        npcSpawns.put(new Vector3(x, y, layerIndex), npcId);
-                        symbols[y][x] = '.';
-                        tiles[y][x] = registry.getType('.');
-                    } else {
-                        symbols[y][x] = c;
-                        if (c == '"') {
-                            inQuotes = !inQuotes;
-                        }
-                        final TileType type = registry.getType(c);
-                        if (!inQuotes && c != '"' && type == TileType.UNKNOWN && c != ' ') {
-                            markers.computeIfAbsent(charStr, k -> new ArrayList<>())
-                                    .add(new Vector3(x, y, layerIndex));
-                            tiles[y][x] = registry.getType('.');
-                        } else {
-                            tiles[y][x] = type;
-                        }
-                    }
-                } else {
-                    symbols[y][x] = ' ';
-                    tiles[y][x] = TileType.VOID;
+            parseLine(lines[y], y, width, ctx);
+        }
+
+        return new ParsedMapLayer(ctx.tiles, ctx.symbols, ctx.markers, ctx.npcSpawns, ctx.objectSpawns);
+    }
+
+    private static void parseLine(String line, int y, int width, ParseContext ctx) {
+        boolean inQuotes = false;
+        for (int x = 0; x < width; x++) {
+            if (x < line.length()) {
+                char c = line.charAt(x);
+                if (processSpecialMarkers(x, y, c, ctx)) {
+                    continue;
                 }
+
+                ctx.symbols[y][x] = c;
+                if (c == '"') inQuotes = !inQuotes;
+
+                processRegularTile(x, y, c, inQuotes, ctx);
+            } else {
+                ctx.symbols[y][x] = ' ';
+                ctx.tiles[y][x] = TileType.VOID;
             }
         }
-        return new ParsedMapLayer(tiles, symbols, markers, npcSpawns);
+    }
+
+    private static boolean processSpecialMarkers(int x, int y, char c, ParseContext ctx) {
+        if (ctx.mapData == null) return false;
+        final String charStr = String.valueOf(c);
+        return checkAndSetNpc(x, y, charStr, ctx) || checkAndSetObject(x, y, charStr, ctx) || checkAndSetSpawn(x, y, charStr, ctx);
+    }
+
+    private static boolean checkAndSetSpawn(int x, int y, String charStr, ParseContext ctx) {
+        if (ctx.mapData.getSpawnMarkers() != null && ctx.mapData.getSpawnMarkers().containsKey(charStr)) {
+            final String lineId = ctx.mapData.getSpawnMarkers().get(charStr);
+            ctx.mapData.getSpawns().put(lineId, new Vector3(x, y, ctx.layerIndex));
+            setFloor(x, y, ctx);
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean checkAndSetNpc(int x, int y, String charStr, ParseContext ctx) {
+        if (ctx.mapData.getNpcMarkers() != null && ctx.mapData.getNpcMarkers().containsKey(charStr)) {
+            final String npcId = ctx.mapData.getNpcMarkers().get(charStr);
+            ctx.npcSpawns.put(new Vector3(x, y, ctx.layerIndex), npcId);
+            setFloor(x, y, ctx);
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean checkAndSetObject(int x, int y, String charStr, ParseContext ctx) {
+        if (ctx.mapData.getObjectMarkers() != null && ctx.mapData.getObjectMarkers().containsKey(charStr)) {
+            ctx.objectSpawns.put(new Vector3(x, y, ctx.layerIndex), charStr);
+            setFloor(x, y, ctx);
+            return true;
+        }
+        return false;
+    }
+
+    private static void setFloor(int x, int y, ParseContext ctx) {
+        ctx.symbols[y][x] = '.';
+        ctx.tiles[y][x] = ctx.registry.getType('.');
+    }
+
+    private static void processRegularTile(int x, int y, char c, boolean inQuotes, ParseContext ctx) {
+        final TileType type = ctx.registry.getType(c);
+        if (!inQuotes && c != '"' && type == TileType.UNKNOWN && c != ' ') {
+            ctx.markers.computeIfAbsent(String.valueOf(c), k -> new ArrayList<>())
+                    .add(new Vector3(x, y, ctx.layerIndex));
+            ctx.tiles[y][x] = ctx.registry.getType('.');
+        } else {
+            ctx.tiles[y][x] = type;
+        }
     }
 
     /// Gets the tile type at specific coordinates.
@@ -101,5 +138,24 @@ public class ParsedMapLayer {
             return ' ';
         }
         return symbols[y][x];
+    }
+
+    private static class ParseContext {
+        final TileType[][] tiles;
+        final char[][] symbols;
+        final Map<String, List<Vector3>> markers = new HashMap<>();
+        final Map<Vector3, String> npcSpawns = new HashMap<>();
+        final Map<Vector3, String> objectSpawns = new HashMap<>();
+        final TileRegistry registry;
+        final int layerIndex;
+        final GameMapData mapData;
+
+        ParseContext(int width, int height, TileRegistry registry, int layerIndex, GameMapData mapData) {
+            this.tiles = new TileType[height][width];
+            this.symbols = new char[height][width];
+            this.registry = registry;
+            this.layerIndex = layerIndex;
+            this.mapData = mapData;
+        }
     }
 }
