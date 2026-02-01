@@ -22,7 +22,8 @@ public class DialogRegistry {
     }
 
     public String getRandomDialog(String key) {
-        if (dialogMap.get(key) == null) return null;
-        return  dialogMap.get(key).get(ThreadLocalRandom.current().nextInt(0, dialogMap.get(key).size()));
+        final List<String> dialogs = dialogMap.get(key);
+        if (dialogs == null || dialogs.isEmpty()) return null;
+        return dialogs.get(ThreadLocalRandom.current().nextInt(0, dialogs.size()));
     }
 }

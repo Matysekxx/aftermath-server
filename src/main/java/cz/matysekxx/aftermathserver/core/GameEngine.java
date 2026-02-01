@@ -338,7 +338,7 @@ public class GameEngine {
     }
 
     public void processAttack(String sessionId) {
-        /*combatService.handleAttack(players.get(sessionId), attackRequest);*/
+        combatService.handleAttack(players.get(sessionId));
     }
 
     public void processUse(String sessionId, UseRequest useRequest) {

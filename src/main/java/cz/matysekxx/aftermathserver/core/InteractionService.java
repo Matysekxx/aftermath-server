@@ -65,11 +65,11 @@ public class InteractionService {
 
     public void processInteraction(Player player) {
         final Spatial target = spatialService.getNearby(player.getMapId(), player)
-                .stream().filter(n -> !(n instanceof Player))
+                .stream()
+                .filter(n -> (n instanceof MapObject || (n instanceof Npc npc && !npc.isDead())))
                 .filter(n -> MathUtil.getChebyshevDistance(
                         Vector2.of(player.getX(), player.getY()),
-                        Vector2.of(n.getX(), n.getY())
-                ) <= 2)
+                        Vector2.of(n.getX(), n.getY())) <= 2)
                 .min(Comparator.comparingInt(n -> MathUtil.getChebyshevDistance(
                         Vector2.of(player.getX(), player.getY()),
                         Vector2.of(n.getX(), n.getY())

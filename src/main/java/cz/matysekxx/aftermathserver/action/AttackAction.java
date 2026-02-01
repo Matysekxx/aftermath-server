@@ -16,11 +16,6 @@ public class AttackAction extends Action {
 
     @Override
     public void execute(String sessionId, JsonNode payload) {
-        //  TODO: odebrat AttackRequest a utok resit pomoci Quadtree
-        /*
-        final AttackRequest attackRequest = objectMapper.convertValue(payload, AttackRequest.class);
-        gameEngine.processAttack(sessionId, attackRequest);
-
-         */
+        gameEngine.processAttack(sessionId);
     }
 }

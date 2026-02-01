@@ -13,10 +13,12 @@ import cz.matysekxx.aftermathserver.dto.NpcDto;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.MathUtil;
+import cz.matysekxx.aftermathserver.util.Spatial;
 import cz.matysekxx.aftermathserver.util.Vector2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,30 +37,13 @@ public class CombatService {
         this.spatialService = spatialService;
     }
 
-    public void handleAttack(Player player, AttackRequest attackRequest) {
-        final GameMapData map = worldManager.getMap(player.getMapId());
-        if (map == null) return;
-
-        final Optional<Npc> closestEntity = map.getNpcs().stream()
-                .filter(e -> e.getId().equals(attackRequest.getTargetId()))
-                .findFirst();
-        if (closestEntity.isEmpty()) {
-            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Target not found", player.getId()));
-            return;
-        }
-
-        final Npc target = closestEntity.get();
-        final int distance = MathUtil.getChebyshevDistance(
-                Vector2.of(player.getX(), player.getY()),
-                Vector2.of(target.getX(), target.getY())
-        );
-
+    public void handleAttack(Player player) {
         final Integer equippedSlot = player.getEquippedWeaponSlot();
         if (equippedSlot == null) {
             gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You don't have any weapon equipped!", player.getId()));
             return;
         }
-
+        
         final Inventory inv = player.getInventory();
         final Item weapon = inv.getSlots().get(equippedSlot);
 
@@ -66,19 +51,31 @@ public class CombatService {
             gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Equipped item is not a valid weapon", player.getId()));
             return;
         }
-
         final int weaponRange = weapon.getRange() != null ? weapon.getRange() : 1;
-        if (distance > weaponRange) {
-            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Weapon range exceeded", player.getId()));
+        
+        final Npc closestNpc = spatialService.getNearby(player.getMapId(), player).stream()
+                .filter(n -> n instanceof Npc)
+                .map(n -> (Npc) n)
+                .filter(n -> !n.isDead())
+                .filter(n-> MathUtil.getChebyshevDistance(
+                        Vector2.of(player.getX(), player.getY()),
+                        Vector2.of(n.getX(), n.getY())) <= weaponRange
+                ).min(Comparator.comparingInt(n -> MathUtil.getChebyshevDistance(
+                        Vector2.of(player.getX(), player.getY()),
+                        Vector2.of(n.getX(), n.getY())
+                )))
+                .orElse(null);
+        
+        if (closestNpc == null) {
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Target not found", player.getId()));
             return;
         }
-
-        target.takeDamage(weapon.getDamage());
-        log.info("Player {} dealt {} damage to NPC {}", player.getName(), weapon.getDamage(), target.getName());
-
-        if (target.isDead()) handleNpcDeath(target, map, player.getId());
+        closestNpc.takeDamage(weapon.getDamage());
+        log.info("Player {} dealt {} damage to NPC {}", player.getName(), weapon.getDamage(), closestNpc.getName());
+        final GameMapData map = worldManager.getMap(player.getMapId());
+        if (closestNpc.isDead()) handleNpcDeath(closestNpc, map, player.getId());
         else {
-            final List<NpcDto> update = List.of(NpcDto.fromEntity(target));
+            final List<NpcDto> update = List.of(NpcDto.fromEntity(closestNpc));
             gameEventQueue.enqueue(GameEventFactory.broadcastNpcs(update, map.getId()));
         }
     }
