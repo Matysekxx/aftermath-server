@@ -10,13 +10,11 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.MathUtil;
+import cz.matysekxx.aftermathserver.util.Spatial;
 import cz.matysekxx.aftermathserver.util.Vector2;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /// Service responsible for coordinating interactions between players and map objects.
 ///
@@ -32,8 +30,8 @@ public class InteractionService {
 
     /// Constructs the InteractionService.
     ///
-    /// @param objectInteractionLogicMap       A map of interaction keys (e.g., "LOOT", "READ") to their logic handlers.
-    /// @param gameEventQueue The queue used to dispatch events resulting from interactions.
+    /// @param objectInteractionLogicMap A map of interaction keys (e.g., "LOOT", "READ") to their logic handlers.
+    /// @param gameEventQueue            The queue used to dispatch events resulting from interactions.
     public InteractionService(Map<String, ObjectInteractionLogic> objectInteractionLogicMap, GameEventQueue gameEventQueue, List<NpcInteractionLogic> npcInteractionLogicList, SpatialService spatialService) {
         this.objectInteractionLogicMap = objectInteractionLogicMap;
         this.gameEventQueue = gameEventQueue;
@@ -48,38 +46,39 @@ public class InteractionService {
     ///
     /// @param player The player performing the action.
     /// @param target The object being interacted with.
-    public void processInteraction(Player player, MapObject target) {
-        if (target == null) {
-            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Object not found", player.getId()));
-            return;
+    public void processObjectInteraction(Player player, MapObject target) {
+        final ObjectInteractionLogic objectInteractionLogic = objectInteractionLogicMap.get(target.getAction());
+        if (objectInteractionLogic != null) {
+            final Collection<GameEvent> events = objectInteractionLogic.interact(target, player);
+            if (events != null) events.forEach(gameEventQueue::enqueue);
         }
-
-        final int distance = MathUtil.getChebyshevDistance(new Vector2(player.getX(), player.getY()), new Vector2(target.getX(), target.getY()));
-        if (distance <= 1) {
-            final ObjectInteractionLogic objectInteractionLogic = objectInteractionLogicMap.get(target.getAction());
-            if (objectInteractionLogic != null) {
-                final Collection<GameEvent> events = objectInteractionLogic.interact(target, player);
-                if (events != null) events.forEach(gameEventQueue::enqueue);
-            }
-        } else gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You are too far away", player.getId()));
-
     }
 
     public void processNpcInteraction(Player player, Npc npc) {
-        final int distance = MathUtil.getChebyshevDistance(
-          Vector2.of(player.getX(), player.getY()),
-          Vector2.of(npc.getX(), npc.getY())
-        );
-        if (distance > 2) {
-            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You are too far away", player.getId()));
-            return;
-        }
-
         final InteractionType type = npc.getInteraction();
         if (npcInteractionLogicMap.containsKey(type)) {
             final NpcInteractionLogic logic = npcInteractionLogicMap.get(type);
             final Collection<GameEvent> events = logic.interact(npc, player);
             if (events != null) events.forEach(gameEventQueue::enqueue);
+        }
+    }
+
+    public void processInteraction(Player player) {
+        final Spatial target = spatialService.getNearby(player.getMapId(), player)
+                .stream().filter(n -> !(n instanceof Player))
+                .filter(n -> MathUtil.getChebyshevDistance(
+                        Vector2.of(player.getX(), player.getY()),
+                        Vector2.of(n.getX(), n.getY())
+                ) <= 2)
+                .min(Comparator.comparingInt(n -> MathUtil.getChebyshevDistance(
+                        Vector2.of(player.getX(), player.getY()),
+                        Vector2.of(n.getX(), n.getY())
+                ))).orElse(null);
+        switch (target) {
+            case MapObject mapObject -> processObjectInteraction(player, mapObject);
+            case Npc npc -> processNpcInteraction(player, npc);
+            case null, default ->
+                    gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Target not found", player.getId()));
         }
     }
 }

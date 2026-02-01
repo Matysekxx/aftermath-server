@@ -2,7 +2,6 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
-import cz.matysekxx.aftermathserver.core.model.entity.Entity;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.entity.State;
@@ -12,6 +11,8 @@ import cz.matysekxx.aftermathserver.core.world.*;
 import cz.matysekxx.aftermathserver.dto.*;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
+import cz.matysekxx.aftermathserver.util.MathUtil;
+import cz.matysekxx.aftermathserver.util.Vector2;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import cz.matysekxx.aftermathserver.util.Spatial;
 import lombok.extern.slf4j.Slf4j;
@@ -166,18 +167,9 @@ public class GameEngine {
     }
 
     /// Processes an interaction request.
-    public void processInteract(String id, String targetObjectId) {
+    public void processInteract(String id) {
         final Player player = players.get(id);
-        final GameMapData map = worldManager.getMap(player.getMapId());
-        final MapObject targetObject = map.getObject(targetObjectId);
-        if (targetObject != null) {
-            interactionService.processInteraction(player, targetObject);
-        }
-        map.getNpcs().stream().filter(npc -> npc.getId().equals(targetObjectId)).findFirst()
-                .ifPresentOrElse(
-                        npc -> interactionService.processNpcInteraction(player, npc),
-                        () -> gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Target not found", id))
-                );
+        interactionService.processInteraction(player);
     }
 
     /// Handles dropping an item from inventory.
@@ -345,8 +337,8 @@ public class GameEngine {
         return players.get(playerId);
     }
 
-    public void processAttack(String sessionId, AttackRequest attackRequest) {
-        combatService.handleAttack(players.get(sessionId), attackRequest);
+    public void processAttack(String sessionId) {
+        /*combatService.handleAttack(players.get(sessionId), attackRequest);*/
     }
 
     public void processUse(String sessionId, UseRequest useRequest) {

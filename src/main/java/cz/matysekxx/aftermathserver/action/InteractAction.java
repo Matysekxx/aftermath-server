@@ -2,7 +2,6 @@ package cz.matysekxx.aftermathserver.action;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cz.matysekxx.aftermathserver.core.GameEngine;
-import cz.matysekxx.aftermathserver.dto.InteractRequest;
 import org.springframework.stereotype.Component;
 
 /// Handles interactions with map objects.
@@ -18,7 +17,6 @@ public class InteractAction extends Action {
 
     @Override
     public void execute(String sessionId, JsonNode payload) {
-        final var request = objectMapper.convertValue(payload, InteractRequest.class);
-        gameEngine.processInteract(sessionId, request.getTarget());
+        gameEngine.processInteract(sessionId);
     }
 }

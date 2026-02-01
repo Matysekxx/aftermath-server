@@ -2,7 +2,6 @@ package cz.matysekxx.aftermathserver.action;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cz.matysekxx.aftermathserver.core.GameEngine;
-import cz.matysekxx.aftermathserver.dto.AttackRequest;
 import org.springframework.stereotype.Component;
 
 /// Handles combat attacks.
@@ -17,7 +16,11 @@ public class AttackAction extends Action {
 
     @Override
     public void execute(String sessionId, JsonNode payload) {
+        //  TODO: odebrat AttackRequest a utok resit pomoci Quadtree
+        /*
         final AttackRequest attackRequest = objectMapper.convertValue(payload, AttackRequest.class);
         gameEngine.processAttack(sessionId, attackRequest);
+
+         */
     }
 }
