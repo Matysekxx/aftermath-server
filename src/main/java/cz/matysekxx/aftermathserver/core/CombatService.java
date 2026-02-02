@@ -64,6 +64,11 @@ public class CombatService {
             gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Equipped item is not a valid weapon", player.getId()));
             return;
         }
+        final long currentTime = System.currentTimeMillis();
+        if (currentTime - player.getLastAttackTime() < weapon.getCooldown()) {
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You are attacking to quickly!", player.getId()));
+            return;
+        }
         final int weaponRange = weapon.getRange() != null ? weapon.getRange() : 1;
 
         final Npc closestNpc = spatialService.getNearby(player.getMapId(), player).stream()
@@ -84,6 +89,7 @@ public class CombatService {
             return;
         }
         closestNpc.takeDamage(weapon.getDamage());
+        player.setLastAttackTime(System.currentTimeMillis());
         log.info("Player {} dealt {} damage to NPC {}", player.getName(), weapon.getDamage(), closestNpc.getName());
         final GameMapData map = worldManager.getMap(player.getMapId());
         if (closestNpc.isDead()) handleNpcDeath(closestNpc, map, player.getId());

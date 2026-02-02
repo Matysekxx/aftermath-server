@@ -32,6 +32,7 @@ public class Item {
     /// Damage dealt (if weapon).
     private Integer damage;
     private Integer range;
+    private Integer cooldown;
 
     /// Value in game currency.
     private Integer price;
