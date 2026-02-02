@@ -1,9 +1,7 @@
 package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
-import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
 import cz.matysekxx.aftermathserver.core.factory.MapObjectFactory;
-import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.entity.State;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
@@ -15,7 +13,6 @@ import cz.matysekxx.aftermathserver.dto.*;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Spatial;
-import cz.matysekxx.aftermathserver.util.Vector3;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -23,7 +20,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /// Core engine managing the game state and loop.
@@ -51,6 +47,7 @@ public class GameEngine {
     private final CombatService combatService;
     private final SpatialService spatialService;
     private final PlayerRegistry playerRegistry;
+    private final LoginService loginService;
     private long tickCounter = 0;
 
     /// Constructs the GameEngine with all required services.
@@ -67,7 +64,12 @@ public class GameEngine {
     /// @param combatService      Handles combat logic.
     /// @param spatialService     Manages spatial indexing.
     /// @param playerRegistry     Registry of active players.
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService, SpawnManager spawnManager, CombatService combatService, SpatialService spatialService, PlayerRegistry playerRegistry) {
+    /// @param loginService       Handles login operations.
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory,
+                      GameSettings settings, MovementService movementService, StatsService statsService,
+                      InteractionService interactionService, EconomyService economyService,
+                      SpawnManager spawnManager, CombatService combatService, SpatialService spatialService,
+                      PlayerRegistry playerRegistry, LoginService loginService) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
@@ -80,6 +82,7 @@ public class GameEngine {
         this.combatService = combatService;
         this.spatialService = spatialService;
         this.playerRegistry = playerRegistry;
+        this.loginService = loginService;
     }
 
     /// Initializes world content such as NPCs.
@@ -92,72 +95,12 @@ public class GameEngine {
 
     /// Sends available login options (classes, maps) to the client.
     public void sendLoginOptions(String sessionId) {
-        log.info("Sending login options to session: {}", sessionId);
-        final var classesMap = settings.getClasses();
-        final List<String> classes = classesMap != null ? new ArrayList<>(classesMap.keySet()) : new ArrayList<>();
-        final List<SpawnPointInfo> maps = new ArrayList<>();
-
-        for (GameMapData map : worldManager.getMaps()) {
-            if (map.getType() == MapType.SAFE_ZONE) {
-                maps.add(new SpawnPointInfo(map.getId(), map.getName()));
-                log.info("Adding safe zone map to login options: {}", map.getId());
-            }
-        }
-
-        final LoginOptionsResponse response = new LoginOptionsResponse(classes, maps);
-        log.info("Prepared LoginOptionsResponse: classes={}, maps={}", classes.size(), maps.size());
-        log.info("Enqueuing SEND_LOGIN_OPTIONS event for session: {}", sessionId);
-        gameEventQueue.enqueue(GameEventFactory.sendLoginOptionsEvent(response, sessionId));
+        loginService.sendLoginOptions(sessionId);
     }
 
     /// Adds a new player session to the game.
     public void addPlayer(String sessionId, LoginRequest request) {
-        if (playerRegistry.containsId(sessionId)) return;
-
-        String mapId = request.getStartingMapId();
-        if (mapId == null || !worldManager.containsMap(mapId)) {
-            mapId = settings.getStartingMapId() != null ? settings.getStartingMapId() : "nemocnice-motol";
-        }
-
-        String className = request.getPlayerClass();
-        if (className == null || settings.getClasses() == null || !settings.getClasses().containsKey(className)) {
-            className = settings.getDefaultClass();
-        }
-
-        assert settings.getClasses() != null;
-        final PlayerClassConfig classConfig = settings.getClasses().get(className);
-
-        final GameMapData startingMap = worldManager.getMap(mapId);
-
-        final Map<String, Vector3> availableSpawns = startingMap.getSpawns();
-        Vector3 spawn;
-        if (availableSpawns != null && !availableSpawns.isEmpty()) {
-            final List<Vector3> spawnList = new ArrayList<>(availableSpawns.values());
-            spawn = spawnList.get(ThreadLocalRandom.current().nextInt(spawnList.size()));
-            log.info("Player {} spawning at random marker on map {}: {}", request.getUsername(), mapId, spawn);
-        } else {
-            spawn = startingMap.getMetroSpawn(settings.getLineId());
-            if (spawn == null) spawn = new Vector3(10, 10, 0);
-        }
-
-        final Player newPlayer = new Player(sessionId, request.getUsername(),
-                spawn, classConfig, mapId, className
-        );
-        playerRegistry.put(newPlayer);
-
-        enqueueViewport(newPlayer, startingMap);
-        gameEventQueue.enqueue(GameEventFactory.sendMapObjectsToPlayer(worldManager.getMap(mapId).getObjects(), sessionId));
-
-        final List<NpcDto> npcs = new ArrayList<>();
-        for (Npc npc : worldManager.getMap(mapId).getNpcs()) {
-            final NpcDto npcDto = NpcDto.fromEntity(npc);
-            npcs.add(npcDto);
-        }
-        log.info("Sending {} NPCs to player {} on map {}", npcs.size(), newPlayer.getName(), mapId);
-        gameEventQueue.enqueue(GameEventFactory.sendNpcsToPlayer(npcs, sessionId));
-        gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(newPlayer));
-        gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(newPlayer));
-        gameEventQueue.enqueue(GameEventFactory.sendPositionEvent(newPlayer));
+        loginService.handleLogin(sessionId, request);
     }
 
     /// Removes a player session.
@@ -334,14 +277,6 @@ public class GameEngine {
         map.addObject(corpse);
         player.getInventory().clear();
         gameEventQueue.enqueue(GameEventFactory.sendGameOverEvent(player));
-    }
-
-    /// Helper to generate and enqueue a viewport update for a player.
-    private void enqueueViewport(Player player, GameMapData mapData) {
-        final MapViewportPayload viewport = MapViewportPayload.of(
-                mapData, player.getX(), player.getY(), VIEWPORT_RANGE_X, VIEWPORT_RANGE_Y
-        );
-        gameEventQueue.enqueue(GameEventFactory.sendMapDataEvent(viewport, player.getId()));
     }
 
     /// Retrieves a player instance by their unique session ID.

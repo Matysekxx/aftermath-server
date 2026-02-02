@@ -1,0 +1,133 @@
+package cz.matysekxx.aftermathserver.core;
+
+import cz.matysekxx.aftermathserver.config.GameSettings;
+import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
+import cz.matysekxx.aftermathserver.core.model.entity.Npc;
+import cz.matysekxx.aftermathserver.core.model.entity.Player;
+import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.core.world.MapType;
+import cz.matysekxx.aftermathserver.core.world.WorldManager;
+import cz.matysekxx.aftermathserver.dto.*;
+import cz.matysekxx.aftermathserver.event.GameEventFactory;
+import cz.matysekxx.aftermathserver.event.GameEventQueue;
+import cz.matysekxx.aftermathserver.util.Vector3;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
+
+import static cz.matysekxx.aftermathserver.core.GameEngine.VIEWPORT_RANGE_X;
+import static cz.matysekxx.aftermathserver.core.GameEngine.VIEWPORT_RANGE_Y;
+
+/// Service responsible for handling player authentication and initial game setup.
+///
+/// Manages the login process, including validating requests, selecting spawn points,
+/// creating player instances, and sending initial game state to the client.
+@Service
+@Slf4j
+public class LoginService {
+    private final WorldManager worldManager;
+    private final GameEventQueue gameEventQueue;
+    private final GameSettings settings;
+    private final PlayerRegistry playerRegistry;
+
+    public LoginService(WorldManager worldManager, GameEventQueue gameEventQueue, GameSettings settings, PlayerRegistry playerRegistry) {
+        this.worldManager = worldManager;
+        this.gameEventQueue = gameEventQueue;
+        this.settings = settings;
+        this.playerRegistry = playerRegistry;
+    }
+
+    /// Sends available login options (classes, maps) to the client.
+    ///
+    /// @param sessionId The session ID of the connecting client.
+    public void sendLoginOptions(String sessionId) {
+        log.info("Sending login options to session: {}", sessionId);
+        final var classesMap = settings.getClasses();
+        final List<String> classes = classesMap != null ? new ArrayList<>(classesMap.keySet()) : new ArrayList<>();
+        final List<SpawnPointInfo> maps = new ArrayList<>();
+
+        for (GameMapData map : worldManager.getMaps()) {
+            if (map.getType() == MapType.SAFE_ZONE) {
+                maps.add(new SpawnPointInfo(map.getId(), map.getName()));
+                log.info("Adding safe zone map to login options: {}", map.getId());
+            }
+        }
+        final LoginOptionsResponse response = new LoginOptionsResponse(classes, maps);
+        log.info("Prepared LoginOptionsResponse: classes={}, maps={}", classes.size(), maps.size());
+        gameEventQueue.enqueue(GameEventFactory.sendLoginOptionsEvent(response, sessionId));
+    }
+
+    /// Handles the player login process.
+    ///
+    /// Validates the login request, creates a new player entity, registers it,
+    /// and triggers the initial data synchronization (viewport, inventory, stats).
+    ///
+    /// @param sessionId The session ID of the player.
+    /// @param request   The login data provided by the client.
+    public void handleLogin(String sessionId, LoginRequest request) {
+        if (playerRegistry.containsId(sessionId)) return;
+
+        final String mapId = resolveMapId(request.getStartingMapId());
+        final String className = resolveClassName(request.getPlayerClass());
+        final PlayerClassConfig classConfig = settings.getClasses().get(className);
+        final GameMapData startingMap = worldManager.getMap(mapId);
+        final Vector3 spawn = determineSpawnPoint(startingMap, request.getUsername());
+
+        final Player newPlayer = new Player(sessionId, request.getUsername(),
+                spawn, classConfig, mapId, className
+        );
+        playerRegistry.put(newPlayer);
+
+        sendInitialGameState(newPlayer, startingMap);
+    }
+
+    private String resolveMapId(String requestedMapId) {
+        if (requestedMapId != null && worldManager.containsMap(requestedMapId)) {
+            return requestedMapId;
+        }
+        return settings.getStartingMapId() != null ? settings.getStartingMapId() : "nemocnice-motol";
+    }
+
+    private String resolveClassName(String requestedClassName) {
+        if (requestedClassName != null && settings.getClasses() != null && settings.getClasses().containsKey(requestedClassName)) {
+            return requestedClassName;
+        }
+        return settings.getDefaultClass();
+    }
+
+    private Vector3 determineSpawnPoint(GameMapData map, String username) {
+        final Map<String, Vector3> availableSpawns = map.getSpawns();
+        if (availableSpawns != null && !availableSpawns.isEmpty()) {
+            final List<Vector3> spawnList = new ArrayList<>(availableSpawns.values());
+            final Vector3 spawn = spawnList.get(ThreadLocalRandom.current().nextInt(spawnList.size()));
+            log.info("Player {} spawning at random marker on map {}: {}", username, map.getId(), spawn);
+            return spawn;
+        }
+        final Vector3 metroSpawn = map.getMetroSpawn(settings.getLineId());
+        return metroSpawn != null ? metroSpawn : new Vector3(10, 10, 0);
+    }
+
+    private void sendInitialGameState(Player player, GameMapData map) {
+        enqueueViewport(player, map);
+        gameEventQueue.enqueue(GameEventFactory.sendMapObjectsToPlayer(map.getObjects(), player.getId()));
+
+        final List<NpcDto> npcs = map.getNpcs().stream().map(NpcDto::fromEntity).toList();
+        log.info("Sending {} NPCs to player {} on map {}", npcs.size(), player.getName(), map.getId());
+        gameEventQueue.enqueue(GameEventFactory.sendNpcsToPlayer(npcs, player.getId()));
+        gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(player));
+        gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
+        gameEventQueue.enqueue(GameEventFactory.sendPositionEvent(player));
+    }
+
+    /// Helper to generate and enqueue a viewport update for a player.
+    private void enqueueViewport(Player player, GameMapData mapData) {
+        final MapViewportPayload viewport = MapViewportPayload.of(
+                mapData, player.getX(), player.getY(), VIEWPORT_RANGE_X, VIEWPORT_RANGE_Y
+        );
+        gameEventQueue.enqueue(GameEventFactory.sendMapDataEvent(viewport, player.getId()));
+    }
+}
