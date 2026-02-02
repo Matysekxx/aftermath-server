@@ -1,7 +1,9 @@
 package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
+import cz.matysekxx.aftermathserver.core.factory.ItemFactory;
 import cz.matysekxx.aftermathserver.core.factory.MapObjectFactory;
+import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.entity.State;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
@@ -13,6 +15,8 @@ import cz.matysekxx.aftermathserver.dto.*;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Spatial;
+import cz.matysekxx.aftermathserver.util.MathUtil;
+import cz.matysekxx.aftermathserver.util.Vector2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -20,6 +24,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /// Core engine managing the game state and loop.
@@ -38,6 +43,7 @@ public class GameEngine {
     private final WorldManager worldManager;
     private final GameEventQueue gameEventQueue;
     private final MapObjectFactory mapObjectFactory;
+    private final ItemFactory itemFactory;
     private final GameSettings settings;
     private final MovementService movementService;
     private final StatsService statsService;
@@ -55,6 +61,7 @@ public class GameEngine {
     /// @param worldManager       Manages game maps.
     /// @param gameEventQueue     Queue for game events.
     /// @param mapObjectFactory   Factory for creating map objects.
+    /// @param itemFactory        Factory for creating items.
     /// @param settings           Game configuration settings.
     /// @param movementService    Handles entity movement.
     /// @param statsService       Manages player statistics.
@@ -65,7 +72,7 @@ public class GameEngine {
     /// @param spatialService     Manages spatial indexing.
     /// @param playerRegistry     Registry of active players.
     /// @param loginService       Handles login operations.
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory,
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, ItemFactory itemFactory,
                       GameSettings settings, MovementService movementService, StatsService statsService,
                       InteractionService interactionService, EconomyService economyService,
                       SpawnManager spawnManager, CombatService combatService, SpatialService spatialService,
@@ -73,6 +80,7 @@ public class GameEngine {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
+        this.itemFactory = itemFactory;
         this.settings = settings;
         this.movementService = movementService;
         this.statsService = statsService;
@@ -332,5 +340,28 @@ public class GameEngine {
                     }
                 }
         );
+    }
+
+    /// Processes a buy request from a player.
+    ///
+    /// Validates the player, map, and NPC before delegating the transaction to EconomyService.
+    ///
+    /// @param sessionId The session ID of the player.
+    /// @param request   The buy request containing NPC ID and item index.
+    public void processBuy(String sessionId, BuyRequest request) {
+        final Optional<Player> player = playerRegistry.getMaybePlayer(sessionId);
+        player.ifPresent(p -> {
+                    final GameMapData map = worldManager.getMap(p.getMapId());
+                    final Optional<Npc> npc = map.getNpcs().stream()
+                            .filter(n -> n.getId().equals(request.getNpcId()))
+                            .findFirst();
+                    if (npc.isPresent()) {
+                        economyService.processBuy(p, npc.get(), request);
+                    } else {
+                        gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Trader not found", sessionId));
+                    }
+                }
+        );
+        
     }
 }

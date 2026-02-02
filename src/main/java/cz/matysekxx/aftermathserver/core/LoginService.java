@@ -85,6 +85,7 @@ public class LoginService {
         sendInitialGameState(newPlayer, startingMap);
     }
 
+    /// Resolves the map ID, falling back to default if invalid.
     private String resolveMapId(String requestedMapId) {
         if (requestedMapId != null && worldManager.containsMap(requestedMapId)) {
             return requestedMapId;
@@ -92,6 +93,7 @@ public class LoginService {
         return settings.getStartingMapId() != null ? settings.getStartingMapId() : "nemocnice-motol";
     }
 
+    /// Resolves the class name, falling back to default if invalid.
     private String resolveClassName(String requestedClassName) {
         if (requestedClassName != null && settings.getClasses() != null && settings.getClasses().containsKey(requestedClassName)) {
             return requestedClassName;
@@ -99,6 +101,7 @@ public class LoginService {
         return settings.getDefaultClass();
     }
 
+    /// Determines the spawn point for a new player.
     private Vector3 determineSpawnPoint(GameMapData map, String username) {
         final Map<String, Vector3> availableSpawns = map.getSpawns();
         if (availableSpawns != null && !availableSpawns.isEmpty()) {
@@ -111,6 +114,7 @@ public class LoginService {
         return metroSpawn != null ? metroSpawn : new Vector3(10, 10, 0);
     }
 
+    /// Sends the initial game state to the client upon login.
     private void sendInitialGameState(Player player, GameMapData map) {
         enqueueViewport(player, map);
         gameEventQueue.enqueue(GameEventFactory.sendMapObjectsToPlayer(map.getObjects(), player.getId()));

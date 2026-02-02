@@ -50,16 +50,8 @@ public class NpcFactory {
             default -> throw new IllegalStateException("Unexpected value: " + template.getBehavior());
         };
         final String instanceId = template.getId() + "_" + UUID.randomUUID().toString().substring(0, 8);
-        final Npc npc = new Npc(
-                instanceId,
-                template.getName(),
-                x, y,
-                layerIndex,
-                mapId,
-                template.getMaxHp(),
-                behavior,
-                template.getInteraction()
-        );
+        final Npc npc = Npc.fromTemplate(instanceId, template, x, y, layerIndex, mapId, behavior);
+        npc.setShopItems(template.getShopItems());
         npc.setType(template.getType());
         npc.setAggressive(template.isAggressive());
         npc.setDamage(template.getDamage());

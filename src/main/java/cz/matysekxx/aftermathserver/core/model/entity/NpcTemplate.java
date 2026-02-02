@@ -29,4 +29,6 @@ public class NpcTemplate {
     private String dialogId;
     /// List of items that can drop from this NPC.
     private List<Item> loot = new ArrayList<>();
+    /// List of items available for purchase from the npc.
+    private List<Item> shopItems = new ArrayList<>();
 }

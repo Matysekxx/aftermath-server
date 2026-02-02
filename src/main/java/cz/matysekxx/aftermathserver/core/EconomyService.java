@@ -1,15 +1,74 @@
 package cz.matysekxx.aftermathserver.core;
 
+import cz.matysekxx.aftermathserver.core.factory.ItemFactory;
+import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
+import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.dto.BuyRequest;
+import cz.matysekxx.aftermathserver.event.GameEventFactory;
+import cz.matysekxx.aftermathserver.event.GameEventQueue;
+import cz.matysekxx.aftermathserver.util.MathUtil;
+import cz.matysekxx.aftermathserver.util.Vector2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 /// Service responsible for managing the game's economic systems.
 ///
 /// This includes credit transactions, debt accumulation, interest rates,
 /// and price calculations for buying and selling items.
 @Service
+@Slf4j
 public class EconomyService {
+
+
+    private final GameEventQueue gameEventQueue;
+    private final ItemFactory itemFactory;
+
+    public EconomyService(GameEventQueue gameEventQueue, ItemFactory itemFactory) {
+        this.gameEventQueue = gameEventQueue;
+        this.itemFactory = itemFactory;
+    }
+
+    /// Processes a buy request from a player.
+    ///
+    /// Validates the trader, distance, funds, and inventory space before executing the transaction.
+    ///
+    /// @param player  The player making the purchase.
+    /// @param npc     The NPC trader.
+    /// @param request The buy request details.
+    public void processBuy(Player player, Npc npc, BuyRequest request) {
+        if (MathUtil.getChebyshevDistance(player, npc) > 2) {
+            gameEventQueue.enqueue(
+                    GameEventFactory.sendErrorEvent("Too far away from trader", player.getId()));return;
+        }
+
+        final List<Item> shopItems = npc.getShopItems();
+        if (shopItems == null || request.getItemIndex() < 0 || request.getItemIndex() >= shopItems.size()) {
+            gameEventQueue.enqueue(
+                    GameEventFactory.sendErrorEvent("Invalid item selection", player.getId()));return;
+        }
+        final Item itemToBuy = shopItems.get(request.getItemIndex());
+        assert itemToBuy.getPrice() != null;
+
+        if (!canAfford(player, itemToBuy.getPrice())) {
+            gameEventQueue.enqueue(
+                    GameEventFactory.sendErrorEvent("Not enough credits", player.getId()));return;
+        }
+        final Item newItem = itemFactory.createItem(itemToBuy.getId(), 1);
+        if (player.getInventory().addItem(newItem)) {
+            removeCredits(player, itemToBuy.getPrice());
+            gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(player));
+            gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
+            gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Bought " + newItem.getName(), player.getId()));
+        } else gameEventQueue.enqueue(
+                GameEventFactory.sendErrorEvent("Inventory full", player.getId()));
+
+    }
 
     /// Processes the end-of-day debt cycle.
     ///

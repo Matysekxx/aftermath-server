@@ -26,5 +26,6 @@ public enum EventType {
     OPEN_METRO_UI,
     /// Send available login options (classes, maps) to client.
     SEND_LOGIN_OPTIONS,
-    SEND_NPCS;
+    SEND_NPCS,
+    OPEN_TRADE_UI;
 }

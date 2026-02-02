@@ -121,6 +121,11 @@ public class NetworkService {
         sendJson(id, "OPEN_METRO_UI", dto);
     }
 
+    /// Sends a trade offer to a client to open the trading UI.
+    void sendTradeOffer(String sessionId, TradeOfferDto offer) {
+        sendJson(sessionId, "OPEN_TRADE_UI", offer);
+    }
+
     /// Sends a notification message to a client.
     void sendToClient(String payload, String sessionId) {
         sendJson(sessionId, "NOTIFICATION", payload);

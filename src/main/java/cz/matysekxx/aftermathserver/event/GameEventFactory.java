@@ -7,6 +7,7 @@ import cz.matysekxx.aftermathserver.dto.ChatRequest;
 import cz.matysekxx.aftermathserver.dto.LoginOptionsResponse;
 import cz.matysekxx.aftermathserver.dto.MapViewportPayload;
 import cz.matysekxx.aftermathserver.dto.NpcDto;
+import cz.matysekxx.aftermathserver.dto.TradeOfferDto;
 
 import java.util.Collection;
 import java.util.List;
@@ -58,6 +59,11 @@ public class GameEventFactory {
     /// Creates an event to open the Metro UI for a specific player.
     public static GameEvent sendMetroUiEvent(Map.Entry<String, List<MetroStation>> stations, String sessionId) {
         return GameEvent.create(EventType.OPEN_METRO_UI, stations, sessionId, null, false);
+    }
+
+    /// Creates an event to open the Trade UI for a specific player.
+    public static GameEvent sendTradeUiEvent(TradeOfferDto tradeOffer, String sessionId) {
+        return GameEvent.create(EventType.OPEN_TRADE_UI, tradeOffer, sessionId, null, false);
     }
 
     /// Creates an event to send login options (classes, maps) to a specific session.
