@@ -18,8 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /// Hostile behavior that chases and attacks the nearest player.
 @Component
 public class AggressiveBehavior implements Behavior {
-    private final int visionRange = 10;
-    private final int attackCooldown = 1500;
+    private static final int visionRange = 10;
+    private static final int attackCooldown = 1500;
     private final GameEventQueue gameEventQueue;
     private final SpatialService spatialService;
     private final Map<String, Long> lastAttackTimes = new ConcurrentHashMap<>();

@@ -17,7 +17,7 @@ public class IdleBehavior implements Behavior {
             final int targetX = npc.getX() + dir.getDx();
             final int targetY = npc.getY() + dir.getDy();
 
-            if (map.isWalkable(npc.getLayerIndex(), targetX, targetY)) {
+            if (map.isWalkable(targetX, targetY, npc.getLayerIndex())) {
                 npc.setX(targetX);
                 npc.setY(targetY);
             }

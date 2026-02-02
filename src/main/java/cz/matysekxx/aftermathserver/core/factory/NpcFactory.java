@@ -44,7 +44,6 @@ public class NpcFactory {
         }
         final Behavior behavior = switch (template.getBehavior().toUpperCase()) {
             case "AGGRESSIVE" -> new AggressiveBehavior(gameEventQueue, spatialService);
-            case "PATROL" -> new PatrolBehavior();
             case "STATIONARY" -> new StationaryBehavior();
             case "IDLE" -> new IdleBehavior();
             default -> throw new IllegalStateException("Unexpected value: " + template.getBehavior());

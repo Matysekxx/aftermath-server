@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.TileRegistry;
 import cz.matysekxx.aftermathserver.core.world.TileType;
+import cz.matysekxx.aftermathserver.util.Spatial;
+import cz.matysekxx.aftermathserver.util.Vector2;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import lombok.Getter;
 
@@ -141,6 +143,10 @@ public class ParsedMapLayer {
             return ' ';
         }
         return symbols[y][x];
+    }
+
+    public char getSymbolAt(Vector2 vector) {
+        return getSymbolAt(vector.x(), vector.y());
     }
 
     private static class ParseContext {

@@ -64,19 +64,11 @@ public class MovementService {
         final GameMapData currentMap = worldManager.getMap(player.getMapId());
         final TriggerContext triggerContext = new TriggerContext(metroService);
         currentMap.getDynamicTrigger(target.x(), target.y(), player.getLayerIndex())
-                .ifPresentOrElse(new Consumer<>() {
-                                     @Override
-                                     public void accept(TileTrigger tileTrigger) {
-                                         tileTrigger.onEnter(player, triggerContext);
-                                     }
-                                 },
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                currentMap.getMaybeTileTrigger(String.valueOf(currentMap.getLayer(player.getLayerIndex()).getSymbolAt(target.x(), target.y())))
-                                        .ifPresent(tileTrigger -> tileTrigger.onEnter(player, triggerContext));
-                            }
-                        });
+                .ifPresentOrElse(
+                        tileTrigger -> tileTrigger.onEnter(player, triggerContext),
+                        () -> currentMap.getMaybeTileTrigger(
+                                String.valueOf(currentMap.getLayer(player.getLayerIndex()).getSymbolAt(target)))
+                                .ifPresent(tileTrigger -> tileTrigger.onEnter(player, triggerContext)));
 
         gameEventQueue.enqueue(GameEventFactory.sendPositionEvent(player));
 

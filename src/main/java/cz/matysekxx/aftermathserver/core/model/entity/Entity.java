@@ -44,14 +44,6 @@ public abstract class Entity implements Spatial {
         }
     }
 
-    /// Restores health by the specified amount, up to maxHp.
-    public void heal(int amount) {
-        hp += amount;
-        if (hp > maxHp) {
-            hp = maxHp;
-        }
-    }
-
     /// Checks if the entity is dead.
     public boolean isDead() {
         return state == State.DEAD;

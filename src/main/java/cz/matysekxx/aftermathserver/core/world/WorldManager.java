@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /// Manages the lifecycle and access to all game maps.
 ///
@@ -57,6 +59,18 @@ public class WorldManager {
     public GameMapData getMap(String mapId) {
         if (maps.containsKey(mapId)) return maps.get(mapId);
         return null;
+    }
+
+    public void forEach(Consumer<GameMapData> consumer) {
+        for (GameMapData map : maps.values()) {
+            consumer.accept(map);
+        }
+    }
+
+    public void forEachWithPredicate(Predicate<GameMapData> predicate, Consumer<GameMapData> consumer) {
+        for (GameMapData map : maps.values()) {
+            if (predicate.test(map)) consumer.accept(map);
+        }
     }
 
     public Collection<GameMapData> getMaps() {

@@ -47,6 +47,7 @@ public class PlayerRegistry {
     public void forEach(Consumer<Player> action) {
         for (Player player : players.values()) {
             if (player != null) action.accept(player);
+
         }
     }
 

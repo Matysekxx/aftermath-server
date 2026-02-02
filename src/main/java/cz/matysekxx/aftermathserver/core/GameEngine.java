@@ -15,8 +15,6 @@ import cz.matysekxx.aftermathserver.dto.*;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Spatial;
-import cz.matysekxx.aftermathserver.util.MathUtil;
-import cz.matysekxx.aftermathserver.util.Vector2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -24,7 +22,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /// Core engine managing the game state and loop.
@@ -43,8 +40,6 @@ public class GameEngine {
     private final WorldManager worldManager;
     private final GameEventQueue gameEventQueue;
     private final MapObjectFactory mapObjectFactory;
-    private final ItemFactory itemFactory;
-    private final GameSettings settings;
     private final MovementService movementService;
     private final StatsService statsService;
     private final InteractionService interactionService;
@@ -61,8 +56,6 @@ public class GameEngine {
     /// @param worldManager       Manages game maps.
     /// @param gameEventQueue     Queue for game events.
     /// @param mapObjectFactory   Factory for creating map objects.
-    /// @param itemFactory        Factory for creating items.
-    /// @param settings           Game configuration settings.
     /// @param movementService    Handles entity movement.
     /// @param statsService       Manages player statistics.
     /// @param interactionService Handles interactions.
@@ -72,16 +65,13 @@ public class GameEngine {
     /// @param spatialService     Manages spatial indexing.
     /// @param playerRegistry     Registry of active players.
     /// @param loginService       Handles login operations.
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, ItemFactory itemFactory,
-                      GameSettings settings, MovementService movementService, StatsService statsService,
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, MovementService movementService, StatsService statsService,
                       InteractionService interactionService, EconomyService economyService,
                       SpawnManager spawnManager, CombatService combatService, SpatialService spatialService,
                       PlayerRegistry playerRegistry, LoginService loginService) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
-        this.itemFactory = itemFactory;
-        this.settings = settings;
         this.movementService = movementService;
         this.statsService = statsService;
         this.interactionService = interactionService;
@@ -166,50 +156,45 @@ public class GameEngine {
     }
 
     private void initialSpawnNpc() {
-        for (GameMapData map : worldManager.getMaps()) {
-            if (map.getType() == MapType.HAZARD_ZONE) {
-                final double difficultyMultiplier = 0.5 + (map.getDifficulty() * 0.5);
-                final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
-                final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY * difficultyMultiplier));
-
-                spawnManager.spawnRandomNpcs(map.getId(), maxNpcs);
-                log.info("Initial spawn on map {}: {} NPCs (based on {} tiles)", map.getId(), maxNpcs, reachableTiles);
-            }
-        }
+        worldManager.forEachWithPredicate(map -> map.getType() == MapType.HAZARD_ZONE,
+                map -> {
+                    final double difficultyMultiplier = 0.5 + (map.getDifficulty() * 0.5);
+                    final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
+                    final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY * difficultyMultiplier));
+                    spawnManager.spawnRandomNpcs(map.getId(), maxNpcs);
+                    log.info("Initial spawn on map {}: {} NPCs (based on {} tiles)", map.getId(), maxNpcs, reachableTiles);
+                });
     }
 
     private void respawnNpcs() {
-        for (GameMapData map : worldManager.getMaps()) {
-            if (map.getType() == MapType.HAZARD_ZONE) {
-                final double difficultyMultiplier = 0.5 + (map.getDifficulty() * 0.5);
-                final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
-                final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY * difficultyMultiplier));
-                final int currentCount = map.getNpcs().size();
+        worldManager.forEachWithPredicate(mapData -> mapData.getType() == MapType.HAZARD_ZONE,
+                map -> {
+                    final double difficultyMultiplier = 0.5 + (map.getDifficulty() * 0.5);
+                    final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
+                    final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY * difficultyMultiplier));
+                    final int currentCount = map.getNpcs().size();
 
-                if (currentCount < maxNpcs) {
-                    int toSpawn = Math.min(DAILY_RESPAWN_COUNT, maxNpcs - currentCount);
-                    spawnManager.spawnRandomNpcs(map.getId(), toSpawn);
-                    log.info("Respawned {} NPCs on map {} (Limit: {})", toSpawn, map.getId(), maxNpcs);
-                }
-            }
-        }
+                    if (currentCount < maxNpcs) {
+                        int toSpawn = Math.min(DAILY_RESPAWN_COUNT, maxNpcs - currentCount);
+                        spawnManager.spawnRandomNpcs(map.getId(), toSpawn);
+                        log.info("Respawned {} NPCs on map {} (Limit: {})", toSpawn, map.getId(), maxNpcs);
+                    }
+                });
     }
 
     private void spawnItems() {
-        for (GameMapData map : worldManager.getMaps()) {
+        worldManager.forEach(map -> {
             final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
             final double density = map.getType() == MapType.HAZARD_ZONE ? (0.0005 * map.getDifficulty()) : 0.0001;
             int count = (int) (reachableTiles * density);
-
             if (map.getType() == MapType.SAFE_ZONE) {
                 count = Math.max(4, count);
             } else {
                 count = Math.max(8, count);
             }
-
             spawnManager.spawnRandomLoot(map.getId(), count);
             log.info("Spawned {} loot items on map: {} (density {})", count, map.getId(), density);
-        }
+        });
     }
 
     private void updateNpcs(Set<String> activeMaps) {
@@ -217,22 +202,19 @@ public class GameEngine {
         playerRegistry.forEach(p -> {
             playersByMap.computeIfAbsent(p.getMapId(), k -> new ArrayList<>()).add(p);
         });
+        worldManager.forEachWithPredicate(map -> activeMaps.contains(map.getId()), map -> {
+            final List<Player> playersOnMap = playersByMap.getOrDefault(map.getId(), List.of());
+            map.getNpcs().forEach(npc -> npc.update(map, playersOnMap));
 
-        for (GameMapData map : worldManager.getMaps()) {
-            if (activeMaps.contains(map.getId())) {
-                final List<Player> playersOnMap = playersByMap.getOrDefault(map.getId(), List.of());
-                map.getNpcs().forEach(npc -> npc.update(map, playersOnMap));
-                final List<NpcDto> npcDtos = map.getNpcs().stream().map(NpcDto::fromEntity).collect(Collectors.toList());
+            final List<NpcDto> npcDtos = map.getNpcs().stream().map(NpcDto::fromEntity).collect(Collectors.toList());
+            gameEventQueue.enqueue(GameEventFactory.broadcastNpcs(npcDtos, map.getId()));
 
-                gameEventQueue.enqueue(GameEventFactory.broadcastNpcs(npcDtos, map.getId()));
-
-                final List<Spatial> allEntities = new ArrayList<>();
-                allEntities.addAll(map.getNpcs());
-                allEntities.addAll(playersOnMap);
-                allEntities.addAll(map.getObjects());
-                spatialService.rebuildIndex(map.getId(), allEntities);
-            }
-        }
+            final List<Spatial> allEntities = new ArrayList<>();
+            allEntities.addAll(map.getNpcs());
+            allEntities.addAll(playersOnMap);
+            allEntities.addAll(map.getObjects());
+            spatialService.rebuildIndex(map.getId(), allEntities);
+        });
     }
 
     /// Updates the state of all active players.
@@ -362,6 +344,6 @@ public class GameEngine {
                     }
                 }
         );
-        
+
     }
 }
