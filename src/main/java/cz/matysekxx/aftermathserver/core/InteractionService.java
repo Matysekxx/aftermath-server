@@ -54,6 +54,12 @@ public class InteractionService {
         }
     }
 
+    /// Processes an interaction between a player and an NPC.
+    ///
+    /// Delegates the interaction logic based on the NPC's interaction type.
+    ///
+    /// @param player The player initiating the interaction.
+    /// @param npc    The NPC being interacted with.
     public void processNpcInteraction(Player player, Npc npc) {
         final InteractionType type = npc.getInteraction();
         if (npcInteractionLogicMap.containsKey(type)) {
@@ -63,6 +69,12 @@ public class InteractionService {
         }
     }
 
+    /// Processes a generic interaction request from a player.
+    ///
+    /// Automatically finds the nearest valid target (Object or NPC) within range
+    /// and executes the appropriate interaction logic.
+    ///
+    /// @param player The player initiating the interaction.
     public void processInteraction(Player player) {
         final Spatial target = spatialService.getNearby(player.getMapId(), player)
                 .stream()

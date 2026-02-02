@@ -1,14 +1,14 @@
 package cz.matysekxx.aftermathserver.core;
 
-import cz.matysekxx.aftermathserver.core.model.entity.Npc;
+import cz.matysekxx.aftermathserver.core.factory.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.factory.NpcFactory;
+import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTable;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTemplate;
 import cz.matysekxx.aftermathserver.core.model.item.ItemTable;
 import cz.matysekxx.aftermathserver.core.model.item.ItemTemplate;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
-import cz.matysekxx.aftermathserver.core.factory.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,13 @@ public class SpawnManager {
     private final ItemTable itemTable;
     private final Map<String, List<Vector3>> reachableTilesCache = new ConcurrentHashMap<>();
 
-
+    /// Constructs the SpawnManager.
+    ///
+    /// @param worldManager     The manager for world data.
+    /// @param mapObjectFactory Factory for creating map objects.
+    /// @param npcFactory       Factory for creating NPCs.
+    /// @param npcTable         Configuration table for NPCs.
+    /// @param itemTable        Configuration table for items.
     public SpawnManager(WorldManager worldManager, MapObjectFactory mapObjectFactory, NpcFactory npcFactory, NpcTable npcTable, ItemTable itemTable) {
         this.worldManager = worldManager;
         this.mapObjectFactory = mapObjectFactory;

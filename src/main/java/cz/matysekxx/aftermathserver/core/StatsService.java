@@ -25,6 +25,11 @@ public class StatsService {
     private final GameEventQueue gameEventQueue;
     private final Map<String, ItemEffect> itemEffects;
 
+    /// Constructs the StatsService.
+    ///
+    /// @param worldManager   The world manager to access map data.
+    /// @param gameEventQueue The event queue for sending updates.
+    /// @param itemEffects    A map of item effects for consumables.
     public StatsService(WorldManager worldManager, GameEventQueue gameEventQueue, Map<String, ItemEffect> itemEffects) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
@@ -62,7 +67,6 @@ public class StatsService {
     /// Increases radiation levels and applies damage if the radiation limit is exceeded.
     ///
     /// @param player The player affected by radiation.
-    /// @param map    The current map to get difficulty from.
     /// @return true if radiation increased or health decreased.
     private boolean applyRadiation(Player player, int difficulty) {
         player.setRads(player.getRads() + difficulty);

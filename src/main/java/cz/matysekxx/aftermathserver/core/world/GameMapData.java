@@ -45,14 +45,6 @@ public class GameMapData {
 
     private Collection<Link> links;
 
-    @Data
-    @NoArgsConstructor
-    public static class ObjectMarker {
-        private String type;
-        private String action;
-        private String description;
-    }
-
     /// Retrieves a specific layer by index.
     public ParsedMapLayer getLayer(int index) {
         return parsedLayers.get(index);
@@ -98,5 +90,13 @@ public class GameMapData {
         final ParsedMapLayer parsedLayer = parsedLayers.get(z);
         if (parsedLayer == null) return false;
         return parsedLayer.getTileAt(x, y).isWalkable();
+    }
+
+    @Data
+    @NoArgsConstructor
+    public static class ObjectMarker {
+        private String type;
+        private String action;
+        private String description;
     }
 }

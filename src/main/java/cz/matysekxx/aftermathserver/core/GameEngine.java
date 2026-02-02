@@ -53,6 +53,20 @@ public class GameEngine {
     private final PlayerRegistry playerRegistry;
     private long tickCounter = 0;
 
+    /// Constructs the GameEngine with all required services.
+    ///
+    /// @param worldManager       Manages game maps.
+    /// @param gameEventQueue     Queue for game events.
+    /// @param mapObjectFactory   Factory for creating map objects.
+    /// @param settings           Game configuration settings.
+    /// @param movementService    Handles entity movement.
+    /// @param statsService       Manages player statistics.
+    /// @param interactionService Handles interactions.
+    /// @param economyService     Manages economy and debts.
+    /// @param spawnManager       Handles spawning of entities.
+    /// @param combatService      Handles combat logic.
+    /// @param spatialService     Manages spatial indexing.
+    /// @param playerRegistry     Registry of active players.
     public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService, SpawnManager spawnManager, CombatService combatService, SpatialService spatialService, PlayerRegistry playerRegistry) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
@@ -97,7 +111,7 @@ public class GameEngine {
     }
 
     /// Adds a new player session to the game.
-    public void addPlayer(String sessionId, LoginRequest request) { //TODO: presunout do nove tridy LoginService
+    public void addPlayer(String sessionId, LoginRequest request) {
         if (playerRegistry.containsId(sessionId)) return;
 
         String mapId = request.getStartingMapId();
@@ -338,30 +352,47 @@ public class GameEngine {
         return playerRegistry.getPlayer(playerId);
     }
 
+    /// Processes an attack request from a player.
+    ///
+    /// Delegates the combat logic to the CombatService using the player associated with the session.
+    ///
+    /// @param sessionId The session ID of the attacking player.
     public void processAttack(String sessionId) {
         combatService.handleAttack(playerRegistry.getPlayer(sessionId));
     }
 
+    /// Processes a request to use a consumable item.
+    ///
+    /// @param sessionId  The session ID of the player.
+    /// @param useRequest The request details containing the item slot.
     public void processUse(String sessionId, UseRequest useRequest) {
         statsService.useConsumable(playerRegistry.getPlayer(sessionId), useRequest);
     }
 
+    /// Processes a request to equip an item.
+    ///
+    /// Handles equipping weapons or masks based on the item type in the specified slot.
+    ///
+    /// @param sessionId    The session ID of the player.
+    /// @param equipRequest The request details containing the item slot.
     public void processEquip(String sessionId, EquipRequest equipRequest) {
         final Optional<Player> maybePlayer = playerRegistry.getMaybePlayer(sessionId);
         maybePlayer.ifPresent(player -> {
                     final Item item = player.getInventory().getSlots().get(equipRequest.getSlotIndex());
                     if (item != null) {
                         switch (item.getType()) {
-                            case WEAPON -> {player.setEquippedWeaponSlot(equipRequest.getSlotIndex());
+                            case WEAPON -> {
+                                player.setEquippedWeaponSlot(equipRequest.getSlotIndex());
                                 gameEventQueue.enqueue(GameEventFactory.sendMessageEvent(
                                         "Equipped: " + item.getName(), sessionId));
                             }
-                            case MASK -> {player.setEquippedMaskSlot(equipRequest.getSlotIndex());
+                            case MASK -> {
+                                player.setEquippedMaskSlot(equipRequest.getSlotIndex());
                                 gameEventQueue.enqueue(GameEventFactory.sendMessageEvent(
                                         "Equipped Mask: " + item.getName(), sessionId));
                             }
                             default -> gameEventQueue.enqueue(GameEventFactory.sendErrorEvent(
-                                            "Cannot equip this item", sessionId));
+                                    "Cannot equip this item", sessionId));
                         }
                     }
                 }

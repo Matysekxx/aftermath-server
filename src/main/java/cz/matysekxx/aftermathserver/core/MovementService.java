@@ -26,6 +26,11 @@ public class MovementService {
     private final GameEventQueue gameEventQueue;
     private final MetroService metroService;
 
+    /// Constructs the MovementService.
+    ///
+    /// @param worldManager   The world manager for map data.
+    /// @param gameEventQueue The event queue for sending updates.
+    /// @param metroService   The service for metro travel logic.
     public MovementService(WorldManager worldManager, GameEventQueue gameEventQueue, MetroService metroService) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
@@ -56,7 +61,6 @@ public class MovementService {
 
         player.setX(target.x());
         player.setY(target.y());
-
         final GameMapData currentMap = worldManager.getMap(player.getMapId());
         final TriggerContext triggerContext = new TriggerContext(metroService);
         currentMap.getDynamicTrigger(target.x(), target.y(), player.getLayerIndex())

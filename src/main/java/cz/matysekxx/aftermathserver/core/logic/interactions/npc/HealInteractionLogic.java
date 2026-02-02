@@ -15,7 +15,7 @@ public class HealInteractionLogic implements NpcInteractionLogic {
     @Override
     public Collection<GameEvent> interact(Npc target, Player player) {
         final int cost = 20;
-        if (player.getHp() < player.getMaxHp() || player.getRads() > 0){
+        if (player.getHp() < player.getMaxHp() || player.getRads() > 0) {
             if (player.getCredits() < cost) {
                 return List.of(GameEventFactory.sendErrorEvent("You don't have enough credits! Price: " + cost, player.getId()));
             }

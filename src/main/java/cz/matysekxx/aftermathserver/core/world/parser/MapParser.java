@@ -1,11 +1,11 @@
 package cz.matysekxx.aftermathserver.core.world.parser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.matysekxx.aftermathserver.core.factory.MapObjectFactory;
-import cz.matysekxx.aftermathserver.core.model.entity.Npc;
-import cz.matysekxx.aftermathserver.core.factory.NpcFactory;
-import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.factory.ItemFactory;
+import cz.matysekxx.aftermathserver.core.factory.MapObjectFactory;
+import cz.matysekxx.aftermathserver.core.factory.NpcFactory;
+import cz.matysekxx.aftermathserver.core.model.entity.Npc;
+import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.core.world.TileRegistry;

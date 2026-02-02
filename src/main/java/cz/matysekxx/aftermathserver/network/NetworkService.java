@@ -37,6 +37,10 @@ public class NetworkService {
     private final GameEventQueue gameEventQueue;
     private ExecutorService eventLoopExecutor;
 
+    /// Constructs the NetworkService.
+    ///
+    /// @param gameEventQueue    The queue for game events.
+    /// @param gameEventHandlers A list of handlers for processing specific event types.
     public NetworkService(GameEventQueue gameEventQueue, List<GameEventHandler> gameEventHandlers) {
         this.gameEventQueue = gameEventQueue;
         for (GameEventHandler gameEventHandler : gameEventHandlers) {
@@ -92,6 +96,7 @@ public class NetworkService {
         sessionToMap.put(sessionId, mapId);
     }
 
+    /// Broadcasts a message to all players on a specific map.
     void broadcastToMap(String payload, String mapId) {
         final TextMessage message = new TextMessage(payload);
         sessions.values().stream().filter(WebSocketSession::isOpen).forEach(session -> {
@@ -108,6 +113,7 @@ public class NetworkService {
         });
     }
 
+    /// Sends the Metro UI data to a client.
     void sendUIList(Map.Entry<String, List<MetroStation>> metroStations, String id) {
         final UILoadResponse dto = new UILoadResponse();
         dto.setLineId(metroStations.getKey());
@@ -115,26 +121,32 @@ public class NetworkService {
         sendJson(id, "OPEN_METRO_UI", dto);
     }
 
+    /// Sends a notification message to a client.
     void sendToClient(String payload, String sessionId) {
         sendJson(sessionId, "NOTIFICATION", payload);
     }
 
+    /// Sends the Game Over signal to a client.
     void sendGameOver(String sessionId) {
         sendJson(sessionId, "GAME_OVER", Map.of("message", "YOU DIED"));
     }
 
+    /// Sends updated player statistics to a client.
     void sendStatsToClient(Player p) {
         sendJson(p.getId(), "STATS_UPDATE", StatsResponse.of(p));
     }
 
+    /// Sends the player's inventory data to a client.
     void sendInventory(Player p) {
         sendJson(p.getId(), "INVENTORY_UPDATE", p.getInventory().getSlots());
     }
 
+    /// Sends the map viewport data to a client.
     void sendMapData(String sessionId, MapViewportPayload payload) {
         sendJson(sessionId, "MAP_VIEWPORT", payload);
     }
 
+    /// Broadcasts the list of map objects to all players on a map.
     void broadcastMapObjects(List<MapObject> objects, String mapId) {
         try {
             broadcastToMap(objectMapper.writeValueAsString(WebSocketResponse.of("MAP_OBJECTS_UPDATE", objects)), mapId);
@@ -143,10 +155,12 @@ public class NetworkService {
         }
     }
 
+    /// Sends the list of map objects to a specific client.
     void sendMapObjects(String sessionId, List<MapObject> objects) {
         sendJson(sessionId, "MAP_OBJECTS_UPDATE", objects);
     }
 
+    /// Sends the list of NPCs to a client or broadcasts it to a map.
     void sendNpcs(String sessionId, String mapId, boolean isBroadcast, List<NpcDto> npcs) {
         try {
             final String json = objectMapper.writeValueAsString(WebSocketResponse.of("NPCS_UPDATE", npcs));
@@ -158,14 +172,17 @@ public class NetworkService {
         }
     }
 
+    /// Sends the player's updated position to the client.
     void sendPosition(Player p) {
         sendJson(p.getId(), "PLAYER_MOVED", PlayerUpdatePayload.of(p));
     }
 
+    /// Sends an error message to a client.
     void sendError(String sessionId, String message) {
         sendJson(sessionId, "ACTION_FAILED", message);
     }
 
+    /// Sends the login options (classes, maps) to a client.
     void sendLoginOptions(String sessionId, LoginOptionsResponse response) {
         sendJson(sessionId, "LOGIN_OPTIONS", response);
     }

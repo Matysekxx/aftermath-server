@@ -1,5 +1,6 @@
 package cz.matysekxx.aftermathserver.core;
 
+import cz.matysekxx.aftermathserver.core.factory.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.model.entity.Inventory;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
@@ -7,7 +8,6 @@ import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.item.ItemType;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
-import cz.matysekxx.aftermathserver.core.factory.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.dto.NpcDto;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
@@ -20,6 +20,9 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 
+/// Service responsible for handling combat mechanics.
+///
+/// Manages player attacks, damage calculation, and NPC death processing.
 @Service
 @Slf4j
 public class CombatService {
@@ -28,6 +31,12 @@ public class CombatService {
     private final MapObjectFactory mapObjectFactory;
     private final SpatialService spatialService;
 
+    /// Constructs the CombatService.
+    ///
+    /// @param worldManager     The manager for world data.
+    /// @param gameEventQueue   The queue for game events.
+    /// @param mapObjectFactory Factory for creating map objects (loot bags).
+    /// @param spatialService   Service for spatial queries (finding targets).
     public CombatService(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, SpatialService spatialService) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
@@ -35,13 +44,19 @@ public class CombatService {
         this.spatialService = spatialService;
     }
 
+    /// Processes an attack initiated by a player.
+    ///
+    /// Checks if the player has a weapon equipped, finds the nearest valid target
+    /// within range using spatial indexing, applies damage, and handles target death if necessary.
+    ///
+    /// @param player The player performing the attack.
     public void handleAttack(Player player) {
         final Integer equippedSlot = player.getEquippedWeaponSlot();
         if (equippedSlot == null) {
             gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You don't have any weapon equipped!", player.getId()));
             return;
         }
-        
+
         final Inventory inv = player.getInventory();
         final Item weapon = inv.getSlots().get(equippedSlot);
 
@@ -50,12 +65,12 @@ public class CombatService {
             return;
         }
         final int weaponRange = weapon.getRange() != null ? weapon.getRange() : 1;
-        
+
         final Npc closestNpc = spatialService.getNearby(player.getMapId(), player).stream()
                 .filter(n -> n instanceof Npc)
                 .map(n -> (Npc) n)
                 .filter(n -> !n.isDead())
-                .filter(n-> MathUtil.getChebyshevDistance(
+                .filter(n -> MathUtil.getChebyshevDistance(
                         Vector2.of(player.getX(), player.getY()),
                         Vector2.of(n.getX(), n.getY())) <= weaponRange
                 ).min(Comparator.comparingInt(n -> MathUtil.getChebyshevDistance(
@@ -63,7 +78,7 @@ public class CombatService {
                         Vector2.of(n.getX(), n.getY())
                 )))
                 .orElse(null);
-        
+
         if (closestNpc == null) {
             gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Target not found", player.getId()));
             return;
@@ -78,6 +93,13 @@ public class CombatService {
         }
     }
 
+    /// Handles the logic when an NPC dies.
+    ///
+    /// Removes the NPC from the map, spawns loot, and broadcasts updates to players.
+    ///
+    /// @param npc      The NPC that died.
+    /// @param map      The map where the death occurred.
+    /// @param killerId The ID of the player who killed the NPC.
     private void handleNpcDeath(Npc npc, GameMapData map, String killerId) {
         map.getNpcs().remove(npc);
         if (npc.getLoot() != null) {

@@ -53,10 +53,16 @@ public class Player extends Entity {
         }
     }
 
+    /// Adds credits to the player's balance.
+    ///
+    /// @param amount The amount of credits to add.
     public void addCredits(int amount) {
         credits += amount;
     }
 
+    /// Removes credits from the player's balance.
+    ///
+    /// @param amount The amount of credits to remove.
     public void removeCredits(int amount) {
         credits -= amount;
 

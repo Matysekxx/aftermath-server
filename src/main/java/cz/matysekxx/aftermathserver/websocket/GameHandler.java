@@ -28,6 +28,11 @@ public class GameHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Map<String, Action> actions;
 
+    /// Constructs the GameHandler with necessary dependencies.
+    ///
+    /// @param gameEngine     The core game engine.
+    /// @param networkService The service for network communication.
+    /// @param actions        A map of available game actions.
     public GameHandler(GameEngine gameEngine, NetworkService networkService, Map<String, Action> actions) {
         this.gameEngine = gameEngine;
         this.networkService = networkService;

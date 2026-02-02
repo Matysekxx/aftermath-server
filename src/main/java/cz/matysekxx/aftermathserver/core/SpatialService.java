@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
 @Service
 public class SpatialService {
@@ -30,12 +29,9 @@ public class SpatialService {
 
         for (Spatial entity : entities) {
             final int z = entity.getLayerIndex();
-            layerMap.computeIfAbsent(z, new Function<>() {
-                @Override
-                public Quadtree<Spatial> apply(Integer k) {
-                    return new Quadtree<>(0, Rectangle.of(0, 0, 1000, 1000));
-                }
-            }).insert(entity);
+            layerMap.computeIfAbsent(
+                    z, k -> new Quadtree<>(0, Rectangle.of(0, 0, 1000, 1000))
+            ).insert(entity);
         }
         spatialIndices.put(mapId, layerMap);
     }
