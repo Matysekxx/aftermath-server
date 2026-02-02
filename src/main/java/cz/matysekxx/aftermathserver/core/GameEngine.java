@@ -7,12 +7,15 @@ import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.entity.State;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
-import cz.matysekxx.aftermathserver.core.world.*;
+import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.core.world.MapObject;
+import cz.matysekxx.aftermathserver.core.world.MapType;
+import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.dto.*;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
-import cz.matysekxx.aftermathserver.util.Vector3;
 import cz.matysekxx.aftermathserver.util.Spatial;
+import cz.matysekxx.aftermathserver.util.Vector3;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -20,8 +23,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 /// Core engine managing the game state and loop.
 ///
@@ -36,7 +39,6 @@ public class GameEngine {
     /// Target density: 1 NPC per 100 reachable tiles (0.0005)
     private static final double NPC_DENSITY = 0.0005;
     private static final int DAILY_RESPAWN_COUNT = 3;
-    private final ConcurrentHashMap<String, Player> players = new ConcurrentHashMap<>();
     private final WorldManager worldManager;
     private final GameEventQueue gameEventQueue;
     private final MapObjectFactory mapObjectFactory;
@@ -48,9 +50,10 @@ public class GameEngine {
     private final SpawnManager spawnManager;
     private final CombatService combatService;
     private final SpatialService spatialService;
+    private final PlayerRegistry playerRegistry;
     private long tickCounter = 0;
 
-    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService, SpawnManager spawnManager, CombatService combatService, SpatialService spatialService) {
+    public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, GameSettings settings, MovementService movementService, StatsService statsService, InteractionService interactionService, EconomyService economyService, SpawnManager spawnManager, CombatService combatService, SpatialService spatialService, PlayerRegistry playerRegistry) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
@@ -62,6 +65,7 @@ public class GameEngine {
         this.spawnManager = spawnManager;
         this.combatService = combatService;
         this.spatialService = spatialService;
+        this.playerRegistry = playerRegistry;
     }
 
     /// Initializes world content such as NPCs.
@@ -94,7 +98,7 @@ public class GameEngine {
 
     /// Adds a new player session to the game.
     public void addPlayer(String sessionId, LoginRequest request) { //TODO: presunout do nove tridy LoginService
-        if (players.containsKey(sessionId)) return;
+        if (playerRegistry.containsId(sessionId)) return;
 
         String mapId = request.getStartingMapId();
         if (mapId == null || !worldManager.containsMap(mapId)) {
@@ -125,7 +129,7 @@ public class GameEngine {
         final Player newPlayer = new Player(sessionId, request.getUsername(),
                 spawn, classConfig, mapId, className
         );
-        players.put(sessionId, newPlayer);
+        playerRegistry.put(newPlayer);
 
         enqueueViewport(newPlayer, startingMap);
         gameEventQueue.enqueue(GameEventFactory.sendMapObjectsToPlayer(worldManager.getMap(mapId).getObjects(), sessionId));
@@ -144,13 +148,12 @@ public class GameEngine {
 
     /// Removes a player session.
     public void removePlayer(String sessionId) {
-        players.remove(sessionId);
+        playerRegistry.remove(sessionId);
     }
 
     /// Retrieves the map ID for a given player.
     public String getPlayerMapId(String playerId) {
-        final Player player = players.get(playerId);
-        if (player == null) return null;
+        final Player player = playerRegistry.getPlayer(playerId);
         return player.getMapId();
     }
 
@@ -161,18 +164,18 @@ public class GameEngine {
 
     /// Processes a movement request.
     public void processMove(String playerId, MoveRequest moveRequest) {
-        movementService.movementProcess(players.get(playerId), moveRequest);
+        movementService.movementProcess(playerRegistry.getPlayer(playerId), moveRequest);
     }
 
     /// Processes an interaction request.
     public void processInteract(String id) {
-        final Player player = players.get(id);
+        final Player player = playerRegistry.getPlayer(id);
         interactionService.processInteraction(player);
     }
 
     /// Handles dropping an item from inventory.
     public void dropItem(String playerId, int slotIndex, int amount) {
-        final Player player = players.get(playerId);
+        final Player player = playerRegistry.getPlayer(playerId);
         final Optional<Item> droppedItem = player.getInventory().removeItem(slotIndex, amount);
         droppedItem.ifPresentOrElse(item -> {
             final GameMapData map = worldManager.getMap(player.getMapId());
@@ -246,21 +249,16 @@ public class GameEngine {
 
     private void updateNpcs(Set<String> activeMaps) {
         final Map<String, List<Player>> playersByMap = new HashMap<>();
-        for (Player player : players.values()) {
-            playersByMap.computeIfAbsent(player.getMapId(), k -> new ArrayList<>()).add(player);
-        }
+        playerRegistry.forEach(p -> {
+            playersByMap.computeIfAbsent(p.getMapId(), k -> new ArrayList<>()).add(p);
+        });
 
         for (GameMapData map : worldManager.getMaps()) {
             if (activeMaps.contains(map.getId())) {
                 final List<Player> playersOnMap = playersByMap.getOrDefault(map.getId(), List.of());
-
                 map.getNpcs().forEach(npc -> npc.update(map, playersOnMap));
+                final List<NpcDto> npcDtos = map.getNpcs().stream().map(NpcDto::fromEntity).collect(Collectors.toList());
 
-                final List<NpcDto> npcDtos = new ArrayList<>();
-                for (Npc npc : map.getNpcs()) {
-                    final var npcDto = NpcDto.fromEntity(npc);
-                    npcDtos.add(npcDto);
-                }
                 gameEventQueue.enqueue(GameEventFactory.broadcastNpcs(npcDtos, map.getId()));
 
                 final List<Spatial> allEntities = new ArrayList<>();
@@ -277,17 +275,19 @@ public class GameEngine {
     /// Applies environmental effects and checks for death conditions.
     private Set<String> updatePlayers() {
         final Set<String> activeMapIds = new HashSet<>();
-        for (Player player : players.values()) {
-            if (player == null || player.getState() == State.DEAD || player.getState() == State.TRAVELLING) continue;
-            final boolean statsChanged = statsService.applyStats(player);
-            if (player.getHp() <= 0) {
-                handlePlayerDeath(player);
-                continue;
-            }
-            activeMapIds.add(player.getMapId());
-            if (statsChanged || player.getRads() > 0)
-                gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
-        }
+        playerRegistry.forEachWithPredicate(
+                player -> player.getState() != State.DEAD && player.getState() != State.TRAVELLING,
+                player -> {
+                    final boolean statsChanged = statsService.applyStats(player);
+                    if (player.getHp() <= 0) {
+                        handlePlayerDeath(player);
+                    } else {
+                        activeMapIds.add(player.getMapId());
+                        if (statsChanged || player.getRads() > 0)
+                            gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
+                    }
+                }
+        );
         return activeMapIds;
     }
 
@@ -296,11 +296,12 @@ public class GameEngine {
     /// Triggers debt calculation for all players via EconomyService.
     private void processDailyCycle() {
         log.info("Processing daily cycle. Day: {}", tickCounter / TICKS_PER_DAY);
-        for (Player player : players.values()) {
-            if (player.getState() == State.DEAD) continue;
-            economyService.processDailyDebt(player);
-            gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("A new day has dawned. Daily living fees have been deducted.", player.getId()));
-        }
+        playerRegistry.forEachWithPredicate(
+                player -> player.getState() != State.DEAD,
+                player -> {
+                    economyService.processDailyDebt(player);
+                    gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("A new day has dawned. Daily living fees have been deducted.", player.getId()));
+                });
         respawnNpcs();
         spawnItems();
     }
@@ -334,34 +335,36 @@ public class GameEngine {
     /// @param playerId The session ID of the player.
     /// @return The Player object, or null if not found.
     public Player getPlayerById(String playerId) {
-        return players.get(playerId);
+        return playerRegistry.getPlayer(playerId);
     }
 
     public void processAttack(String sessionId) {
-        combatService.handleAttack(players.get(sessionId));
+        combatService.handleAttack(playerRegistry.getPlayer(sessionId));
     }
 
     public void processUse(String sessionId, UseRequest useRequest) {
-        statsService.useConsumable(players.get(sessionId), useRequest);
+        statsService.useConsumable(playerRegistry.getPlayer(sessionId), useRequest);
     }
 
     public void processEquip(String sessionId, EquipRequest equipRequest) {
-        final Player player = players.get(sessionId);
-        if (player == null) return;
-
-        final Item item = player.getInventory().getSlots().get(equipRequest.getSlotIndex());
-        if (item == null) return;
-
-        switch (item.getType()) {
-            case WEAPON -> {
-                player.setEquippedWeaponSlot(equipRequest.getSlotIndex());
-                gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Equipped: " + item.getName(), sessionId));
-            }
-            case MASK -> {
-                player.setEquippedMaskSlot(equipRequest.getSlotIndex());
-                gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Equipped Mask: " + item.getName(), sessionId));
-            }
-            case null, default -> gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Cannot equip this item", sessionId));
-        }
+        final Optional<Player> maybePlayer = playerRegistry.getMaybePlayer(sessionId);
+        maybePlayer.ifPresent(player -> {
+                    final Item item = player.getInventory().getSlots().get(equipRequest.getSlotIndex());
+                    if (item != null) {
+                        switch (item.getType()) {
+                            case WEAPON -> {player.setEquippedWeaponSlot(equipRequest.getSlotIndex());
+                                gameEventQueue.enqueue(GameEventFactory.sendMessageEvent(
+                                        "Equipped: " + item.getName(), sessionId));
+                            }
+                            case MASK -> {player.setEquippedMaskSlot(equipRequest.getSlotIndex());
+                                gameEventQueue.enqueue(GameEventFactory.sendMessageEvent(
+                                        "Equipped Mask: " + item.getName(), sessionId));
+                            }
+                            default -> gameEventQueue.enqueue(GameEventFactory.sendErrorEvent(
+                                            "Cannot equip this item", sessionId));
+                        }
+                    }
+                }
+        );
     }
 }
