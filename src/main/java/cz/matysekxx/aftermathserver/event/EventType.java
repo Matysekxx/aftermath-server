@@ -27,5 +27,7 @@ public enum EventType {
     /// Send available login options (classes, maps) to client.
     SEND_LOGIN_OPTIONS,
     SEND_NPCS,
-    OPEN_TRADE_UI;
+    OPEN_TRADE_UI,
+    /// Broadcast a message to all players on the server.
+    GLOBAL_ANNOUNCEMENT;
 }
