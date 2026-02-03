@@ -64,8 +64,9 @@ public class CombatService {
 
         final int weaponCooldown = weapon.getCooldown() != null ? weapon.getCooldown() : 1000;
         final long currentTime = System.currentTimeMillis();
+        player.setLastAttackTime(currentTime);
         if (currentTime - player.getLastAttackTime() < weaponCooldown) {
-            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You are attacking to quickly!", player.getId()));
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You are attacking too quickly!", player.getId()));
             return;
         }
 
@@ -91,7 +92,6 @@ public class CombatService {
 
         final int damage = weapon.getDamage() != null ? weapon.getDamage() : 1;
         closestNpc.takeDamage(damage);
-        player.setLastAttackTime(System.currentTimeMillis());
         log.info("Player {} dealt {} damage to NPC {}", player.getName(), damage, closestNpc.getName());
         if (closestNpc.isDead()) handleNpcDeath(closestNpc, map, player.getId());
         else {
