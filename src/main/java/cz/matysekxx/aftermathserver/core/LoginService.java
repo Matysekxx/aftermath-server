@@ -2,8 +2,8 @@ package cz.matysekxx.aftermathserver.core;
 
 import cz.matysekxx.aftermathserver.config.GameSettings;
 import cz.matysekxx.aftermathserver.config.PlayerClassConfig;
-import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
+import cz.matysekxx.aftermathserver.core.model.entity.State;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapType;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
@@ -69,7 +69,11 @@ public class LoginService {
     /// @param sessionId The session ID of the player.
     /// @param request   The login data provided by the client.
     public void handleLogin(String sessionId, LoginRequest request) {
-        if (playerRegistry.containsId(sessionId)) return;
+        final Player existingPlayer = playerRegistry.getPlayer(sessionId);
+
+        if (existingPlayer != null && existingPlayer.getState() != State.DEAD) {
+            return;
+        }
 
         final String mapId = resolveMapId(request.getStartingMapId());
         final String className = resolveClassName(request.getPlayerClass());
@@ -77,12 +81,28 @@ public class LoginService {
         final GameMapData startingMap = worldManager.getMap(mapId);
         final Vector3 spawn = determineSpawnPoint(startingMap, request.getUsername());
 
-        final Player newPlayer = new Player(sessionId, request.getUsername(),
-                spawn, classConfig, mapId, className
-        );
-        playerRegistry.put(newPlayer);
-
-        sendInitialGameState(newPlayer, startingMap);
+        if (existingPlayer != null && existingPlayer.getState() == State.DEAD) {
+            log.info("Respawning player {} (session: {})", request.getUsername(), sessionId);
+            existingPlayer.setName(request.getUsername());
+            existingPlayer.setRole(className);
+            existingPlayer.setHp(classConfig.getMaxHp());
+            existingPlayer.setMaxHp(classConfig.getMaxHp());
+            existingPlayer.setX(spawn.x());
+            existingPlayer.setY(spawn.y());
+            existingPlayer.setLayerIndex(spawn.z());
+            existingPlayer.setMapId(mapId);
+            existingPlayer.setState(State.ALIVE);
+            existingPlayer.setRads(0);
+            existingPlayer.setRadsLimit(classConfig.getRadsLimit());
+            
+            sendInitialGameState(existingPlayer, startingMap);
+        } else {
+            final Player newPlayer = new Player(sessionId, request.getUsername(),
+                    spawn, classConfig, mapId, className
+            );
+            playerRegistry.put(newPlayer);
+            sendInitialGameState(newPlayer, startingMap);
+        }
     }
 
     /// Resolves the map ID, falling back to default if invalid.

@@ -265,8 +265,12 @@ public class GameEngine {
         if (map == null) return;
         final MapObject corpse = mapObjectFactory.createPlayerCorpse(player);
         map.addObject(corpse);
+
         player.getInventory().clear();
+        player.setEquippedWeaponSlot(null);
+        player.setEquippedMaskSlot(null);
         gameEventQueue.enqueue(GameEventFactory.sendGameOverEvent(player));
+        sendLoginOptions(player.getId());
     }
 
     /// Retrieves a player instance by their unique session ID.
