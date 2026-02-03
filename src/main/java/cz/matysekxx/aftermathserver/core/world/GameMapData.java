@@ -30,6 +30,7 @@ public class GameMapData {
     private String name;
     private MapType type;
     private int difficulty;
+    @JsonIgnore private boolean cleared = false;
     private Map<Integer, String> layout = new HashMap<>();
     private Collection<MapObject> objects = new CopyOnWriteArrayList<>();
     private Collection<Npc> npcs = new CopyOnWriteArrayList<>();

@@ -22,6 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /// Core engine managing the game state and loop.
@@ -167,7 +168,7 @@ public class GameEngine {
     }
 
     private void respawnNpcs() {
-        worldManager.forEachWithPredicate(mapData -> mapData.getType() == MapType.HAZARD_ZONE,
+        worldManager.forEachWithPredicate(mapData -> mapData.getType() == MapType.HAZARD_ZONE && !mapData.isCleared(),
                 map -> {
                     final double difficultyMultiplier = 0.5 + (map.getDifficulty() * 0.5);
                     final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
@@ -269,7 +270,9 @@ public class GameEngine {
         player.getInventory().clear();
         player.setEquippedWeaponSlot(null);
         player.setEquippedMaskSlot(null);
+        
         gameEventQueue.enqueue(GameEventFactory.sendGameOverEvent(player));
+
         sendLoginOptions(player.getId());
     }
 

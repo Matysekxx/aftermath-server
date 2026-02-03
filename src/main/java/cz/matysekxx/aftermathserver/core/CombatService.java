@@ -8,6 +8,7 @@ import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.model.item.ItemType;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
+import cz.matysekxx.aftermathserver.core.world.MapType;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.dto.NpcDto;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
@@ -64,7 +65,6 @@ public class CombatService {
 
         final int weaponCooldown = weapon.getCooldown() != null ? weapon.getCooldown() : 1000;
         final long currentTime = System.currentTimeMillis();
-        player.setLastAttackTime(currentTime);
         if (currentTime - player.getLastAttackTime() < weaponCooldown) {
             gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You are attacking too quickly!", player.getId()));
             return;
@@ -92,6 +92,7 @@ public class CombatService {
 
         final int damage = weapon.getDamage() != null ? weapon.getDamage() : 1;
         closestNpc.takeDamage(damage);
+        player.setLastAttackTime(System.currentTimeMillis());
         log.info("Player {} dealt {} damage to NPC {}", player.getName(), damage, closestNpc.getName());
         if (closestNpc.isDead()) handleNpcDeath(closestNpc, map, player.getId());
         else {
@@ -121,5 +122,27 @@ public class CombatService {
         gameEventQueue.enqueue(GameEventFactory.broadcastNpcs(remainingNpcs, map.getId()));
 
         gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("You killed " + npc.getName(), killerId));
+
+        final boolean hasAggressiveNpcs = map.getNpcs()
+                .stream().anyMatch(Npc::isAggressive);
+        if (!hasAggressiveNpcs && !map.isCleared()) {
+            map.setCleared(true);
+            final var announcement = "STATION SECURED: " + map.getName() + " has been liberated by " + killerId + "!";
+            gameEventQueue.enqueue(GameEventFactory.broadcastGlobalAnnouncement(announcement));
+            log.info("Map {} has been cleared by player {}", map.getId(), killerId);
+            checkTotalVictory();
+        }
+    }
+
+    private void checkTotalVictory() {
+        boolean allCleared = worldManager.getMaps().stream()
+                .filter(m -> m.getType() == MapType.HAZARD_ZONE)
+                .allMatch(GameMapData::isCleared);
+        if (allCleared) {
+            gameEventQueue.enqueue(GameEventFactory.broadcastGlobalAnnouncement(
+                "!!! TOTAL VICTORY !!! The entire Metro system is now safe. Humanity has reclaimed its home. " +
+                "All survivors are requested to report to their local Administrators to finalize their debts."
+            ));
+        }
     }
 }

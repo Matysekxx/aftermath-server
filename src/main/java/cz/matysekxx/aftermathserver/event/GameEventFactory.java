@@ -98,4 +98,9 @@ public class GameEventFactory {
     public static GameEvent broadcastChatMsgEvent(ChatRequest request, String mapId) {
         return GameEvent.create(EventType.BROADCAST_CHAT_MSG, request, null, mapId, true);
     }
+
+    /// Creates an event to broadcast a global announcement to all players on the server.
+    public static GameEvent broadcastGlobalAnnouncement(String message) {
+        return GameEvent.create(EventType.GLOBAL_ANNOUNCEMENT, message, null, null, true);
+    }
 }

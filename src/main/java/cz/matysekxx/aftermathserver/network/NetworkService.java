@@ -113,6 +113,25 @@ public class NetworkService {
         });
     }
 
+    /// Broadcasts a message to all connected players regardless of their location.
+    void broadcastGlobalAnnouncement(String message) {
+        try {
+            final String json = objectMapper.writeValueAsString(WebSocketResponse.of("GLOBAL_ANNOUNCEMENT", message));
+            final TextMessage textMessage = new TextMessage(json);
+            sessions.values().stream()
+                    .filter(WebSocketSession::isOpen)
+                    .forEach(session -> {
+                try {
+                    session.sendMessage(textMessage);
+                } catch (IOException e) {
+                    log.error("Error sending global announcement to {}: {}", session.getId(), e.getMessage());
+                }
+            });
+        } catch (JsonProcessingException e) {
+            log.error("Error serializing global announcement: {}", e.getMessage());
+        }
+    }
+
     /// Sends the Metro UI data to a client.
     void sendUIList(Map.Entry<String, List<MetroStation>> metroStations, String id) {
         final UILoadResponse dto = new UILoadResponse();
