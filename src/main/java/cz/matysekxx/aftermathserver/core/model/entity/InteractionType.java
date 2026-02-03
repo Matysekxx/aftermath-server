@@ -5,5 +5,6 @@ public enum InteractionType {
     TALK,
     TRADE,
     QUEST,
-    HEAL
+    HEAL,
+    DEBT_PAYMENT
 }

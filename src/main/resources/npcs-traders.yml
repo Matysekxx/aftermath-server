@@ -27,3 +27,12 @@ game:
         behavior: "STATIONARY"
         interaction: "TALK"
         dialogId: "the-bartender"
+
+      - id: "administrator_mustek"
+        name: "Administrator"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 100
+        behavior: "STATIONARY"
+        interaction: "DEBT_PAYMENT"
+        dialogId: "the-admin"
