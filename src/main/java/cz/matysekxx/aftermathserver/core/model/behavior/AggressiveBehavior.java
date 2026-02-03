@@ -49,7 +49,7 @@ public class AggressiveBehavior implements Behavior {
         final long lastAttack = lastAttackTimes.getOrDefault(npc.getId(), 0L);
 
         if (now - lastAttack >= attackCooldown) {
-            target.setHp(Math.max(0, target.getHp() - npc.getDamage()));
+            target.setHp(Math.max(0, target.getHp() - Math.max(1, npc.getDamage())));
             lastAttackTimes.put(npc.getId(), now);
 
             gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Byl jsi napaden: " + npc.getName(), target.getId()));
@@ -67,9 +67,9 @@ public class AggressiveBehavior implements Behavior {
         if (map.isWalkable(nextX, nextY, npc.getLayerIndex())) {
             npc.setX(nextX);
             npc.setY(nextY);
-        } else if (dx != 0 && map.isWalkable(npc.getLayerIndex(), npc.getX() + dx, npc.getY())) {
+        } else if (dx != 0 && map.isWalkable(npc.getX() + dx, npc.getY(), npc.getLayerIndex())) {
             npc.setX(npc.getX() + dx);
-        } else if (dy != 0 && map.isWalkable(npc.getLayerIndex(), npc.getX(), npc.getY() + dy)) {
+        } else if (dy != 0 && map.isWalkable(npc.getX(), npc.getY() + dy, npc.getLayerIndex())) {
             npc.setY(npc.getY() + dy);
         }
     }

@@ -61,11 +61,14 @@ public class CombatService {
             gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Equipped item is not a valid weapon", player.getId()));
             return;
         }
+
+        final int weaponCooldown = weapon.getCooldown() != null ? weapon.getCooldown() : 1000;
         final long currentTime = System.currentTimeMillis();
-        if (currentTime - player.getLastAttackTime() < weapon.getCooldown()) {
+        if (currentTime - player.getLastAttackTime() < weaponCooldown) {
             gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You are attacking to quickly!", player.getId()));
             return;
         }
+
         final int weaponRange = weapon.getRange() != null ? weapon.getRange() : 1;
 
         final GameMapData map = worldManager.getMap(player.getMapId());
@@ -85,9 +88,11 @@ public class CombatService {
             gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Target not found", player.getId()));
             return;
         }
-        closestNpc.takeDamage(weapon.getDamage());
+
+        final int damage = weapon.getDamage() != null ? weapon.getDamage() : 1;
+        closestNpc.takeDamage(damage);
         player.setLastAttackTime(System.currentTimeMillis());
-        log.info("Player {} dealt {} damage to NPC {}", player.getName(), weapon.getDamage(), closestNpc.getName());
+        log.info("Player {} dealt {} damage to NPC {}", player.getName(), damage, closestNpc.getName());
         if (closestNpc.isDead()) handleNpcDeath(closestNpc, map, player.getId());
         else {
             final List<NpcDto> update = List.of(NpcDto.fromEntity(closestNpc));

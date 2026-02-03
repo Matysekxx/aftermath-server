@@ -137,8 +137,8 @@ public class GameEngine {
             final GameMapData map = worldManager.getMap(player.getMapId());
             final MapObject lootBag = mapObjectFactory.createLootBag(item.getId(), amount, player.getX(), player.getY(), player.getLayerIndex());
             map.addObject(lootBag);
-            if (slotIndex == player.getEquippedWeaponSlot()) player.setEquippedWeaponSlot(null);
-            if (slotIndex == player.getEquippedMaskSlot()) player.setEquippedMaskSlot(null);
+            if (Objects.equals(slotIndex, player.getEquippedWeaponSlot())) player.setEquippedWeaponSlot(null);
+            if (Objects.equals(slotIndex, player.getEquippedMaskSlot())) player.setEquippedMaskSlot(null);
             gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(player));
             gameEventQueue.enqueue(GameEventFactory.broadcastMapObjects(map.getObjects(), player.getMapId()));
         }, () -> gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Item not found or invalid amount", playerId)));
@@ -305,6 +305,7 @@ public class GameEngine {
         maybePlayer.ifPresent(player -> {
                     final Item item = player.getInventory().getSlots().get(equipRequest.getSlotIndex());
                     if (item != null) {
+                        log.info("Player {} trying to equip item: {} (Type: {})", player.getName(), item.getName(), item.getType());
                         switch (item.getType()) {
                             case WEAPON -> {
                                 player.setEquippedWeaponSlot(equipRequest.getSlotIndex());

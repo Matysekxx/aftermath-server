@@ -39,6 +39,7 @@ public class ItemFactory {
                 .range(template.getRange())
                 .price(template.getPrice())
                 .effect(template.getEffect())
+                .cooldown(template.getCooldown())
                 .build();
     }
 }
