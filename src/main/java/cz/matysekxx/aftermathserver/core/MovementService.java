@@ -73,7 +73,7 @@ public class MovementService {
         gameEventQueue.enqueue(GameEventFactory.sendPositionEvent(player));
 
         final var viewport = MapViewportPayload.of(
-                currentMap, player.getX(), player.getY(), GameEngine.VIEWPORT_RANGE_X, GameEngine.VIEWPORT_RANGE_Y
+                currentMap, player.getX(), player.getY(), player.getLayerIndex(), GameEngine.VIEWPORT_RANGE_X, GameEngine.VIEWPORT_RANGE_Y
         );
         gameEventQueue.enqueue(GameEventFactory.sendMapDataEvent(viewport, player.getId()));
     }

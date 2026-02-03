@@ -17,7 +17,7 @@
     <bean id="smichovske-nadrazi" parent="baseStationF" p:id="smichovske-nadrazi" p:name="Smíchovské nádraží"/>
     <bean id="arbesovo-namesti" parent="baseStationF" p:id="arbesovo-namesti" p:name="Arbesovo náměstí"/>
     <bean id="malostranske-namesti" parent="baseStationF" p:id="malostranske-namesti" p:name="Malostranské náměstí"/>
-    <bean id="malostranská-f" parent="baseStationF" p:id="malostranská" p:name="Malostranská"/>
+    <bean id="malostranská-f" parent="baseStationF" p:id="malostranska" p:name="Malostranská"/>
     <bean id="hradcanka-f" parent="baseStationF" p:id="hradcanska" p:name="Hradčanská"/>
     <bean id="podbaba" parent="baseStationF" p:id="podbaba" p:name="Podbaba"/>
     <bean id="zoologicka-zahrada" parent="baseStationF" p:id="zoologicka-zahrada" p:name="Zoologická zahrada"/>

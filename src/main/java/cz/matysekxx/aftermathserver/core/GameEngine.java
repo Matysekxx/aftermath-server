@@ -109,6 +109,7 @@ public class GameEngine {
     /// Retrieves the map ID for a given player.
     public String getPlayerMapId(String playerId) {
         final Player player = playerRegistry.getPlayer(playerId);
+        if (player == null) return null;
         return player.getMapId();
     }
 
@@ -134,8 +135,7 @@ public class GameEngine {
         final Optional<Item> droppedItem = player.getInventory().removeItem(slotIndex, amount);
         droppedItem.ifPresentOrElse(item -> {
             final GameMapData map = worldManager.getMap(player.getMapId());
-            final MapObject lootBag = mapObjectFactory.createLootBag(item.getId(), amount, player.getX(), player.getY());
-            lootBag.setZ(player.getLayerIndex());
+            final MapObject lootBag = mapObjectFactory.createLootBag(item.getId(), amount, player.getX(), player.getY(), player.getLayerIndex());
             map.addObject(lootBag);
             if (slotIndex == player.getEquippedWeaponSlot()) player.setEquippedWeaponSlot(null);
             if (slotIndex == player.getEquippedMaskSlot()) player.setEquippedMaskSlot(null);

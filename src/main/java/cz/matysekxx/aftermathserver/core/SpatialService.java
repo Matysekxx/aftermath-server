@@ -8,6 +8,7 @@ import cz.matysekxx.aftermathserver.util.Spatial;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,6 +42,6 @@ public class SpatialService {
         if (layerMap == null) return List.of();
         final Quadtree<Spatial> quadtree = layerMap.get(center.getLayerIndex());
         if (quadtree == null) return List.of();
-        return quadtree.retrieve(List.of(), center);
+        return quadtree.retrieve(new ArrayList<>(), center);
     }
 }

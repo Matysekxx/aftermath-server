@@ -1,6 +1,5 @@
 package cz.matysekxx.aftermathserver.core.factory;
 
-import cz.matysekxx.aftermathserver.core.SpatialService;
 import cz.matysekxx.aftermathserver.core.model.behavior.*;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTable;
@@ -20,13 +19,10 @@ public class NpcFactory {
     private final ItemFactory itemFactory;
     private final GameEventQueue gameEventQueue;
 
-    private final SpatialService spatialService;
-
-    public NpcFactory(NpcTable npcTable, ItemFactory itemFactory, GameEventQueue gameEventQueue, SpatialService spatialService) {
+    public NpcFactory(NpcTable npcTable, ItemFactory itemFactory, GameEventQueue gameEventQueue) {
         this.npcTable = npcTable;
         this.itemFactory = itemFactory;
         this.gameEventQueue = gameEventQueue;
-        this.spatialService = spatialService;
     }
 
     /// Creates a new NPC instance based on a template ID.
@@ -43,7 +39,7 @@ public class NpcFactory {
             throw new IllegalArgumentException("Unknown NPC template: " + id);
         }
         final Behavior behavior = switch (template.getBehavior().toUpperCase()) {
-            case "AGGRESSIVE" -> new AggressiveBehavior(gameEventQueue, spatialService);
+            case "AGGRESSIVE" -> new AggressiveBehavior(gameEventQueue);
             case "STATIONARY" -> new StationaryBehavior();
             case "IDLE" -> new IdleBehavior();
             default -> throw new IllegalStateException("Unexpected value: " + template.getBehavior());

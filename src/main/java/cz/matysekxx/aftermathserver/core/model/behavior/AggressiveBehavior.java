@@ -1,6 +1,5 @@
 package cz.matysekxx.aftermathserver.core.model.behavior;
 
-import cz.matysekxx.aftermathserver.core.SpatialService;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
@@ -21,21 +20,18 @@ public class AggressiveBehavior implements Behavior {
     private static final int visionRange = 10;
     private static final int attackCooldown = 1500;
     private final GameEventQueue gameEventQueue;
-    private final SpatialService spatialService;
     private final Map<String, Long> lastAttackTimes = new ConcurrentHashMap<>();
 
-    public AggressiveBehavior(GameEventQueue gameEventQueue, SpatialService spatialService) {
+    public AggressiveBehavior(GameEventQueue gameEventQueue) {
         this.gameEventQueue = gameEventQueue;
-        this.spatialService = spatialService;
     }
 
     @Override
     public void update(Npc npc, GameMapData map, Collection<Player> players) {
         final Vector2 npcPos = new Vector2(npc.getX(), npc.getY());
 
-        spatialService.getNearby(npc.getMapId(), npc).stream()
-                .filter(s -> s instanceof Player)
-                .map(s -> (Player) s)
+        players.stream()
+                .filter(p -> p.getLayerIndex() == npc.getLayerIndex())
                 .filter(p -> !p.isDead() && MathUtil.getChebyshevDistance(npcPos, new Vector2(p.getX(), p.getY())) <= visionRange)
                 .min(Comparator.comparingInt(p -> MathUtil.getChebyshevDistance(npcPos, new Vector2(p.getX(), p.getY()))))
                 .ifPresent(target -> {

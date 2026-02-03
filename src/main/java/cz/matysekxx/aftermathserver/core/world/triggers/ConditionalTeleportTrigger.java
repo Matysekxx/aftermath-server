@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -14,6 +15,7 @@ import java.util.function.Predicate;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Slf4j
+@NoArgsConstructor
 public class ConditionalTeleportTrigger extends TeleportTrigger {
     private String condition;
     @JsonIgnore

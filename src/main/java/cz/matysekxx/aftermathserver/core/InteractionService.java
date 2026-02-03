@@ -6,6 +6,8 @@ import cz.matysekxx.aftermathserver.core.model.entity.InteractionType;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
+import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
@@ -25,17 +27,17 @@ public class InteractionService {
     private final Map<String, ObjectInteractionLogic> objectInteractionLogicMap;
     private final GameEventQueue gameEventQueue;
     private final Map<InteractionType, NpcInteractionLogic> npcInteractionLogicMap = new EnumMap<>(InteractionType.class);
-
-    private final SpatialService spatialService;
+    private final WorldManager worldManager;
 
     /// Constructs the InteractionService.
     ///
     /// @param objectInteractionLogicMap A map of interaction keys (e.g., "LOOT", "READ") to their logic handlers.
     /// @param gameEventQueue            The queue used to dispatch events resulting from interactions.
-    public InteractionService(Map<String, ObjectInteractionLogic> objectInteractionLogicMap, GameEventQueue gameEventQueue, List<NpcInteractionLogic> npcInteractionLogicList, SpatialService spatialService) {
+    /// @param worldManager              The manager for world data.
+    public InteractionService(Map<String, ObjectInteractionLogic> objectInteractionLogicMap, GameEventQueue gameEventQueue, List<NpcInteractionLogic> npcInteractionLogicList, WorldManager worldManager) {
         this.objectInteractionLogicMap = objectInteractionLogicMap;
         this.gameEventQueue = gameEventQueue;
-        this.spatialService = spatialService;
+        this.worldManager = worldManager;
         npcInteractionLogicList.forEach(npcInteractionLogic -> npcInteractionLogicMap.put(npcInteractionLogic.getType(), npcInteractionLogic));
     }
 
@@ -76,8 +78,18 @@ public class InteractionService {
     ///
     /// @param player The player initiating the interaction.
     public void processInteraction(Player player) {
-        final Spatial target = spatialService.getNearby(player.getMapId(), player)
-                .stream()
+        final GameMapData map = worldManager.getMap(player.getMapId());
+        if (map == null) return;
+
+        final List<Spatial> candidates = new ArrayList<>();
+        map.getObjects().stream()
+                .filter(o -> o.getLayerIndex() == player.getLayerIndex())
+                .forEach(candidates::add);
+        map.getNpcs().stream()
+                .filter(n -> n.getLayerIndex() == player.getLayerIndex() && !n.isDead())
+                .forEach(candidates::add);
+
+        final Spatial target = candidates.stream()
                 .filter(n -> (n instanceof MapObject || (n instanceof Npc npc && !npc.isDead())))
                 .filter(n -> MathUtil.getChebyshevDistance(
                         Vector2.of(player.getX(), player.getY()),

@@ -3,10 +3,12 @@ package cz.matysekxx.aftermathserver.core.world.triggers;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /// Trigger definition for teleportation tiles.
 @Data
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class TeleportTrigger extends TileTrigger {
     private int targetX;
     private int targetY;

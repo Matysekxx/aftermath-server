@@ -34,6 +34,7 @@ public class MapObjectFactory {
 
         corpse.setX(deadPlayer.getX());
         corpse.setY(deadPlayer.getY());
+        corpse.setZ(deadPlayer.getLayerIndex());
 
         final List<Item> droppedItems = new ArrayList<>(deadPlayer.getInventory().getSlots().values());
         corpse.setItems(droppedItems);
@@ -41,7 +42,7 @@ public class MapObjectFactory {
     }
 
     /// Creates a loot bag containing a specific item.
-    public MapObject createLootBag(String itemId, int quantity, int x, int y) {
+    public MapObject createLootBag(String itemId, int quantity, int x, int y, int z) {
         final MapObject bag = new MapObject();
         bag.setId(generateId("loot"));
         bag.setType("CONTAINER");
@@ -49,6 +50,7 @@ public class MapObjectFactory {
         bag.setDescription("Dropped items");
         bag.setX(x);
         bag.setY(y);
+        bag.setZ(z);
         bag.getItems().add(itemFactory.createItem(itemId, quantity));
         return bag;
     }

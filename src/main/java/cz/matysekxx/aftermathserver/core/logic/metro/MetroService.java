@@ -105,7 +105,7 @@ public class MetroService {
                 economyService.recordActivityCost(player, 15 * Math.max(1, distance));
 
                 final var viewport = MapViewportPayload.of(
-                        targetMap, player.getX(), player.getY(), GameEngine.VIEWPORT_RANGE_X, GameEngine.VIEWPORT_RANGE_Y
+                        targetMap, player.getX(), player.getY(), player.getLayerIndex(), GameEngine.VIEWPORT_RANGE_X, GameEngine.VIEWPORT_RANGE_Y
                 );
                 gameEventQueue.enqueue(GameEventFactory.sendMapDataEvent(viewport, player.getId()));
 

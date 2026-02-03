@@ -115,7 +115,7 @@ public class SpawnManager {
         for (int i = 0; i < count; i++) {
             final Vector3 tile = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
             final ItemTemplate template = templates.get(ThreadLocalRandom.current().nextInt(templates.size()));
-            final MapObject lootBag = mapObjectFactory.createLootBag(template.getId(), ThreadLocalRandom.current().nextInt(1, 3), tile.x(), tile.y());
+            final MapObject lootBag = mapObjectFactory.createLootBag(template.getId(), ThreadLocalRandom.current().nextInt(1, 3), tile.x(), tile.y(), tile.z());
             map.addObject(lootBag);
         }
     }

@@ -1,6 +1,6 @@
 {
-  "id": "flora",
-  "name": "Flora",
+  "id": "nadrazi-holesovice",
+  "name": "Nádraží Holešovice",
   "type": "HAZARD_ZONE",
   "difficulty": 3,
   "layout": {

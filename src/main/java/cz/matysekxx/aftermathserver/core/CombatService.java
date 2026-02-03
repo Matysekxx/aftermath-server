@@ -29,19 +29,16 @@ public class CombatService {
     private final WorldManager worldManager;
     private final GameEventQueue gameEventQueue;
     private final MapObjectFactory mapObjectFactory;
-    private final SpatialService spatialService;
 
     /// Constructs the CombatService.
     ///
     /// @param worldManager     The manager for world data.
     /// @param gameEventQueue   The queue for game events.
     /// @param mapObjectFactory Factory for creating map objects (loot bags).
-    /// @param spatialService   Service for spatial queries (finding targets).
-    public CombatService(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, SpatialService spatialService) {
+    public CombatService(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
-        this.spatialService = spatialService;
     }
 
     /// Processes an attack initiated by a player.
@@ -71,9 +68,9 @@ public class CombatService {
         }
         final int weaponRange = weapon.getRange() != null ? weapon.getRange() : 1;
 
-        final Npc closestNpc = spatialService.getNearby(player.getMapId(), player).stream()
-                .filter(n -> n instanceof Npc)
-                .map(n -> (Npc) n)
+        final GameMapData map = worldManager.getMap(player.getMapId());
+        final Npc closestNpc = map.getNpcs().stream()
+                .filter(n -> n.getLayerIndex() == player.getLayerIndex())
                 .filter(n -> !n.isDead())
                 .filter(n -> MathUtil.getChebyshevDistance(
                         Vector2.of(player.getX(), player.getY()),
@@ -91,7 +88,6 @@ public class CombatService {
         closestNpc.takeDamage(weapon.getDamage());
         player.setLastAttackTime(System.currentTimeMillis());
         log.info("Player {} dealt {} damage to NPC {}", player.getName(), weapon.getDamage(), closestNpc.getName());
-        final GameMapData map = worldManager.getMap(player.getMapId());
         if (closestNpc.isDead()) handleNpcDeath(closestNpc, map, player.getId());
         else {
             final List<NpcDto> update = List.of(NpcDto.fromEntity(closestNpc));
@@ -110,7 +106,7 @@ public class CombatService {
         map.getNpcs().remove(npc);
         if (npc.getLoot() != null) {
             for (Item item : npc.getLoot()) {
-                final MapObject lootBag = mapObjectFactory.createLootBag(item.getId(), item.getQuantity(), npc.getX(), npc.getY());
+                final MapObject lootBag = mapObjectFactory.createLootBag(item.getId(), item.getQuantity(), npc.getX(), npc.getY(), npc.getLayerIndex());
                 map.addObject(lootBag);
             }
         }

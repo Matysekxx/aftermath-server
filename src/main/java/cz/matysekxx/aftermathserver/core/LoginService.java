@@ -103,6 +103,11 @@ public class LoginService {
 
     /// Determines the spawn point for a new player.
     private Vector3 determineSpawnPoint(GameMapData map, String username) {
+        final Vector3 metroSpawn = map.getMetroSpawn(settings.getLineId());
+        if (metroSpawn != null) {
+            return metroSpawn;
+        }
+
         final Map<String, Vector3> availableSpawns = map.getSpawns();
         if (availableSpawns != null && !availableSpawns.isEmpty()) {
             final List<Vector3> spawnList = new ArrayList<>(availableSpawns.values());
@@ -110,8 +115,7 @@ public class LoginService {
             log.info("Player {} spawning at random marker on map {}: {}", username, map.getId(), spawn);
             return spawn;
         }
-        final Vector3 metroSpawn = map.getMetroSpawn(settings.getLineId());
-        return metroSpawn != null ? metroSpawn : new Vector3(10, 10, 0);
+        return new Vector3(10, 10, 0);
     }
 
     /// Sends the initial game state to the client upon login.
@@ -130,8 +134,16 @@ public class LoginService {
     /// Helper to generate and enqueue a viewport update for a player.
     private void enqueueViewport(Player player, GameMapData mapData) {
         final MapViewportPayload viewport = MapViewportPayload.of(
-                mapData, player.getX(), player.getY(), VIEWPORT_RANGE_X, VIEWPORT_RANGE_Y
+                mapData, player.getX(), player.getY(), player.getLayerIndex(), VIEWPORT_RANGE_X, VIEWPORT_RANGE_Y
         );
+
+        if (viewport.getLayers().isEmpty()) {
+            log.error("POZOR: Posílám PRÁZDNOU mapu pro hráče {}! (Z-index: {})", player.getName(), player.getLayerIndex());
+        } else {
+            log.info("Posílám mapu: {} (vrstev: {}, střed: [{},{},{}])", 
+                    viewport.getMapName(), viewport.getLayers().size(), viewport.getCenterX(), viewport.getCenterY(), viewport.getCenterZ());
+        }
+
         gameEventQueue.enqueue(GameEventFactory.sendMapDataEvent(viewport, player.getId()));
     }
 }

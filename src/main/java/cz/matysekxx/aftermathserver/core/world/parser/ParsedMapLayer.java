@@ -18,12 +18,9 @@ import java.util.*;
 public class ParsedMapLayer {
     private final TileType[][] tiles;
     private final char[][] symbols;
-    @JsonIgnore
-    private final Map<String, List<Vector3>> markers;
-    @JsonIgnore
-    private final Map<Vector3, String> npcSpawns;
-    @JsonIgnore
-    private final Map<Vector3, String> objectSpawns;
+    @JsonIgnore private final Map<String, List<Vector3>> markers;
+    @JsonIgnore private final Map<Vector3, String> npcSpawns;
+    @JsonIgnore private final Map<Vector3, String> objectSpawns;
     private final int width;
     private final int height;
 
