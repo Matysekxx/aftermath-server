@@ -1,6 +1,6 @@
 game:
   npcs:
-    definitions:
+    storyNpcs:
       - id: "commander_andel"
         name: "Commander (Anděl)"
         type: "HUMAN"

@@ -1,12 +1,12 @@
 game:
   npcs:
-    definitions:
+    mutantNpcs:
       - id: "mutant_rat"
         name: "Mutant Rat"
         type: "MUTANT"
         aggressive: true
         damage: 5
-        range: 1
+        range: 20
         maxHp: 20
         behavior: "AGGRESSIVE"
         loot:
@@ -18,7 +18,7 @@ game:
         type: "MUTANT"
         aggressive: true
         damage: 12
-        range: 1
+        range: 20
         maxHp: 45
         behavior: "AGGRESSIVE"
         loot:
@@ -30,6 +30,6 @@ game:
         type: "MUTANT"
         aggressive: true
         damage: 8
-        range: 1
+        range: 20
         maxHp: 30
         behavior: "AGGRESSIVE"

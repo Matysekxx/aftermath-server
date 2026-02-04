@@ -1,6 +1,6 @@
 game:
   npcs:
-    definitions:
+    traderNpcs:
       - id: "merchant_mustek"
         name: "Merchant (Můstek)"
         type: "HUMAN"
