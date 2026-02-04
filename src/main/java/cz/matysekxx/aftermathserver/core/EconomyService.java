@@ -6,6 +6,7 @@ import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.dto.BuyRequest;
+import cz.matysekxx.aftermathserver.dto.SellRequest;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.MathUtil;
@@ -53,21 +54,51 @@ public class EconomyService {
                     GameEventFactory.sendErrorEvent("Invalid item selection", player.getId()));return;
         }
         final Item itemToBuy = shopItems.get(request.getItemIndex());
-        assert itemToBuy.getPrice() != null;
+        
+        final int price = itemToBuy.getPrice() != null ? itemToBuy.getPrice() : 0;
+        if (price <= 0) {
+             gameEventQueue.enqueue(
+                    GameEventFactory.sendErrorEvent("Item has no price", player.getId()));return;
+        }
 
-        if (!canAfford(player, itemToBuy.getPrice())) {
+        if (!canAfford(player, price)) {
             gameEventQueue.enqueue(
                     GameEventFactory.sendErrorEvent("Not enough credits", player.getId()));return;
         }
         final Item newItem = itemFactory.createItem(itemToBuy.getId(), 1);
         if (player.getInventory().addItem(newItem)) {
-            removeCredits(player, itemToBuy.getPrice());
+            removeCredits(player, price);
             gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(player));
             gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
             gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Bought " + newItem.getName(), player.getId()));
         } else gameEventQueue.enqueue(
                 GameEventFactory.sendErrorEvent("Inventory full", player.getId()));
 
+    }
+
+    public void processSell(Player player, Npc npc, SellRequest request) {
+        if (MathUtil.getChebyshevDistance(player, npc) > 2) {
+            gameEventQueue.enqueue(
+                    GameEventFactory.sendErrorEvent("Too far away from trader", player.getId()));
+            return;
+        }
+
+        final Optional<Item> itemOpt = player.getInventory().removeItem(request.getSlotIndex(), 1);
+        if (itemOpt.isEmpty()) {
+            gameEventQueue.enqueue(
+                    GameEventFactory.sendErrorEvent("Item not found", player.getId()));
+            return;
+        }
+
+        final Item item = itemOpt.get();
+        final int sellPrice = calculateSellPrice(item, player);
+        addCredits(player, sellPrice);
+        
+        log.info("Player {} sold {} for {} CR. New balance: {}", player.getName(), item.getName(), sellPrice, player.getCredits());
+
+        gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(player));
+        gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
+        gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Sold " + item.getName() + " for " + sellPrice + " CR", player.getId()));
     }
 
     /// Processes the end-of-day debt cycle.
@@ -148,6 +179,7 @@ public class EconomyService {
     /// @param player The player selling the item.
     /// @return The calculated credit value.
     public int calculateSellPrice(Item item, Player player) {
-        return item.getPrice() != null ? item.getPrice() : 0;
+        int basePrice = item.getPrice() != null ? item.getPrice() : 0;
+        return Math.max(1, (int) (basePrice * 0.5)); // Sell for 50% of value
     }
 }
