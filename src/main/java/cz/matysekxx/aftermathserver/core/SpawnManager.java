@@ -102,6 +102,16 @@ public class SpawnManager {
         spawnNpcs(mapId, count, reachableTiles, templates, mapData);
     }
 
+    public void spawnRandomTraderNpcs(String mapId, int count) {
+        final List<Vector3> reachableTiles = getReachableTiles(mapId);
+        final List<NpcTemplate> templates = npcTable.getTraderNpcs();
+        if (reachableTiles.isEmpty() || templates.isEmpty()) {
+            return;
+        }
+        final GameMapData mapData = worldManager.getMap(mapId);
+        spawnNpcs(mapId, count, reachableTiles, templates, mapData);
+    }
+
     /// Spawns a specific type of NPC on the map.
     ///
     /// @param mapId         The ID of the target map.

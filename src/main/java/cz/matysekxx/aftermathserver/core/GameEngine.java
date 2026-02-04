@@ -32,8 +32,8 @@ public class GameEngine {
     public static final int VIEWPORT_RANGE_X = 60;
     public static final int VIEWPORT_RANGE_Y = 20;
     private static final int TICKS_PER_DAY = 1200;
-    /// Target density: 1 NPC per 100 reachable tiles (0.0005)
-    private static final double NPC_DENSITY = 0.0005;
+    /// Target density: 1 NPC per 1000 reachable tiles (0.001)
+    private static final double NPC_DENSITY = 0.001;
     private static final int DAILY_RESPAWN_COUNT = 3;
     private final WorldManager worldManager;
     private final GameEventQueue gameEventQueue;
@@ -118,7 +118,7 @@ public class GameEngine {
 
     /// Processes a movement request.
     public void processMove(String playerId, MoveRequest moveRequest) {
-        movementService.movementProcess(playerRegistry.getPlayer(playerId), moveRequest);
+        playerRegistry.getMaybePlayer(playerId).ifPresent(player -> movementService.movementProcess(player, moveRequest));
     }
 
     /// Processes an interaction request.
@@ -155,34 +155,34 @@ public class GameEngine {
 
     private void initialSpawnNpc() {
         worldManager.forEach(map -> {
+            final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
             if (map.getType() == MapType.HAZARD_ZONE) {
                 final double difficultyMultiplier = 0.5 + (map.getDifficulty() * 0.5);
-                final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
                 final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY * difficultyMultiplier));
                 spawnManager.spawnRandomAggressiveNpcs(map.getId(), maxNpcs);
                 log.info("Initial spawn on map {}: {} NPCs (based on {} tiles)", map.getId(), maxNpcs, reachableTiles);
             } else if (map.getType() == MapType.SAFE_ZONE) {
-                map.getNpcMarkers().forEach((markerName, pos) -> {
-                    log.info("Safe zone map {} has NPC marker: {}", map.getId(), markerName);
-                });
+                int traderCount = Math.max(2, (int) (reachableTiles * NPC_DENSITY));
+                spawnManager.spawnRandomTraderNpcs(map.getId(), traderCount);
+                log.info("Initial spawn on safe map {}: {} Traders", map.getId(), traderCount);
             }
         });
     }
 
     private void respawnNpcs() {
-        worldManager.forEachWithPredicate(mapData -> mapData.getType() == MapType.HAZARD_ZONE && !mapData.isCleared(),
-                map -> {
-                    final double difficultyMultiplier = 0.5 + (map.getDifficulty() * 0.5);
-                    final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
-                    final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY * difficultyMultiplier));
-                    final int currentCount = map.getNpcs().size();
-
-                    if (currentCount < maxNpcs) {
-                        int toSpawn = Math.min(DAILY_RESPAWN_COUNT, maxNpcs - currentCount);
-                        spawnManager.spawnRandomAggressiveNpcs(map.getId(), toSpawn);
-                        log.info("Respawned {} NPCs on map {} (Limit: {})", toSpawn, map.getId(), maxNpcs);
-                    }
-                });
+        for (GameMapData map : worldManager.getMaps()) {
+            final double difficultyMultiplier = 0.5 + (map.getDifficulty() * 0.5);
+            final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
+            final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY * difficultyMultiplier));
+            final int currentCount = map.getNpcs().size();
+            if (currentCount < maxNpcs) {
+                final int toSpawn = Math.min(DAILY_RESPAWN_COUNT, maxNpcs - currentCount);
+                switch (map.getType()) {
+                    case SAFE_ZONE -> spawnManager.spawnRandomTraderNpcs(map.getId(), toSpawn);
+                    case HAZARD_ZONE -> spawnManager.spawnRandomAggressiveNpcs(map.getId(), toSpawn);
+                }
+            }
+        }
     }
 
     private void spawnItems() {
@@ -354,6 +354,19 @@ public class GameEngine {
                     }
                 }
         );
+    }
 
+    public void processSell(String sessionId, SellRequest request) {
+        playerRegistry.getMaybePlayer(sessionId).ifPresent(p -> {
+            final GameMapData map = worldManager.getMap(p.getMapId());
+            final Optional<Npc> npc = map.getNpcs().stream()
+                    .filter(n -> n.getId().equals(request.getNpcId()))
+                    .findFirst();
+            if (npc.isPresent()) {
+                economyService.processSell(p, npc.get(), request);
+            } else {
+                gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Trader not found", sessionId));
+            }
+        });
     }
 }
