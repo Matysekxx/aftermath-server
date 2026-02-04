@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 /// Factory for creating NPC instances from templates.
@@ -46,7 +47,19 @@ public class NpcFactory {
         };
         final String instanceId = template.getId() + "_" + UUID.randomUUID().toString().substring(0, 8);
         final Npc npc = Npc.fromTemplate(instanceId, template, x, y, layerIndex, mapId, behavior);
-        npc.setShopItems(template.getShopItems());
+
+        final List<Item> shopItems = new ArrayList<>();
+        if (template.getShopItems() != null) {
+            for (Item item : template.getShopItems()) {
+                try {
+                    shopItems.add(itemFactory.createItem(item.getId(), item.getQuantity()));
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Error creating shop item for NPC " + id + ": " + e.getMessage());
+                }
+            }
+        }
+        npc.setShopItems(shopItems);
+        
         npc.setType(template.getType());
         npc.setAggressive(template.isAggressive());
         npc.setDamage(template.getDamage());
@@ -55,7 +68,11 @@ public class NpcFactory {
         final Collection<Item> loot = new ArrayList<>();
         if (template.getLoot() != null) {
             for (Item item : template.getLoot()) {
-                loot.add(itemFactory.createItem(item.getId(), item.getQuantity()));
+                try {
+                    loot.add(itemFactory.createItem(item.getId(), item.getQuantity()));
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Error creating loot item for NPC " + id + ": " + e.getMessage());
+                }
             }
         }
         npc.setLoot(loot);
