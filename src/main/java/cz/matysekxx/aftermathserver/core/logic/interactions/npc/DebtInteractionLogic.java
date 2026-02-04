@@ -6,12 +6,14 @@ import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
 @Component
 public class DebtInteractionLogic implements NpcInteractionLogic {
     private final EconomyService economyService;
@@ -33,12 +35,14 @@ public class DebtInteractionLogic implements NpcInteractionLogic {
         final int amountToPay = Math.min(player.getCredits(), player.getDebt());
         
         if (amountToPay > 0) {
+            log.info("player {} paid {} credits", player.getName(), amountToPay);
             economyService.applyPayment(player, amountToPay);
             events.add(GameEventFactory.sendMessageEvent(
                     target.getName() + ": Payment received. Your remaining debt is " + player.getDebt() + " credits.", player.getId()));
             events.add(GameEventFactory.sendStatsEvent(player));
             
             if (player.getDebt() <= 0) {
+                log.info("player {} paid all debt", player.getName());
                 events.add(GameEventFactory.sendMessageEvent(
                         target.getName() + ": UNBELIEVABLE! You've paid it all! You are a free person now.", player.getId()));
             }
