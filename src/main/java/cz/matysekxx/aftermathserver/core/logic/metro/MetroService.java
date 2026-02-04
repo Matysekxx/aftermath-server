@@ -90,7 +90,7 @@ public class MetroService {
                 player.setX(spawn.x());
                 player.setY(spawn.y());
                 player.setLayerIndex(spawn.z());
-
+                player.setHp(player.getMaxHp());
                 player.setMapId(targetMapId);
                 player.setState(State.ALIVE);
 

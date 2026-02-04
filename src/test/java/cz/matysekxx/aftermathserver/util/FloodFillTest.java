@@ -39,8 +39,7 @@ class FloodFillTest {
     @Test
     void testFloodFillStaysInsideWalls() {
 
-        String layout =
-                """
+        String layout = """
                         #####
                         #...#
                         #.@.#

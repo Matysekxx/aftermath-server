@@ -7,12 +7,14 @@ import cz.matysekxx.aftermathserver.core.model.entity.NpcTable;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTemplate;
 import cz.matysekxx.aftermathserver.core.model.item.ItemTable;
 import cz.matysekxx.aftermathserver.core.model.item.ItemTemplate;
+import cz.matysekxx.aftermathserver.core.model.item.ItemType;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -108,15 +110,37 @@ public class SpawnManager {
     /// @param count The number of items to spawn.
     public void spawnRandomLoot(String mapId, int count) {
         final List<Vector3> reachableTiles = getReachableTiles(mapId);
-        final List<ItemTemplate> templates = itemTable.getDefinitions();
-        if (reachableTiles.isEmpty() || templates == null || templates.isEmpty()) return;
+        final List<ItemTemplate> allTemplates = itemTable.getDefinitions();
+        if (reachableTiles.isEmpty() || allTemplates == null || allTemplates.isEmpty()) return;
 
         final GameMapData map = worldManager.getMap(mapId);
+        final ThreadLocalRandom random = ThreadLocalRandom.current();
+
         for (int i = 0; i < count; i++) {
-            final Vector3 tile = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
-            final ItemTemplate template = templates.get(ThreadLocalRandom.current().nextInt(templates.size()));
-            final MapObject lootBag = mapObjectFactory.createLootBag(template.getId(), ThreadLocalRandom.current().nextInt(1, 3), tile.x(), tile.y(), tile.z());
+            final Vector3 tile = reachableTiles.get(random.nextInt(reachableTiles.size()));
+            final ItemTemplate template = selectRandomItemByRarity(allTemplates, random);
+            final MapObject lootBag = mapObjectFactory.createLootBag(template.getId(), random.nextInt(1, 3), tile.x(), tile.y(), tile.z());
             map.addObject(lootBag);
         }
+    }
+
+    private ItemTemplate selectRandomItemByRarity(List<ItemTemplate> allTemplates, ThreadLocalRandom random) {
+        final double randomDouble = random.nextDouble();
+        if (randomDouble < 0.05) {
+            final List<ItemTemplate> items = allTemplates.stream().filter(t -> t.getType() == ItemType.VALUABLE).toList();
+            if (!items.isEmpty()) return items.get(random.nextInt(items.size()));
+        } 
+        
+        if (randomDouble < 0.15) {
+            final List<ItemTemplate> items = allTemplates.stream().filter(t -> t.getType() == ItemType.WEAPON).toList();
+            if (!items.isEmpty()) return items.get(random.nextInt(items.size()));
+        }
+
+        final List<ItemTemplate> common = allTemplates.stream()
+                .filter(t -> t.getType() == ItemType.RESOURCE || t.getType() == ItemType.CONSUMABLE)
+                .toList();
+        
+        if (common.isEmpty()) return allTemplates.get(random.nextInt(allTemplates.size()));
+        return common.get(random.nextInt(common.size()));
     }
 }

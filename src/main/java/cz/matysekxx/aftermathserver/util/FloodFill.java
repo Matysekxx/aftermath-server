@@ -2,6 +2,7 @@ package cz.matysekxx.aftermathserver.util;
 
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.TileType;
+import cz.matysekxx.aftermathserver.core.world.parser.ParsedMapLayer;
 import cz.matysekxx.aftermathserver.core.world.triggers.TeleportTrigger;
 
 import java.util.*;
@@ -32,7 +33,8 @@ public final class FloodFill {
 
         while (!queue.isEmpty()) {
             final Vector3 current = queue.poll();
-            for (Vector3 neighbor : getNeighborsWithPrecision(current, map)) {
+            if (!isWalkable(map, current)) continue;
+            for (Vector3 neighbor : getNeighbors(current)) {
                 if (isWalkable(map, neighbor) && visited.add(neighbor)) {
                     queue.add(neighbor);
                 }
@@ -53,8 +55,7 @@ public final class FloodFill {
                         }
                     });
         }
-
-        return new ArrayList<>(visited);
+        return List.copyOf(visited);
     }
 
     private static List<Vector3> getNeighborsWithPrecision(Vector3 center, GameMapData mapData) {
@@ -71,9 +72,11 @@ public final class FloodFill {
     }
 
     private static boolean isWalkable(GameMapData map, Vector3 c) {
-        if (c.z() < 0 || c.z() >= map.getLayerCount()) return false;
+        final ParsedMapLayer mapLayer = map.getLayer(c.z());
+        if (mapLayer == null) return false;
+        if (c.y() >= mapLayer.getHeight() || c.y() < 0 || c.x() >= mapLayer.getWidth() || c.x() < 0) return false;
         final TileType tileType = map.getLayer(c.z()).getTileAt(c.x(), c.y());
         if (tileType == TileType.WALL || tileType == TileType.VOID) return false;
-        return tileType.isWalkable() || tileType == TileType.UNKNOWN;
+        return tileType.isWalkable();
     }
 }
