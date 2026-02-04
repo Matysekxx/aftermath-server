@@ -1,38 +1,68 @@
 game:
   npcs:
     traderNpcs:
-      - id: "merchant_mustek"
-        name: "Merchant (Můstek)"
+      - id: "trader_general"
+        name: "Trader"
         type: "HUMAN"
         aggressive: false
         maxHp: 100
-        behavior: "STATIONARY"
+        behavior: "IDLE"
         interaction: "TRADE"
         dialogId: "the-merchant"
+        shopItems:
+          - id: "filter"
+            quantity: 10
+          - id: "canned_food"
+            quantity: 15
+          - id: "medkit"
+            quantity: 5
+          - id: "pipe"
+            quantity: 2
 
-      - id: "doctor_mustek"
-        name: "Doctor (Můstek)"
+      - id: "trader_medic"
+        name: "Medic"
         type: "HUMAN"
         aggressive: false
         maxHp: 100
-        behavior: "STATIONARY"
-        interaction: "HEAL"
+        behavior: "IDLE"
+        interaction: "TRADE"
         dialogId: "the-doctor"
+        shopItems:
+          - id: "medkit"
+            quantity: 10
+          - id: "antirad"
+            quantity: 10
+          - id: "filter"
+            quantity: 5
 
-      - id: "bartender_mustek"
-        name: "Bartender"
+      - id: "trader_arms"
+        name: "Arms Dealer"
         type: "HUMAN"
         aggressive: false
         maxHp: 100
-        behavior: "STATIONARY"
-        interaction: "TALK"
-        dialogId: "the-bartender"
+        behavior: "IDLE"
+        interaction: "TRADE"
+        dialogId: "the-merchant"
+        shopItems:
+          - id: "pistol"
+            quantity: 2
+          - id: "shotgun"
+            quantity: 1
+          - id: "knife"
+            quantity: 3
 
-      - id: "administrator_mustek"
-        name: "Administrator"
+      - id: "trader_scrapper"
+        name: "Scrapper"
         type: "HUMAN"
         aggressive: false
         maxHp: 100
-        behavior: "STATIONARY"
-        interaction: "DEBT_PAYMENT"
-        dialogId: "the-admin"
+        behavior: "IDLE"
+        interaction: "TRADE"
+        dialogId: "the-merchant"
+        shopItems:
+          - id: "scrap_metal"
+            quantity: 100
+          - id: "electronics"
+            quantity: 20
+          - id: "cloth"
+            quantity: 50

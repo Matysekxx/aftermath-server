@@ -10,15 +10,6 @@ game:
         interaction: "QUEST"
         dialogId: "the-commander"
 
-      - id: "administrator_mustek"
-        name: "Administrator"
-        type: "HUMAN"
-        aggressive: false
-        maxHp: 80
-        behavior: "STATIONARY"
-        interaction: "TALK"
-        dialogId: "the-administrator"
-
       - id: "engineer_malesice"
         name: "The Engineer"
         type: "HUMAN"
@@ -36,3 +27,39 @@ game:
         behavior: "STATIONARY"
         interaction: "TALK"
         dialogId: "the-aviatik"
+
+      - id: "merchant_mustek"
+        name: "Merchant (Můstek)"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 100
+        behavior: "STATIONARY"
+        interaction: "TRADE"
+        dialogId: "the-merchant"
+
+      - id: "doctor_mustek"
+        name: "Doctor (Můstek)"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 100
+        behavior: "STATIONARY"
+        interaction: "HEAL"
+        dialogId: "the-doctor"
+
+      - id: "bartender_mustek"
+        name: "Bartender"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 100
+        behavior: "STATIONARY"
+        interaction: "TALK"
+        dialogId: "the-bartender"
+
+      - id: "administrator_mustek"
+        name: "Administrator"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 100
+        behavior: "STATIONARY"
+        interaction: "DEBT_PAYMENT"
+        dialogId: "the-admin"
