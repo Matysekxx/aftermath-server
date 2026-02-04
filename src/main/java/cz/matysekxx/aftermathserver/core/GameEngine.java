@@ -1,7 +1,5 @@
 package cz.matysekxx.aftermathserver.core;
 
-import cz.matysekxx.aftermathserver.config.GameSettings;
-import cz.matysekxx.aftermathserver.core.factory.ItemFactory;
 import cz.matysekxx.aftermathserver.core.factory.MapObjectFactory;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
@@ -156,14 +154,19 @@ public class GameEngine {
     }
 
     private void initialSpawnNpc() {
-        worldManager.forEachWithPredicate(map -> map.getType() == MapType.HAZARD_ZONE,
-                map -> {
-                    final double difficultyMultiplier = 0.5 + (map.getDifficulty() * 0.5);
-                    final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
-                    final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY * difficultyMultiplier));
-                    spawnManager.spawnRandomNpcs(map.getId(), maxNpcs);
-                    log.info("Initial spawn on map {}: {} NPCs (based on {} tiles)", map.getId(), maxNpcs, reachableTiles);
+        worldManager.forEach(map -> {
+            if (map.getType() == MapType.HAZARD_ZONE) {
+                final double difficultyMultiplier = 0.5 + (map.getDifficulty() * 0.5);
+                final int reachableTiles = spawnManager.getReachableTileCount(map.getId());
+                final int maxNpcs = Math.max(5, (int) (reachableTiles * NPC_DENSITY * difficultyMultiplier));
+                spawnManager.spawnRandomAggressiveNpcs(map.getId(), maxNpcs);
+                log.info("Initial spawn on map {}: {} NPCs (based on {} tiles)", map.getId(), maxNpcs, reachableTiles);
+            } else if (map.getType() == MapType.SAFE_ZONE) {
+                map.getNpcMarkers().forEach((markerName, pos) -> {
+                    log.info("Safe zone map {} has NPC marker: {}", map.getId(), markerName);
                 });
+            }
+        });
     }
 
     private void respawnNpcs() {
@@ -176,7 +179,7 @@ public class GameEngine {
 
                     if (currentCount < maxNpcs) {
                         int toSpawn = Math.min(DAILY_RESPAWN_COUNT, maxNpcs - currentCount);
-                        spawnManager.spawnRandomNpcs(map.getId(), toSpawn);
+                        spawnManager.spawnRandomAggressiveNpcs(map.getId(), toSpawn);
                         log.info("Respawned {} NPCs on map {} (Limit: {})", toSpawn, map.getId(), maxNpcs);
                     }
                 });

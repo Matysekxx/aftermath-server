@@ -2,9 +2,11 @@ package cz.matysekxx.aftermathserver.core.model.entity;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,24 +15,33 @@ import java.util.Map;
 ///
 /// Loads NPC templates from the application configuration (e.g., YAML)
 /// and provides fast lookup by ID.
+@Slf4j
 @Data
 @Configuration
 @ConfigurationProperties("game.npcs")
 public class NpcTable {
-    private List<NpcTemplate> definitions;
+    private List<NpcTemplate> mutantNpcs;
+    private List<NpcTemplate> traderNpcs;
+    private List<NpcTemplate> storyNpcs;
     private Map<String, NpcTemplate> templatesById = new HashMap<>();
 
-    /// Initializes the lookup map from the loaded list of definitions.
+    /// Initializes the lookup map from the loaded lists of definitions.
     ///
     /// Executed automatically after dependency injection.
-    /// Throws IllegalStateException if duplicate NPC IDs are found.
     @PostConstruct
     public void init() {
-        if (definitions != null) {
-            for (NpcTemplate npc : definitions) {
+        addDefinitions(mutantNpcs);
+        addDefinitions(traderNpcs);
+        addDefinitions(storyNpcs);
+    }
+
+    private void addDefinitions(List<NpcTemplate> list) {
+        if (list != null) {
+            for (NpcTemplate npc : list) {
                 if (templatesById.put(npc.getId(), npc) != null) {
-                    throw new IllegalStateException("Duplicate key");
+                    log.warn("Duplicate NPC ID found: {}. Overriding.", npc.getId());
                 }
+                log.info("npc {} loaded", npc.getId());
             }
         }
     }
@@ -41,5 +52,10 @@ public class NpcTable {
     /// @return The template object, or null if not found.
     public NpcTemplate getTemplate(String id) {
         return templatesById.get(id);
+    }
+
+    /// Returns all loaded NPC templates.
+    public List<NpcTemplate> getDefinitions() {
+        return new ArrayList<>(templatesById.values());
     }
 }

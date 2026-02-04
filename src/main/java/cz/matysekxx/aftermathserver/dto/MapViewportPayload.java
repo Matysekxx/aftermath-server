@@ -18,6 +18,7 @@ public class MapViewportPayload {
     private int centerZ;
     private int rangeX;
     private int rangeY;
+    private boolean isCleared;
     private Map<Integer, List<String>> layers;
 
     public static MapViewportPayload of(GameMapData map, int px, int py, int pz, int rx, int ry) {
@@ -28,6 +29,7 @@ public class MapViewportPayload {
         payload.setCenterZ(pz);
         payload.setRangeX(rx);
         payload.setRangeY(ry);
+        payload.setCleared(map.isCleared());
 
         final Map<Integer, List<String>> slicedLayers = new HashMap<>();
         final ParsedMapLayer layer = map.getLayer(pz);

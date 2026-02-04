@@ -12,9 +12,9 @@ import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.util.Vector3;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,6 +26,7 @@ import static cz.matysekxx.aftermathserver.util.FloodFill.floodFill;
 ///
 /// Uses map analysis to ensure objects appear only in locations
 /// that are actually accessible to players.
+@Slf4j
 @Service
 public class SpawnManager {
     private final WorldManager worldManager;
@@ -77,12 +78,28 @@ public class SpawnManager {
         final List<NpcTemplate> templates = npcTable.getDefinitions();
         if (reachableTiles.isEmpty() || templates == null || templates.isEmpty()) return;
         final GameMapData mapData = worldManager.getMap(mapId);
+        spawnNpcs(mapId, count, reachableTiles, templates, mapData);
+    }
+
+    private void spawnNpcs(String mapId, int count, List<Vector3> reachableTiles, List<NpcTemplate> templates, GameMapData mapData) {
         for (int i = 0; i < count; i++) {
             final Vector3 vector3 = reachableTiles.get(ThreadLocalRandom.current().nextInt(reachableTiles.size()));
             final NpcTemplate template = templates.get(ThreadLocalRandom.current().nextInt(templates.size()));
             final Npc npc = npcFactory.createNpc(template.getId(), vector3.x(), vector3.y(), vector3.z(), mapId);
             mapData.addNpc(npc);
         }
+    }
+
+    /// Spawns a specified number of random aggressive NPCs on the given map.
+    ///
+    /// @param mapId The ID of the target map.
+    /// @param count The number of NPCs to spawn.
+    public void spawnRandomAggressiveNpcs(String mapId, int count) {
+        final List<Vector3> reachableTiles = getReachableTiles(mapId);
+        final List<NpcTemplate> templates = npcTable.getDefinitions().stream().filter(NpcTemplate::isAggressive).toList();
+        if (reachableTiles.isEmpty() || templates.isEmpty()) return;
+        final GameMapData mapData = worldManager.getMap(mapId);
+        spawnNpcs(mapId, count, reachableTiles, templates, mapData);
     }
 
     /// Spawns a specific type of NPC on the map.

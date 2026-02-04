@@ -69,7 +69,7 @@ public class StatsService {
     /// @param player The player affected by radiation.
     /// @return true if radiation increased or health decreased.
     private boolean applyRadiation(Player player, int difficulty) {
-        player.setRads(player.getRads() + difficulty);
+        player.setRads(player.getRads() + (difficulty / 3));
 
         int maskBonus = 0;
         if (player.getEquippedMaskSlot() != null) {

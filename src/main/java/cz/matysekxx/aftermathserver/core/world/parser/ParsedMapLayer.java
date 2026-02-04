@@ -59,7 +59,8 @@ public class ParsedMapLayer {
         boolean inQuotes = false;
         for (int x = 0; x < width; x++) {
             if (x < line.length()) {
-                char c = line.charAt(x);
+                final char c = line.charAt(x);
+
                 if (processSpecialMarkers(x, y, c, ctx)) {
                     continue;
                 }
@@ -85,7 +86,7 @@ public class ParsedMapLayer {
         if (ctx.mapData.getSpawnMarkers() != null && ctx.mapData.getSpawnMarkers().containsKey(charStr)) {
             final String lineId = ctx.mapData.getSpawnMarkers().get(charStr);
             ctx.mapData.getSpawns().put(lineId, new Vector3(x, y, ctx.layerIndex));
-            setFloor(x, y, ctx);
+            setFloor(x, y, ' ', ctx);
             return true;
         }
         return false;
@@ -95,7 +96,7 @@ public class ParsedMapLayer {
         if (ctx.mapData.getNpcMarkers() != null && ctx.mapData.getNpcMarkers().containsKey(charStr)) {
             final String npcId = ctx.mapData.getNpcMarkers().get(charStr);
             ctx.npcSpawns.put(new Vector3(x, y, ctx.layerIndex), npcId);
-            setFloor(x, y, ctx);
+            setFloor(x, y, charStr.charAt(0), ctx);
             return true;
         }
         return false;
@@ -104,15 +105,15 @@ public class ParsedMapLayer {
     private static boolean checkAndSetObject(int x, int y, String charStr, ParseContext ctx) {
         if (ctx.mapData.getObjectMarkers() != null && ctx.mapData.getObjectMarkers().containsKey(charStr)) {
             ctx.objectSpawns.put(new Vector3(x, y, ctx.layerIndex), charStr);
-            setFloor(x, y, ctx);
+            setFloor(x, y, charStr.charAt(0), ctx);
             return true;
         }
         return false;
     }
 
-    private static void setFloor(int x, int y, ParseContext ctx) {
-        ctx.symbols[y][x] = '.';
-        ctx.tiles[y][x] = ctx.registry.getType('.');
+    private static void setFloor(int x, int y, char originalSymbol, ParseContext ctx) {
+        ctx.symbols[y][x] = originalSymbol;
+        ctx.tiles[y][x] = TileType.FLOOR;
     }
 
     private static void processRegularTile(int x, int y, char c, boolean inQuotes, ParseContext ctx) {
@@ -120,7 +121,7 @@ public class ParsedMapLayer {
         if (!inQuotes && c != '"' && type == TileType.UNKNOWN && c != ' ') {
             ctx.markers.computeIfAbsent(String.valueOf(c), k -> new ArrayList<>())
                     .add(new Vector3(x, y, ctx.layerIndex));
-            ctx.tiles[y][x] = ctx.registry.getType('.');
+            ctx.tiles[y][x] = TileType.FLOOR;
         } else {
             ctx.tiles[y][x] = type;
         }
