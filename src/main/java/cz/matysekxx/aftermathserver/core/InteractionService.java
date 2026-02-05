@@ -78,9 +78,9 @@ public class InteractionService {
     ///
     /// @param player The player initiating the interaction.
     public void processInteraction(Player player) {
-        final GameMapData map = worldManager.getMap(player.getMapId());
-        if (map == null) return;
-
+        final var maybeMap = worldManager.getMaybeMap(player.getMapId());
+        if (maybeMap.isEmpty()) return;
+        final GameMapData map = maybeMap.get();
         final List<Spatial> candidates = new ArrayList<>();
         map.getObjects().stream()
                 .filter(o -> o.getLayerIndex() == player.getLayerIndex())

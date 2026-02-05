@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -59,6 +60,10 @@ public class WorldManager {
     public GameMapData getMap(String mapId) {
         if (maps.containsKey(mapId)) return maps.get(mapId);
         return null;
+    }
+
+    public Optional<GameMapData> getMaybeMap(String mapId) {
+        return Optional.ofNullable(maps.get(mapId));
     }
 
     public void forEach(Consumer<GameMapData> consumer) {

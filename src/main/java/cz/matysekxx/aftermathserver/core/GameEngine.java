@@ -283,10 +283,10 @@ public class GameEngine {
         if (player.getState() == State.DEAD) return;
         player.setState(State.DEAD);
 
-        final GameMapData map = worldManager.getMap(player.getMapId());
-        if (map == null) return;
+        final Optional<GameMapData> maybeMap = worldManager.getMaybeMap(player.getMapId());
+        if (maybeMap.isEmpty()) return;
         final MapObject corpse = mapObjectFactory.createPlayerCorpse(player);
-        map.addObject(corpse);
+        maybeMap.get().addObject(corpse);
 
         player.getInventory().clear();
         player.setEquippedWeaponSlot(null);

@@ -180,6 +180,6 @@ public class EconomyService {
     /// @return The calculated credit value.
     public int calculateSellPrice(Item item, Player player) {
         int basePrice = item.getPrice() != null ? item.getPrice() : 0;
-        return Math.max(1, (int) (basePrice * 0.5)); // Sell for 50% of value
+        return Math.max(1, (int) (basePrice * 0.5));
     }
 }
