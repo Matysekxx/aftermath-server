@@ -29,5 +29,7 @@ public enum EventType {
     SEND_NPCS,
     OPEN_TRADE_UI,
     /// Broadcast a message to all players on the server.
-    GLOBAL_ANNOUNCEMENT;
+    GLOBAL_ANNOUNCEMENT,
+    /// Broadcast positions of other players on the map.
+    BROADCAST_PLAYERS;
 }

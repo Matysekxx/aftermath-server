@@ -3,11 +3,7 @@ package cz.matysekxx.aftermathserver.event;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.metro.MetroStation;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
-import cz.matysekxx.aftermathserver.dto.ChatRequest;
-import cz.matysekxx.aftermathserver.dto.LoginOptionsResponse;
-import cz.matysekxx.aftermathserver.dto.MapViewportPayload;
-import cz.matysekxx.aftermathserver.dto.NpcDto;
-import cz.matysekxx.aftermathserver.dto.TradeOfferDto;
+import cz.matysekxx.aftermathserver.dto.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -102,5 +98,10 @@ public class GameEventFactory {
     /// Creates an event to broadcast a global announcement to all players on the server.
     public static GameEvent broadcastGlobalAnnouncement(String message) {
         return GameEvent.create(EventType.GLOBAL_ANNOUNCEMENT, message, null, null, true);
+    }
+
+    /// Creates an event to broadcast the list of other players on the map.
+    public static GameEvent broadcastPlayers(Collection<OtherPlayerDto> players, String mapId) {
+        return GameEvent.create(EventType.BROADCAST_PLAYERS, players, null, mapId, true);
     }
 }
