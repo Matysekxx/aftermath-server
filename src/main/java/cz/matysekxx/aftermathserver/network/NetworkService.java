@@ -201,6 +201,16 @@ public class NetworkService {
         sendJson(p.getId(), "SEND_PLAYER_POSITION", PlayerUpdatePayload.of(p));
     }
 
+    void broadcastPlayers(List<OtherPlayerDto> players, String mapId) {
+        try {
+            broadcastToMap(objectMapper.writeValueAsString(
+                    WebSocketResponse.of("BROADCAST_PLAYERS", players)
+            ), mapId);
+        } catch (JsonProcessingException e) {
+            log.error("Error broadcasting players: {}", e.getMessage());
+        }
+    }
+
     /// Sends an error message to a client.
     void sendError(String sessionId, String message) {
         sendJson(sessionId, "SEND_ERROR", message);
