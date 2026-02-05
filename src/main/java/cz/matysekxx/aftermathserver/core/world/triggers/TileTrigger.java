@@ -19,5 +19,8 @@ import lombok.Data;
 })
 public abstract class TileTrigger {
     /// Executes the trigger logic when a player enters the tile.
+    ///
+    /// @param player  the player entering the tile
+    /// @param context the trigger context
     public abstract void onEnter(Player player, TriggerContext context);
 }

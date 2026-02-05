@@ -41,6 +41,12 @@ public class ParsedMapLayer {
     }
 
     /// Parses a string content into a map layer using the registry.
+    ///
+    /// @param content    the string content
+    /// @param registry   the tile registry
+    /// @param layerIndex the layer index
+    /// @param mapData    the map data
+    /// @return the parsed map layer
     public static ParsedMapLayer parse(String content, TileRegistry registry, int layerIndex, GameMapData mapData) {
         final String[] lines = getLinesFromContent(content);
         final int height = lines.length;
@@ -128,6 +134,10 @@ public class ParsedMapLayer {
     }
 
     /// Gets the tile type at specific coordinates.
+    ///
+    /// @param x the x coordinate
+    /// @param y the y coordinate
+    /// @return the tile type
     public TileType getTileAt(int x, int y) {
         if (x < 0 || x >= width || y < 0 || y >= height) {
             return TileType.VOID;
@@ -136,6 +146,10 @@ public class ParsedMapLayer {
     }
 
     /// Gets the original symbol at specific coordinates.
+    ///
+    /// @param x the x coordinate
+    /// @param y the y coordinate
+    /// @return the original symbol
     public char getSymbolAt(int x, int y) {
         if (x < 0 || x >= width || y < 0 || y >= height) {
             return ' ';
@@ -143,6 +157,10 @@ public class ParsedMapLayer {
         return symbols[y][x];
     }
 
+    /// Gets the original symbol at specific coordinates.
+    ///
+    /// @param vector the coordinates
+    /// @return the original symbol
     public char getSymbolAt(Vector2 vector) {
         return getSymbolAt(vector.x(), vector.y());
     }
