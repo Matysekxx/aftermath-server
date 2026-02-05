@@ -8,6 +8,8 @@ import cz.matysekxx.aftermathserver.core.model.entity.State;
 import cz.matysekxx.aftermathserver.dto.TravelRequest;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 /// Handles metro travel requests.
 ///
 /// Triggered by the `TRAVEL` command from the client's metro UI.
@@ -24,9 +26,9 @@ public class TravelAction extends Action {
     @Override
     public void execute(String sessionId, JsonNode payload) {
         final TravelRequest travelRequest = objectMapper.convertValue(payload, TravelRequest.class);
-        final Player player = gameEngine.getPlayerById(sessionId);
-        if (player.getState() == State.TRAVELLING) {
-            metroService.startTravel(player, travelRequest.getMapId(), travelRequest.getLineId());
+        final Optional<Player> player = gameEngine.getMaybePlayerById(sessionId);
+        if (player.isPresent() && player.get().getState() == State.TRAVELLING) {
+            metroService.startTravel(player.get(), travelRequest.getMapId(), travelRequest.getLineId());
         }
     }
 }

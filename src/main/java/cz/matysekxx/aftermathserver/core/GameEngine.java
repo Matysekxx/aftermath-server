@@ -113,23 +113,30 @@ public class GameEngine {
 
     /// Processes a chat message request.
     public void handleChatMessage(ChatRequest chatData, String id) {
-        gameEventQueue.enqueue(GameEventFactory.broadcastChatMsgEvent(chatData, getPlayerMapId(id)));
+        playerRegistry.getMaybePlayer(id).ifPresent(player -> {
+            gameEventQueue.enqueue(GameEventFactory.broadcastChatMsgEvent(chatData, player.getMapId()));
+        });
     }
 
     /// Processes a movement request.
     public void processMove(String playerId, MoveRequest moveRequest) {
-        playerRegistry.getMaybePlayer(playerId).ifPresent(player -> movementService.movementProcess(player, moveRequest));
+        playerRegistry.getMaybePlayer(playerId).ifPresent(player -> {
+            movementService.movementProcess(player, moveRequest);
+            broadcastMapPlayers(player.getMapId());
+        });
     }
 
     /// Processes an interaction request.
     public void processInteract(String id) {
-        final Player player = playerRegistry.getPlayer(id);
-        interactionService.processInteraction(player);
+        playerRegistry.getMaybePlayer(id)
+                .ifPresent(interactionService::processInteraction);
     }
 
     /// Handles dropping an item from inventory.
     public void dropItem(String playerId, int slotIndex, int amount) {
-        final Player player = playerRegistry.getPlayer(playerId);
+        final Optional<Player> maybePlayer = playerRegistry.getMaybePlayer(playerId);
+        if (maybePlayer.isEmpty()) return;
+        final Player player = maybePlayer.get();
         final Optional<Item> droppedItem = player.getInventory().removeItem(slotIndex, amount);
         droppedItem.ifPresentOrElse(item -> {
             final GameMapData map = worldManager.getMap(player.getMapId());
@@ -151,6 +158,18 @@ public class GameEngine {
         }
         final Set<String> activeMaps = updatePlayers();
         updateNpcs(activeMaps);
+    }
+
+    private void broadcastMapPlayers(String mapId) {
+        final List<OtherPlayerDto> players = new ArrayList<>();
+        playerRegistry.forEachWithPredicate(
+                p -> p.getMapId().equals(mapId) && p.getState() != State.DEAD && p.getState() != State.TRAVELLING,
+                p -> players.add(OtherPlayerDto.fromPlayer(p))
+        );
+
+        if (players.size() > 1) {
+            gameEventQueue.enqueue(GameEventFactory.broadcastPlayers(players, mapId));
+        }
     }
 
     private void initialSpawnNpc() {
@@ -282,8 +301,8 @@ public class GameEngine {
     ///
     /// @param playerId The session ID of the player.
     /// @return The Player object, or null if not found.
-    public Player getPlayerById(String playerId) {
-        return playerRegistry.getPlayer(playerId);
+    public Optional<Player> getMaybePlayerById(String playerId) {
+        return playerRegistry.getMaybePlayer(playerId);
     }
 
     /// Processes an attack request from a player.
@@ -292,7 +311,7 @@ public class GameEngine {
     ///
     /// @param sessionId The session ID of the attacking player.
     public void processAttack(String sessionId) {
-        combatService.handleAttack(playerRegistry.getPlayer(sessionId));
+        playerRegistry.getMaybePlayer(sessionId).ifPresent(combatService::handleAttack);
     }
 
     /// Processes a request to use a consumable item.
@@ -300,7 +319,8 @@ public class GameEngine {
     /// @param sessionId  The session ID of the player.
     /// @param useRequest The request details containing the item slot.
     public void processUse(String sessionId, UseRequest useRequest) {
-        statsService.useConsumable(playerRegistry.getPlayer(sessionId), useRequest);
+        playerRegistry.getMaybePlayer(sessionId)
+                .ifPresent(player -> statsService.useConsumable(player, useRequest));
     }
 
     /// Processes a request to equip an item.

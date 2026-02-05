@@ -50,12 +50,12 @@ public class LoginService {
         final List<String> classes = classesMap != null ? new ArrayList<>(classesMap.keySet()) : new ArrayList<>();
         final List<SpawnPointInfo> maps = new ArrayList<>();
 
-        for (GameMapData map : worldManager.getMaps()) {
-            if (map.getType() == MapType.SAFE_ZONE) {
-                maps.add(new SpawnPointInfo(map.getId(), map.getName()));
-                log.info("Adding safe zone map to login options: {}", map.getId());
-            }
-        }
+        worldManager.forEachWithPredicate(
+                mapData -> mapData.getType() == MapType.SAFE_ZONE,
+                mapData -> {
+                    maps.add(new SpawnPointInfo(mapData.getId(), mapData.getName()));
+                    log.info("Adding safe zone map to login options: {}", mapData.getId());
+                });
         final LoginOptionsResponse response = new LoginOptionsResponse(classes, maps);
         log.info("Prepared LoginOptionsResponse: classes={}, maps={}", classes.size(), maps.size());
         gameEventQueue.enqueue(GameEventFactory.sendLoginOptionsEvent(response, sessionId));

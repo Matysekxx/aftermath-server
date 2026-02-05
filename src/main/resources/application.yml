@@ -11,6 +11,6 @@ spring:
       - "classpath:npcs-traders.yml"
       - "classpath:npcs-story.yml"
 game:
-  tick-rate: 500
-  starting-map-id: "nadrazi-veleslavin" #placeholder
+  tick-rate: 250
+  starting-map-id: "nadrazi-veleslavin"
   line-id: "line_a"
