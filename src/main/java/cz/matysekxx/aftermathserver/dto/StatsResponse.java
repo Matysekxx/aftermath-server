@@ -14,9 +14,23 @@ public class StatsResponse {
     private int maxHp;
     /// Current radiation level.
     private int rads;
+    /// Current credits balance.
+    private int credits;
+    /// Current debt.
+    private int debt;
+    private Integer equippedWeaponSlot;
+    private Integer equippedMaskSlot;
 
     /// Creates a StatsResponse from a Player entity.
     public static StatsResponse of(Player player) {
-        return new StatsResponse(player.getHp(), player.getMaxHp(), player.getRads());
+        return new StatsResponse(
+            player.getHp(), 
+            player.getMaxHp(), 
+            player.getRads(), 
+            player.getCredits(), 
+            player.getDebt(),
+            player.getEquippedWeaponSlot(),
+            player.getEquippedMaskSlot()
+        );
     }
 }
