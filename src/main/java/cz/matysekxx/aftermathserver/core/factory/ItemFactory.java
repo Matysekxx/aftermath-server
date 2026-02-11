@@ -47,6 +47,7 @@ public class ItemFactory {
                 .price(template.getPrice())
                 .effect(template.getEffect())
                 .cooldown(template.getCooldown())
+                .rarity(template.getRarity())
                 .build();
     }
 }

@@ -39,4 +39,6 @@ public class ItemTemplate {
     private boolean droppable = true;
     /** Max durability for items like masks. */
     private Integer durability;
+    /** Rarity of the item. */
+    private String rarity;
 }

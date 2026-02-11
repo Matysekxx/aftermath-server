@@ -47,6 +47,8 @@ public class Item {
     private boolean droppable;
     /** Current durability. */
     private Integer durability;
+    /** Rarity of the item. */
+    private String rarity;
 
     /**
      * Calculates the total weight of the item stack based on quantity.
