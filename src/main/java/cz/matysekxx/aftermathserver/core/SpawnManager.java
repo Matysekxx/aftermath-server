@@ -167,28 +167,50 @@ public class SpawnManager {
         for (int i = 0; i < count; i++) {
             final Vector3 tile = reachableTiles.get(random.nextInt(reachableTiles.size()));
             final ItemTemplate template = selectRandomItemByRarity(allTemplates, random);
-            final MapObject lootBag = mapObjectFactory.createLootBag(template.getId(), random.nextInt(1, 3), tile.x(), tile.y(), tile.z());
-            map.addObject(lootBag);
+            if (template != null) {
+                final MapObject lootBag = mapObjectFactory.createLootBag(template.getId(), random.nextInt(1, 3), tile.x(), tile.y(), tile.z());
+                map.addObject(lootBag);
+            }
         }
     }
 
+    /**
+     * Selects a random item template from a list based on weighted rarity chances.
+     * <p>
+     * The probability distribution is:
+     * <ul>
+     *     <li>LEGENDARY: 1%</li>
+     *     <li>EPIC: 5%</li>
+     *     <li>RARE: 15%</li>
+     *     <li>UNCOMMON: 30%</li>
+     *     <li>COMMON: 49%</li>
+     * </ul>
+     *
+     * @param allTemplates List of all available item templates.
+     * @param random       The random number generator to use.
+     * @return A randomly selected ItemTemplate, or a fallback if specific rarity lists are empty.
+     */
     private ItemTemplate selectRandomItemByRarity(List<ItemTemplate> allTemplates, ThreadLocalRandom random) {
-        final double randomDouble = random.nextDouble();
-        if (randomDouble < 0.05) {
-            final List<ItemTemplate> items = allTemplates.stream().filter(t -> t.getType() == ItemType.VALUABLE).toList();
-            if (!items.isEmpty()) return items.get(random.nextInt(items.size()));
-        } 
-        
-        if (randomDouble < 0.15) {
-            final List<ItemTemplate> items = allTemplates.stream().filter(t -> t.getType() == ItemType.WEAPON).toList();
-            if (!items.isEmpty()) return items.get(random.nextInt(items.size()));
+        final double roll = random.nextDouble();
+
+        final List<ItemTemplate> legendary = allTemplates.stream().filter(t -> "LEGENDARY".equalsIgnoreCase(t.getRarity())).toList();
+        final List<ItemTemplate> epic = allTemplates.stream().filter(t -> "EPIC".equalsIgnoreCase(t.getRarity())).toList();
+        final List<ItemTemplate> rare = allTemplates.stream().filter(t -> "RARE".equalsIgnoreCase(t.getRarity())).toList();
+        final List<ItemTemplate> uncommon = allTemplates.stream().filter(t -> "UNCOMMON".equalsIgnoreCase(t.getRarity())).toList();
+        final List<ItemTemplate> common = allTemplates.stream().filter(t -> t.getRarity() == null || "COMMON".equalsIgnoreCase(t.getRarity())).toList();
+
+        if (roll < 0.01 && !legendary.isEmpty()) {
+            return legendary.get(random.nextInt(legendary.size()));
+        } else if (roll < 0.06 && !epic.isEmpty()) {
+            return epic.get(random.nextInt(epic.size()));
+        } else if (roll < 0.21 && !rare.isEmpty()) {
+            return rare.get(random.nextInt(rare.size()));
+        } else if (roll < 0.51 && !uncommon.isEmpty()) {
+            return uncommon.get(random.nextInt(uncommon.size()));
+        } else if (!common.isEmpty()) {
+            return common.get(random.nextInt(common.size()));
         }
 
-        final List<ItemTemplate> common = allTemplates.stream()
-                .filter(t -> t.getType() == ItemType.RESOURCE || t.getType() == ItemType.CONSUMABLE)
-                .toList();
-        
-        if (common.isEmpty()) return allTemplates.get(random.nextInt(allTemplates.size()));
-        return common.get(random.nextInt(common.size()));
+        return allTemplates.get(random.nextInt(allTemplates.size()));
     }
 }
