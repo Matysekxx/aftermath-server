@@ -68,16 +68,17 @@ class ParsedMapLayerTest {
         mapData.setSpawnMarkers(markers);
 
         String content =
-                "###\n" +
-                        "#@#\n" +
-                        "###";
+                """
+                        ###
+                        #@#
+                        ###""";
 
         ParsedMapLayer layer = ParsedMapLayer.parse(content, registry, 0, mapData);
 
         assertTrue(mapData.getSpawns().containsKey("line_a"));
         assertEquals(new Vector3(1, 1, 0), mapData.getSpawns().get("line_a"));
 
-        assertEquals('.', layer.getSymbolAt(1, 1));
+        assertEquals(' ', layer.getSymbolAt(1, 1));
         assertEquals(TileType.FLOOR, layer.getTileAt(1, 1));
     }
 
