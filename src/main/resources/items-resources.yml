@@ -8,6 +8,7 @@ game:
         maxStack: 20
         weight: 0.1
         price: 5
+        rarity: COMMON
 
       - id: "electronics"
         name: "Electronics"
@@ -16,6 +17,7 @@ game:
         maxStack: 20
         weight: 0.05
         price: 30
+        rarity: UNCOMMON
 
       - id: "cloth"
         name: "Cloth"
@@ -24,6 +26,7 @@ game:
         maxStack: 30
         weight: 0.05
         price: 2
+        rarity: COMMON
 
       - id: "chemicals"
         name: "Chemicals"
@@ -32,6 +35,7 @@ game:
         maxStack: 10
         weight: 0.2
         price: 20
+        rarity: UNCOMMON
 
       - id: "meat"
         name: "Mutant Meat"
@@ -40,6 +44,7 @@ game:
         maxStack: 10
         weight: 0.3
         price: 4
+        rarity: COMMON
 
       - id: "dust"
         name: "Radioactive Dust"
@@ -49,3 +54,166 @@ game:
         weight: 0.1
         price: 0
         droppable: false
+        rarity: LEGENDARY
+
+      - id: "old_coin"
+        name: "Old Coin"
+        description: "A coin from the old world. Collectors might pay for it."
+        type: VALUABLE
+        maxStack: 50
+        weight: 0.01
+        price: 100
+        rarity: RARE
+
+      - id: "golden_watch"
+        name: "Golden Watch"
+        description: "Still ticking. A reminder of better times."
+        type: VALUABLE
+        maxStack: 5
+        weight: 0.1
+        price: 250
+        rarity: EPIC
+
+      - id: "prague_souvenir"
+        name: "Prague Souvenir"
+        description: "A small statue of Charles Bridge. Surprisingly intact."
+        type: VALUABLE
+        maxStack: 1
+        weight: 0.5
+        price: 500
+        rarity: LEGENDARY
+
+      - id: "government_files"
+        name: "Classified Files"
+        description: "Top secret documents from the Czech government. Contains sensitive info."
+        type: VALUABLE
+        maxStack: 1
+        weight: 0.2
+        price: 1000
+        rarity: LEGENDARY
+
+      - id: "battery"
+        name: "Battery"
+        description: "A charged battery. Essential for electronics."
+        type: RESOURCE
+        maxStack: 10
+        weight: 0.2
+        price: 15
+        rarity: UNCOMMON
+
+      - id: "fuel"
+        name: "Fuel Canister"
+        description: "Highly flammable liquid fuel."
+        type: RESOURCE
+        maxStack: 5
+        weight: 1.0
+        price: 50
+        rarity: RARE
+
+      - id: "lead_plate"
+        name: "Lead Plate"
+        description: "Heavy and dull. Good for blocking radiation."
+        type: RESOURCE
+        maxStack: 5
+        weight: 2.0
+        price: 25
+        rarity: UNCOMMON
+
+      - id: "tool_kit"
+        name: "Tool Kit"
+        description: "A set of basic tools for repairs."
+        type: RESOURCE
+        maxStack: 1
+        weight: 1.5
+        price: 80
+        rarity: RARE
+
+      - id: "strange_artifact"
+        name: "Strange Artifact"
+        description: "It hums with a low frequency. You feel uneasy holding it."
+        type: VALUABLE
+        maxStack: 1
+        weight: 0.3
+        price: 750
+        rarity: EPIC
+
+      - id: "subsidized_donut"
+        name: "Subsidized Donut"
+        description: "A sweet pastry that smells like subsidies. Found near a suspicious nest."
+        type: VALUABLE
+        maxStack: 1
+        weight: 0.1
+        price: 2000
+        rarity: LEGENDARY
+
+      - id: "metro_token"
+        name: "Old Metro Token"
+        description: "A small metal disc used for travel in the old days."
+        type: VALUABLE
+        maxStack: 100
+        weight: 0.01
+        price: 50
+        rarity: UNCOMMON
+
+      - id: "crystal_shard"
+        name: "Glowing Shard"
+        description: "A fragment of a crystal that emits a faint blue light."
+        type: VALUABLE
+        maxStack: 10
+        weight: 0.05
+        price: 300
+        rarity: RARE
+
+      - id: "ancient_map"
+        name: "Ancient Map"
+        description: "A tattered map showing the layout of Prague before the fall."
+        type: VALUABLE
+        maxStack: 1
+        weight: 0.1
+        price: 600
+        rarity: EPIC
+
+      - id: "uranium_ore"
+        name: "Uranium Ore"
+        description: "Raw radioactive material. Handle with care."
+        type: RESOURCE
+        maxStack: 5
+        weight: 1.0
+        price: 200
+        rarity: RARE
+
+      - id: "old_newspaper"
+        name: "Old Newspaper"
+        description: "Headline reads: 'Metro expansion to Letiste Ruzyne finally approved!'"
+        type: RESOURCE
+        maxStack: 10
+        weight: 0.05
+        price: 10
+        rarity: COMMON
+
+      - id: "broken_gas_mask"
+        name: "Broken Gas Mask"
+        description: "The glass is shattered. Might be useful for parts."
+        type: RESOURCE
+        maxStack: 2
+        weight: 0.8
+        price: 30
+        rarity: UNCOMMON
+
+      - id: "mysterious_key"
+        name: "Mysterious Key"
+        description: "A heavy iron key with a strange symbol. What does it open?"
+        type: VALUABLE
+        maxStack: 1
+        weight: 0.1
+        price: 0
+        rarity: EPIC
+
+      - id: "prazska_sunka"
+        name: "Prague Ham"
+        description: "A legendary delicacy. It's preserved so well it might still be edible."
+        type: VALUABLE
+        maxStack: 1
+        weight: 1.2
+        price: 450
+        rarity: RARE
