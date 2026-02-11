@@ -8,7 +8,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/// Handles `SEND_NPCS` events by dispatching them to the NetworkService.
+/**
+ * Handles {@code SEND_NPCS} events by dispatching them to the NetworkService.
+ *
+ * @author Matysekxx
+ */
 @Component
 public class SendNpcsEventHandler extends GameEventHandler {
     public SendNpcsEventHandler(@Lazy NetworkService networkService) {

@@ -4,7 +4,11 @@ import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import org.springframework.stereotype.Component;
 
-/// Logic for items that reduce radiation levels.
+/**
+ * Logic for items that reduce radiation levels.
+ *
+ * @author Matysekxx
+ */
 @Component("ANTIRAD")
 public class RadiationEffect implements ItemEffect {
     @Override

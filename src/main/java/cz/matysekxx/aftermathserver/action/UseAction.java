@@ -5,10 +5,12 @@ import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.dto.UseRequest;
 import org.springframework.stereotype.Component;
 
-/// Handles using consumable items.
-///
-/// Triggered by the `USE` command.
-/// Applies the effect of a consumable item (e.g., healing, radiation reduction) to the player.
+/**
+ * Handles using consumable items from inventory.
+ * Triggered by the "USE" command.
+ *
+ * @author Matysekxx
+ */
 @Component("USE")
 public class UseAction extends Action {
     protected UseAction(GameEngine gameEngine) {

@@ -13,9 +13,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/// Handles looting interactions.
-///
-/// Transfers items from a container object to the player's inventory.
+/**
+ * Handles looting interactions.
+ * <p>
+ * Transfers items from a container object to the player's inventory.
+ *
+ * @author Matysekxx
+ */
 @Component("LOOT")
 public class LootLogicObject implements ObjectInteractionLogic {
     private final WorldManager worldManager;
@@ -24,10 +28,16 @@ public class LootLogicObject implements ObjectInteractionLogic {
         this.worldManager = worldManager;
     }
 
-    /// Executes the loot interaction.
-    ///
-    /// Checks if container is empty, moves items to player inventory if space allows,
-    /// and updates the container description.
+    /**
+     * Executes the loot interaction.
+     * <p>
+     * Checks if container is empty, moves items to player inventory if space allows,
+     * and updates the container description.
+     *
+     * @param target The map object being interacted with.
+     * @param player The player performing the interaction.
+     * @return A collection of GameEvents resulting from the interaction.
+     */
     @Override
     public synchronized Collection<GameEvent> interact(MapObject target, Player player) {
         if (target.getItems().isEmpty()) {

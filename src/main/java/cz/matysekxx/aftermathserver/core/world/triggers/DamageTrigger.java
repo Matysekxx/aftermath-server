@@ -4,10 +4,15 @@ import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/// Trigger definition for damaging tiles.
+/**
+ * Trigger definition for damaging tiles.
+ *
+ * @author Matysekxx
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class DamageTrigger extends TileTrigger {
+    /** The amount of damage to deal. */
     private int damage;
 
     @Override

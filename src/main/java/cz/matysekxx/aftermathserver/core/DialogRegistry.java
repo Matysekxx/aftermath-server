@@ -10,9 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-/// Registry for managing NPC dialogs loaded from configuration.
-///
-/// Provides access to dialog lines based on NPC keys.
+/**
+ * Registry for managing NPC dialogs loaded from configuration.
+ * <p>
+ * Provides access to dialog lines based on NPC keys.
+ *
+ * @author Matysekxx
+ */
 @Slf4j
 @Data
 @Configuration
@@ -20,18 +24,22 @@ import java.util.concurrent.ThreadLocalRandom;
 public class DialogRegistry {
     private Map<String, List<String>> dialogMap = new HashMap<>();
 
-    /// Retrieves all dialog lines associated with a specific key.
-    ///
-    /// @param key The dialog key (e.g., NPC ID).
-    /// @return A list of dialog strings, or null if not found.
+    /**
+     * Retrieves all dialog lines associated with a specific key.
+     *
+     * @param key The dialog key (e.g., NPC ID).
+     * @return A list of dialog strings, or null if not found.
+     */
     public List<String> getDialogs(String key) {
         return dialogMap.get(key);
     }
 
-    /// Retrieves a random dialog line for a specific key.
-    ///
-    /// @param key The dialog key.
-    /// @return A random dialog string, or null if not found or empty.
+    /**
+     * Retrieves a random dialog line for a specific key.
+     *
+     * @param key The dialog key.
+     * @return A random dialog string, or null if not found or empty.
+     */
     public String getRandomDialog(String key) {
         final List<String> dialogs = dialogMap.get(key);
         if (dialogs == null || dialogs.isEmpty()) return null;

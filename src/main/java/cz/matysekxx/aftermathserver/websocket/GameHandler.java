@@ -16,10 +16,12 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.Map;
 
-/// Main WebSocket handler for the game.
-///
-/// Manages player connections, disconnections, and routes incoming messages
-/// to their respective actions.
+/**
+ * Main WebSocket handler for the game.
+ * Manages player connections, disconnections, and routes incoming messages to actions.
+ *
+ * @author Matysekxx
+ */
 @Component
 @Slf4j
 public class GameHandler extends TextWebSocketHandler {

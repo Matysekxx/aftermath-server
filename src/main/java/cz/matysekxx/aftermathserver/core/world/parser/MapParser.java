@@ -21,9 +21,12 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-/// Service for parsing map files.
-///
-/// Handles loading JSON metadata and parsing text-based layout files.
+/**
+ * Service for parsing map files.
+ * Handles loading JSON metadata and parsing text-based layout files.
+ *
+ * @author Matysekxx
+ */
 @Service
 @Slf4j
 public class MapParser {
@@ -33,13 +36,14 @@ public class MapParser {
     private final NpcFactory npcFactory;
     private final MapObjectFactory mapObjectFactory;
 
-
-    /// Constructs a new MapParser.
-    ///
-    /// @param tileRegistry     the tile registry
-    /// @param itemFactory      the item factory
-    /// @param npcFactory       the npc factory
-    /// @param mapObjectFactory the map object factory
+    /**
+     * Constructs a new MapParser.
+     *
+     * @param tileRegistry     the tile registry
+     * @param itemFactory      the item factory
+     * @param npcFactory       the npc factory
+     * @param mapObjectFactory the map object factory
+     */
     public MapParser(TileRegistry tileRegistry, ItemFactory itemFactory, NpcFactory npcFactory, MapObjectFactory mapObjectFactory) {
         this.tileRegistry = tileRegistry;
         this.itemFactory = itemFactory;
@@ -47,11 +51,13 @@ public class MapParser {
         this.mapObjectFactory = mapObjectFactory;
     }
 
-    /// Loads a map from a JSON file path.
-    ///
-    /// @param jsonPath the path to the JSON file
-    /// @return the loaded map data
-    /// @throws IOException if an I/O error occurs
+    /**
+     * Loads a map from a JSON file path.
+     *
+     * @param jsonPath the path to the JSON file
+     * @return the loaded map data
+     * @throws IOException if an I/O error occurs
+     */
     public GameMapData loadMap(String jsonPath) throws IOException {
         final ClassPathResource resource = new ClassPathResource(jsonPath);
         try (final InputStream is = resource.getInputStream()) {
@@ -69,7 +75,9 @@ public class MapParser {
         }
     }
 
-    /// Processes links between maps and creates teleport triggers.
+    /**
+     * Processes links between maps and creates teleport triggers.
+     */
     private void processLinks(GameMapData mapData, Map<Integer, ParsedMapLayer> layers) {
         if (mapData.getLinks() == null || mapData.getLinks().isEmpty()) return;
         final Map<String, List<Vector3>> globalMarkers = new HashMap<>();
@@ -93,8 +101,9 @@ public class MapParser {
         }
     }
 
-
-    /// Processes object spawns from the map layers.
+    /**
+     * Processes object spawns from the map layers.
+     */
     private void processObjectSpawns(GameMapData mapData, Map<Integer, ParsedMapLayer> layers) {
         for (ParsedMapLayer layer : layers.values()) {
             layer.getObjectSpawns().forEach((pos, markerChar) -> {
@@ -108,7 +117,9 @@ public class MapParser {
         }
     }
 
-    /// Parses the layout layers defined in the map data.
+    /**
+     * Parses the layout layers defined in the map data.
+     */
     private Map<Integer, ParsedMapLayer> parseLayoutLayers(GameMapData mapData) throws IOException {
         Map<Integer, String> layoutFiles = mapData.getLayout();
         if (layoutFiles == null) return Map.of();
@@ -120,7 +131,9 @@ public class MapParser {
         return Collections.unmodifiableMap(layers);
     }
 
-    /// Processes map objects and initializes their items.
+    /**
+     * Processes map objects and initializes their items.
+     */
     private void processMapObjects(GameMapData mapData) {
         if (mapData.getObjects() == null) return;
 
@@ -135,7 +148,9 @@ public class MapParser {
         }
     }
 
-    /// Processes NPC spawns from the map layers.
+    /**
+     * Processes NPC spawns from the map layers.
+     */
     private void processNpcSpawns(GameMapData mapData, Map<Integer, ParsedMapLayer> layers) {
         for (ParsedMapLayer layer : layers.values()) {
             layer.getNpcSpawns().forEach((pos, npcId) -> {
@@ -145,7 +160,9 @@ public class MapParser {
         }
     }
 
-    /// Parses a single map file.
+    /**
+     * Parses a single map file.
+     */
     private ParsedMapLayer parseFile(Map.Entry<Integer, String> entry, GameMapData mapData) throws IOException {
         final ClassPathResource resource = new ClassPathResource(entry.getValue());
         try (final InputStream is = resource.getInputStream()) {
@@ -154,10 +171,12 @@ public class MapParser {
         }
     }
 
-    /// Parses a string content into a map layer.
-    ///
-    /// @param content the string content
-    /// @return the parsed map layer
+    /**
+     * Parses a string content into a map layer.
+     *
+     * @param content the string content
+     * @return the parsed map layer
+     */
     public ParsedMapLayer parseString(String content) {
         return ParsedMapLayer.parse(content, tileRegistry, 0, null);
     }

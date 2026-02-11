@@ -16,9 +16,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-/// Manages the lifecycle and access to all game maps.
-///
-/// Loads maps on startup and provides methods to query map data and tile properties.
+/**
+ * Manages the lifecycle and access to all game maps.
+ * Loads maps on startup and provides methods to query map data and tile properties.
+ *
+ * @author Matysekxx
+ */
 @Service
 @Slf4j
 public class WorldManager {
@@ -30,7 +33,9 @@ public class WorldManager {
         this.mapParser = mapParser;
     }
 
-    /// Loads all maps from the classpath assets.
+    /**
+     * Loads all maps from the classpath assets.
+     */
     @PostConstruct
     public void loadMaps() {
         log.info("Loading maps...");
@@ -56,7 +61,11 @@ public class WorldManager {
         }
     }
 
-    /// Retrieves a map by its ID.
+    /**
+     * Retrieves a map by its ID.
+     * @param mapId The ID of the map.
+     * @return The GameMapData or null if not found.
+     */
     public GameMapData getMap(String mapId) {
         if (maps.containsKey(mapId)) return maps.get(mapId);
         return null;
@@ -82,12 +91,14 @@ public class WorldManager {
         return maps.values();
     }
 
-    /// Checks if a map exists.
+    /** Checks if a map exists. */
     public boolean containsMap(String mapId) {
         return maps.containsKey(mapId);
     }
 
-    /// Gets the tile type at specific coordinates.
+    /**
+     * Gets the tile type at specific coordinates.
+     */
     public TileType getTileAt(String mapId, int layer, int x, int y) {
         GameMapData map = maps.get(mapId);
         if (map == null) return TileType.VOID;
@@ -98,7 +109,7 @@ public class WorldManager {
         return parsedLayer.getTileAt(x, y);
     }
 
-    /// Checks if a specific coordinate is walkable.
+    /** Checks if a specific coordinate is walkable. */
     public boolean isWalkable(String mapId, int layer, int x, int y) {
         return getTileAt(mapId, layer, x, y).isWalkable();
     }

@@ -10,7 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/// Factory for creating dynamic map objects.
+/**
+ * Factory service for creating dynamic {@link MapObject} instances.
+ * <p>
+ * Handles the creation of various world objects such as player corpses,
+ * loot bags, and static interactive elements.
+ *
+ * @author Matysekxx
+ */
 @Service
 public class MapObjectFactory {
 

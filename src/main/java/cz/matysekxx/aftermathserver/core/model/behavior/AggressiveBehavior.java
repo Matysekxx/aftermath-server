@@ -14,7 +14,11 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/// Hostile behavior that chases and attacks the nearest player.
+/**
+ * Hostile behavior that chases and attacks the nearest player.
+ *
+ * @author Matysekxx
+ */
 @Component
 public class AggressiveBehavior implements Behavior {
     private static final int visionRange = 10;
@@ -26,6 +30,13 @@ public class AggressiveBehavior implements Behavior {
         this.gameEventQueue = gameEventQueue;
     }
 
+    /**
+     * Updates the NPC state by chasing or attacking the nearest player within vision range.
+     *
+     * @param npc     The NPC instance to update.
+     * @param map     The map data where the NPC is located.
+     * @param players Collection of players currently on the same map.
+     */
     @Override
     public void update(Npc npc, GameMapData map, Collection<Player> players) {
         final Vector2 npcPos = new Vector2(npc.getX(), npc.getY());

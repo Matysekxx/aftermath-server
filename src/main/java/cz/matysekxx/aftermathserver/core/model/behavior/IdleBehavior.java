@@ -8,8 +8,19 @@ import cz.matysekxx.aftermathserver.util.Direction;
 import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 
-/// Simple behavior where the NPC stays idle or moves randomly.
+/**
+ * Simple behavior where the NPC stays idle or moves randomly.
+ *
+ * @author Matysekxx
+ */
 public class IdleBehavior implements Behavior {
+    /**
+     * Updates the NPC state by potentially moving it to a random adjacent walkable tile.
+     *
+     * @param npc     The NPC instance to update.
+     * @param map     The map data where the NPC is located.
+     * @param players Collection of players currently on the same map.
+     */
     @Override
     public void update(Npc npc, GameMapData map, Collection<Player> players) {
         if (ThreadLocalRandom.current().nextInt(100) < 10) {

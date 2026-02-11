@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Handles {@code BROADCAST_PLAYERS} events by sending the list of other players to clients on the map.
+ *
+ * @author Matysekxx
+ */
 @Component
 public class BroadcastPlayersEventHandler extends GameEventHandler {
 

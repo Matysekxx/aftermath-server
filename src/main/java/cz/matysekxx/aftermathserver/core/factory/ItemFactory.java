@@ -5,9 +5,14 @@ import cz.matysekxx.aftermathserver.core.model.item.ItemTable;
 import cz.matysekxx.aftermathserver.core.model.item.ItemTemplate;
 import org.springframework.stereotype.Service;
 
-/// Factory for creating item instances.
-///
-/// Uses `ItemTable` to look up templates and creates new instances with specific quantities.
+/**
+ * Factory service for creating {@link Item} instances.
+ * <p>
+ * Uses the {@link ItemTable} to look up static templates and generates new
+ * item instances with specific quantities and properties.
+ *
+ * @author Matysekxx
+ */
 @Service
 public class ItemFactory {
     private final ItemTable itemTable;

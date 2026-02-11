@@ -9,7 +9,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-/// Handles `OPEN_METRO_UI` events.
+/**
+ * Handles {@code OPEN_METRO_UI} events.
+ *
+ * @author Matysekxx
+ */
 @Component
 public class OpenMetroUIEventHandler extends GameEventHandler {
 

@@ -4,7 +4,11 @@ import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import org.springframework.stereotype.Component;
 
-/// Logic for items that increase the player's radiation limit (Filters).
+/**
+ * Logic for items that increase the player's radiation limit (Filters).
+ *
+ * @author Matysekxx
+ */
 @Component("FILTER")
 public class FilterEffect implements ItemEffect {
     @Override

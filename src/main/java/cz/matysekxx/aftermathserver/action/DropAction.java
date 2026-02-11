@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cz.matysekxx.aftermathserver.core.GameEngine;
 import org.springframework.stereotype.Component;
 
-/// Handles dropping items from inventory.
-///
-/// Triggered by the `DROP` command.
-/// Removes an item from the player's inventory and places it on the map at the player's location.
+/**
+ * Handles dropping items from inventory.
+ * Triggered by the "DROP" command.
+ *
+ * @author Matysekxx
+ */
 @Component("DROP")
 public class DropAction extends Action {
     public DropAction(GameEngine gameEngine) {

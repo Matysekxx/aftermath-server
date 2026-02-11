@@ -5,6 +5,12 @@ import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.dto.EquipRequest;
 import org.springframework.stereotype.Component;
 
+/**
+ * Handles equipping items (weapons, masks) from inventory.
+ * Triggered by the "EQUIP" command.
+ *
+ * @author Matysekxx
+ */
 @Component("EQUIP")
 public class EquipAction extends Action {
 

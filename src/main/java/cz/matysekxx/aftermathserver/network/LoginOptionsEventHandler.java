@@ -6,6 +6,11 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+/**
+ * Handles {@code SEND_LOGIN_OPTIONS} events by sending character creation choices to the client.
+ *
+ * @author Matysekxx
+ */
 @Component
 public class LoginOptionsEventHandler extends GameEventHandler {
 

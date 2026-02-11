@@ -10,10 +10,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-/// Handles metro travel requests.
-///
-/// Triggered by the `TRAVEL` command from the client's metro UI.
-/// Validates if the player is in the correct state and initiates the travel process via MetroService.
+/**
+ * Handles metro travel requests.
+ * Triggered by the "TRAVEL" command from the client's metro UI.
+ *
+ * @author Matysekxx
+ */
 @Component("TRAVEL")
 public class TravelAction extends Action {
     private final MetroService metroService;

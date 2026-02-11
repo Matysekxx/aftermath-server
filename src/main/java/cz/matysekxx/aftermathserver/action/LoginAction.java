@@ -5,6 +5,12 @@ import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.dto.LoginRequest;
 import org.springframework.stereotype.Component;
 
+/**
+ * Handles player login and character creation.
+ * Triggered by the "LOGIN" command.
+ *
+ * @author Matysekxx
+ */
 @Component("LOGIN")
 public class LoginAction extends Action {
 

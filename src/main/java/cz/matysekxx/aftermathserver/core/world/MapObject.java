@@ -8,7 +8,14 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/// Represents an interactive object on the map.
+/**
+ * Represents an interactive object placed on the game map.
+ * <p>
+ * Map objects can be containers (loot), readable signs, or furniture.
+ * They implement {@link Spatial} for positioning and indexing.
+ *
+ * @author Matysekxx
+ */
 @Data
 @NoArgsConstructor
 public class MapObject implements Spatial {

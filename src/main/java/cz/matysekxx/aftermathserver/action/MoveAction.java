@@ -5,10 +5,12 @@ import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.dto.MoveRequest;
 import org.springframework.stereotype.Component;
 
-/// Handles player movement.
-///
-/// Triggered by the `MOVE` command.
-/// Updates the player's position based on the requested direction (UP, DOWN, LEFT, RIGHT).
+/**
+ * Handles player movement requests.
+ * Triggered by the "MOVE" command.
+ *
+ * @author Matysekxx
+ */
 @Component("MOVE")
 public class MoveAction extends Action {
 

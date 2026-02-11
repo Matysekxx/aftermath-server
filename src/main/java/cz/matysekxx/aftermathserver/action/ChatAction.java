@@ -5,10 +5,12 @@ import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.dto.ChatRequest;
 import org.springframework.stereotype.Component;
 
-/// Handles player chat messages.
-///
-/// Triggered by the `CHAT` command.
-/// Parses the message and delegates it to the GameEngine for broadcasting or command processing.
+/**
+ * Handles player chat messages.
+ * Triggered by the "CHAT" command.
+ *
+ * @author Matysekxx
+ */
 @Component("CHAT")
 public class ChatAction extends Action {
 

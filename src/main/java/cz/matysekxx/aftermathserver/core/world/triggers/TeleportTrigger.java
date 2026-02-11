@@ -5,7 +5,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/// Trigger definition for teleportation tiles.
+/**
+ * Trigger definition for teleportation tiles.
+ *
+ * @author Matysekxx
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor

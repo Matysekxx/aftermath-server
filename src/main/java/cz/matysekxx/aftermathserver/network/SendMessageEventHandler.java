@@ -5,7 +5,11 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-/// Handles `SEND_MESSAGE` events by sending a generic text message to the client or broadcasting it.
+/**
+ * Handles {@code SEND_MESSAGE} events by sending a generic text message to the client or broadcasting it.
+ *
+ * @author Matysekxx
+ */
 @Component
 public class SendMessageEventHandler extends GameEventHandler {
 

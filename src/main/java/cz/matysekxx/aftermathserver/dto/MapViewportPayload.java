@@ -9,7 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/// DTO for sending a sliced portion of the map centered around the player.
+/**
+ * DTO for sending a sliced portion of the map centered around the player.
+ *
+ * @author Matysekxx
+ */
 @Data
 public class MapViewportPayload {
     private String mapName;
@@ -21,6 +25,17 @@ public class MapViewportPayload {
     private boolean isCleared;
     private Map<Integer, List<String>> layers;
 
+    /**
+     * Creates a viewport payload from the map data and player position.
+     *
+     * @param map The game map data.
+     * @param px  Player X coordinate.
+     * @param py  Player Y coordinate.
+     * @param pz  Player Z coordinate (layer).
+     * @param rx  Viewport range X.
+     * @param ry  Viewport range Y.
+     * @return The constructed payload.
+     */
     public static MapViewportPayload of(GameMapData map, int px, int py, int pz, int rx, int ry) {
         final MapViewportPayload payload = new MapViewportPayload();
         payload.setMapName(map.getName());

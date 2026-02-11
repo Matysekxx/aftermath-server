@@ -18,9 +18,12 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/// Holds all data regarding a specific game map.
-///
-/// Includes layout, objects, triggers, and environment settings.
+/**
+ * Holds all data regarding a specific game map.
+ * Includes layout, objects, triggers, and environment settings.
+ *
+ * @author Matysekxx
+ */
 @Data
 public class GameMapData {
     @JsonIgnore
@@ -46,12 +49,20 @@ public class GameMapData {
 
     private Collection<Link> links;
 
-    /// Retrieves a specific layer by index.
+    /**
+     * Retrieves a specific layer by index.
+     * @param index The layer index.
+     * @return The parsed map layer.
+     */
     public ParsedMapLayer getLayer(int index) {
         return parsedLayers.get(index);
     }
 
-    /// Checks if a symbol corresponds to a tile trigger.
+    /**
+     * Checks if a symbol corresponds to a tile trigger.
+     * @param symbol The character symbol.
+     * @return An Optional containing the TileTrigger.
+     */
     public Optional<TileTrigger> getMaybeTileTrigger(String symbol) {
         if (!tileTriggers.containsKey(symbol)) return Optional.empty();
         return Optional.of(tileTriggers.get(symbol));

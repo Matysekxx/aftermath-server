@@ -13,7 +13,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-/// Factory for creating NPC instances from templates.
+/**
+ * Factory for creating NPC instances from templates.
+ *
+ * @author Matysekxx
+ */
 @Service
 public class NpcFactory {
     private final NpcTable npcTable;
@@ -26,14 +30,16 @@ public class NpcFactory {
         this.gameEventQueue = gameEventQueue;
     }
 
-    /// Creates a new NPC instance based on a template ID.
-    ///
-    /// @param id         The template ID defined in configuration (e.g., "mutant_rat").
-    /// @param x          The X coordinate on the map.
-    /// @param y          The Y coordinate on the map.
-    /// @param layerIndex The layer index (Z coordinate).
-    /// @param mapId      The ID of the map where the NPC is spawned.
-    /// @return A fully initialized Npc entity with behavior and loot.
+    /**
+     * Creates a new NPC instance based on a template ID.
+     *
+     * @param id         The template ID defined in configuration (e.g., "mutant_rat").
+     * @param x          The X coordinate on the map.
+     * @param y          The Y coordinate on the map.
+     * @param layerIndex The layer index (Z coordinate).
+     * @param mapId      The ID of the map where the NPC is spawned.
+     * @return A fully initialized Npc entity with behavior and loot.
+     */
     public Npc createNpc(String id, int x, int y, int layerIndex, String mapId) {
         final NpcTemplate template = npcTable.getTemplate(id);
         if (template == null) {

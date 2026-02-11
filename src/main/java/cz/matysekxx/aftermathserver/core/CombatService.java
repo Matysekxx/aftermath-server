@@ -21,9 +21,13 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 
-/// Service responsible for handling combat mechanics.
-///
-/// Manages player attacks, damage calculation, and NPC death processing.
+/**
+ * Service responsible for handling combat mechanics.
+ * <p>
+ * Manages player attacks, damage calculation, and NPC death processing.
+ *
+ * @author Matysekxx
+ */
 @Service
 @Slf4j
 public class CombatService {
@@ -31,23 +35,27 @@ public class CombatService {
     private final GameEventQueue gameEventQueue;
     private final MapObjectFactory mapObjectFactory;
 
-    /// Constructs the CombatService.
-    ///
-    /// @param worldManager     The manager for world data.
-    /// @param gameEventQueue   The queue for game events.
-    /// @param mapObjectFactory Factory for creating map objects (loot bags).
+    /**
+     * Constructs the CombatService.
+     *
+     * @param worldManager     The manager for world data.
+     * @param gameEventQueue   The queue for game events.
+     * @param mapObjectFactory Factory for creating map objects (loot bags).
+     */
     public CombatService(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.mapObjectFactory = mapObjectFactory;
     }
 
-    /// Processes an attack initiated by a player.
-    ///
-    /// Checks if the player has a weapon equipped, finds the nearest valid target
-    /// within range using spatial indexing, applies damage, and handles target death if necessary.
-    ///
-    /// @param player The player performing the attack.
+    /**
+     * Processes an attack initiated by a player.
+     * <p>
+     * Checks if the player has a weapon equipped, finds the nearest valid target
+     * within range using spatial indexing, applies damage, and handles target death if necessary.
+     *
+     * @param player The player performing the attack.
+     */
     public void handleAttack(Player player) {
         final Integer equippedSlot = player.getEquippedWeaponSlot();
         if (equippedSlot == null) {
@@ -101,13 +109,15 @@ public class CombatService {
         }
     }
 
-    /// Handles the logic when an NPC dies.
-    ///
-    /// Removes the NPC from the map, spawns loot, and broadcasts updates to players.
-    ///
-    /// @param npc      The NPC that died.
-    /// @param map      The map where the death occurred.
-    /// @param killerId The ID of the player who killed the NPC.
+    /**
+     * Handles the logic when an NPC dies.
+     * <p>
+     * Removes the NPC from the map, spawns loot, and broadcasts updates to players.
+     *
+     * @param npc      The NPC that died.
+     * @param map      The map where the death occurred.
+     * @param killerId The ID of the player who killed the NPC.
+     */
     private void handleNpcDeath(Npc npc, GameMapData map, String killerId) {
         map.getNpcs().remove(npc);
         if (npc.getLoot() != null) {

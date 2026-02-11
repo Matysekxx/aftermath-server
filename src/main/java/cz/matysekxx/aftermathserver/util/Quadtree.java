@@ -3,10 +3,16 @@ package cz.matysekxx.aftermathserver.util;
 import java.util.ArrayList;
 import java.util.List;
 
-/// A Quadtree implementation for efficient spatial querying.
-///
-/// Used to partition a 2D space into smaller quadrants to quickly find objects
-/// within a specific area.
+/**
+ * A Quadtree implementation for efficient spatial partitioning and querying.
+ * <p>
+ * Used to recursively divide 2D space into quadrants, allowing for fast retrieval
+ * of {@link Spatial} objects within a specific geographic area.
+ *
+ * @param <T> The type of spatial objects stored in the tree.
+ *
+ * @author Matysekxx
+ */
 public class Quadtree<T extends Spatial> {
 
     private static final int MAX_OBJECTS = 10;

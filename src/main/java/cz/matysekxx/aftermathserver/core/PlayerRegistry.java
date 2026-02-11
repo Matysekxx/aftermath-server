@@ -9,41 +9,72 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-/// Registry for managing active player sessions.
-///
-/// Provides thread-safe storage and retrieval of player entities,
-/// along with functional iteration methods.
+/**
+ * Registry for managing active player sessions.
+ * <p>
+ * Provides thread-safe storage and retrieval of player entities,
+ * along with functional iteration methods.
+ *
+ * @author Matysekxx
+ */
 @Service
 public class PlayerRegistry {
     private final Map<String, Player> players = new ConcurrentHashMap<>();
 
-    /// Retrieves a player by their session ID.
+    /**
+     * Retrieves a player by their session ID.
+     *
+     * @param id The session ID.
+     * @return The Player entity, or null if not found.
+     */
     public Player getPlayer(String id) {
         return players.get(id);
     }
 
-    /// Registers a player in the registry.
+    /**
+     * Registers a player in the registry.
+     *
+     * @param player The player entity.
+     */
     public void put(Player player) {
         players.put(player.getId(), player);
     }
 
-    /// Registers a player with a specific ID.
+    /**
+     * Registers a player with a specific ID.
+     *
+     * @param id     The session ID.
+     * @param player The player entity.
+     */
     public void put(String id, Player player) {
         players.put(id, player);
     }
 
-    /// Removes a player from the registry.
+    /**
+     * Removes a player from the registry.
+     *
+     * @param id The session ID to remove.
+     */
     public void remove(String id) {
         players.remove(id);
     }
 
-    /// Retrieves a player wrapped in an Optional.
+    /**
+     * Retrieves a player wrapped in an Optional.
+     *
+     * @param id The session ID.
+     * @return An Optional containing the Player if found.
+     */
     public Optional<Player> getMaybePlayer(String id) {
         if (players.containsKey(id)) return Optional.of(players.get(id));
         return Optional.empty();
     }
 
-    /// Performs an action for each registered player.
+    /**
+     * Performs an action for each registered player.
+     *
+     * @param action The consumer to execute for each player.
+     */
     public void forEach(Consumer<Player> action) {
         for (Player player : players.values()) {
             if (player != null) action.accept(player);
@@ -51,14 +82,24 @@ public class PlayerRegistry {
         }
     }
 
-    /// Performs an action for each player that matches the given predicate.
+    /**
+     * Performs an action for each player that matches the given predicate.
+     *
+     * @param predicate The condition to filter players.
+     * @param action    The consumer to execute for matching players.
+     */
     public void forEachWithPredicate(Predicate<Player> predicate, Consumer<Player> action) {
         for (Player player : players.values()) {
             if (player != null && predicate.test(player)) action.accept(player);
         }
     }
 
-    /// Checks if a player ID exists in the registry.
+    /**
+     * Checks if a player ID exists in the registry.
+     *
+     * @param id The session ID.
+     * @return true if the ID exists.
+     */
     public boolean containsId(String id) {
         return players.containsKey(id);
     }

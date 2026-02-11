@@ -13,6 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Service for managing spatial indexing of game entities using Quadtrees.
+ * Allows for efficient "nearby" queries on different map layers.
+ *
+ * @author Matysekxx
+ */
 @Service
 public class SpatialService {
     private final Map<String, Map<Integer, Quadtree<Spatial>>> spatialIndices = new ConcurrentHashMap<>();

@@ -7,24 +7,28 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 import java.util.Map;
 
-/// Configuration properties for game-wide settings.
-///
-/// These settings are loaded from the application configuration (e.g., application.yml)
-/// using the `game` prefix.
+/**
+ * Configuration properties for game-wide settings.
+ * <p>
+ * These settings are loaded from the application configuration (e.g., application.yml)
+ * using the {@code game} prefix.
+ *
+ * @author Matysekxx
+ */
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "game")
 public class GameSettings {
-    /// The ID of the map where new players start.
+    /** The ID of the map where new players start. */
     private String startingMapId;
-    /// List of map IDs allowed for player spawning.
+    /** List of map IDs allowed for player spawning. */
     private List<String> spawnableMaps;
-    /// Default line ID for metro initialization.
+    /** Default line ID for metro initialization. */
     private String lineId;
-    /// The rate at which the game engine ticks (in milliseconds).
+    /** The rate at which the game engine ticks (in milliseconds). */
     private int tickRate;
-    /// The default player class assigned to new players.
+    /** The default player class assigned to new players. */
     private String defaultClass;
-    /// A map of player class configurations, keyed by class name.
+    /** A map of player class configurations, keyed by class name. */
     private Map<String, PlayerClassConfig> classes;
 }

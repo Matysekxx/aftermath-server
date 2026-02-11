@@ -6,7 +6,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/// DTO containing available choices for character creation.
+/**
+ * DTO containing available choices for character creation.
+ *
+ * @author Matysekxx
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

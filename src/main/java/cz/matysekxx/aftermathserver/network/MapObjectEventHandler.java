@@ -8,7 +8,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/// Handles `SEND_MAP_OBJECTS` events by sending or broadcasting the list of interactive objects on the map.
+/**
+ * Handles {@code SEND_MAP_OBJECTS} events by sending or broadcasting the list of interactive objects on the map.
+ *
+ * @author Matysekxx
+ */
 @Component
 public class MapObjectEventHandler extends GameEventHandler {
 

@@ -5,7 +5,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import lombok.Data;
 
-/// Base class for all tile-based triggers.
+/**
+ * Base class for all tile-based triggers.
+ *
+ * @author Matysekxx
+ */
 @Data
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.DEDUCTION
@@ -18,9 +22,11 @@ import lombok.Data;
         @JsonSubTypes.Type(value = HealTrigger.class, name = "HEAL"),
 })
 public abstract class TileTrigger {
-    /// Executes the trigger logic when a player enters the tile.
-    ///
-    /// @param player  the player entering the tile
-    /// @param context the trigger context
+    /**
+     * Executes the trigger logic when a player enters the tile.
+     *
+     * @param player  the player entering the tile
+     * @param context the trigger context
+     */
     public abstract void onEnter(Player player, TriggerContext context);
 }

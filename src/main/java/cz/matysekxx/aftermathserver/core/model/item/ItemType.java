@@ -1,18 +1,23 @@
 package cz.matysekxx.aftermathserver.core.model.item;
 
-/// Categorizes items based on their usage and behavior.
+/**
+ * Categorizes items based on their usage and behavior.
+ *
+ * @author Matysekxx
+ */
 public enum ItemType {
-    /// Crafting materials.
+    /** Crafting materials. */
     RESOURCE,
-    /// Items that can be used (food, meds).
+    /** Items that can be used (food, meds). */
     CONSUMABLE,
-    /// Items used for combat.
+    /** Items used for combat. */
     WEAPON,
-    /// Wearable items.
+    /** Wearable items. */
     EQUIPMENT,
-    /// Items with high monetary value.
+    /** Items with high monetary value. */
     VALUABLE,
-    /// Items required for quests.
+    /** Items required for quests. */
     QUEST,
+    /** Wearable mask for radiation protection. */
     MASK
 }

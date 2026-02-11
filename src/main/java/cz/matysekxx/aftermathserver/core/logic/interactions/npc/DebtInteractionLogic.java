@@ -13,6 +13,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Logic for handling debt payment interactions with NPCs.
+ *
+ * @author Matysekxx
+ */
 @Slf4j
 @Component
 public class DebtInteractionLogic implements NpcInteractionLogic {

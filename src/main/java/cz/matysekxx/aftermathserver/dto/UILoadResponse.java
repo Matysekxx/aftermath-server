@@ -5,11 +5,15 @@ import lombok.Data;
 
 import java.util.List;
 
-/// DTO for sending metro UI data (list of stations) to the client.
+/**
+ * DTO for sending metro UI data (list of stations) to the client.
+ *
+ * @author Matysekxx
+ */
 @Data
 public class UILoadResponse {
-    /// List of available metro stations on the current line.
+    /** List of available metro stations on the current line. */
     private List<MetroStation> stations;
-    /// The ID of the current metro line.
+    /** The ID of the current metro line. */
     private String lineId;
 }

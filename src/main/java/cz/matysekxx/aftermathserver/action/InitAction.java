@@ -5,6 +5,12 @@ import cz.matysekxx.aftermathserver.core.GameEngine;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+/**
+ * Handles the initial connection request from the client.
+ * Triggered by the "INIT" command to receive login options.
+ *
+ * @author Matysekxx
+ */
 @Slf4j
 @Component("INIT")
 public class InitAction extends Action {

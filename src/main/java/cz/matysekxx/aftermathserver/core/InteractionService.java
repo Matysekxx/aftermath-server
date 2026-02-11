@@ -18,10 +18,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-/// Service responsible for coordinating interactions between players and map objects.
-///
-/// It validates the physical possibility of an interaction (distance checks) and
-/// delegates the specific logic to the appropriate [ObjectInteractionLogic] implementation.
+/**
+ * Service responsible for coordinating interactions between players, map objects, and NPCs.
+ * <p>
+ * It validates the physical possibility of an interaction (distance checks) and
+ * delegates the specific logic to the appropriate interaction logic implementations.
+ *
+ * @author Matysekxx
+ */
 @Service
 public class InteractionService {
     private final Map<String, ObjectInteractionLogic> objectInteractionLogicMap;
@@ -38,7 +42,8 @@ public class InteractionService {
         this.objectInteractionLogicMap = objectInteractionLogicMap;
         this.gameEventQueue = gameEventQueue;
         this.worldManager = worldManager;
-        npcInteractionLogicList.forEach(npcInteractionLogic -> npcInteractionLogicMap.put(npcInteractionLogic.getType(), npcInteractionLogic));
+        npcInteractionLogicList.forEach(npcInteractionLogic ->
+                npcInteractionLogicMap.put(npcInteractionLogic.getType(), npcInteractionLogic));
     }
 
     /// Processes an interaction between a player and a target object.

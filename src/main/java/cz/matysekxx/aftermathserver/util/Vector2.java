@@ -1,11 +1,15 @@
 package cz.matysekxx.aftermathserver.util;
 
-/// Represents a 2D coordinate point.
-///
-/// Used for grid positions, directions, and distance calculations on a single layer.
-///
-/// @param x The horizontal coordinate.
-/// @param y The vertical coordinate.
+/**
+ * Represents a 2D coordinate point in the game grid.
+ * <p>
+ * Used for grid positions, directions, and distance calculations on a single map layer.
+ *
+ * @param x The horizontal coordinate.
+ * @param y The vertical coordinate.
+ *
+ * @author Matysekxx
+ */
 public record Vector2(int x, int y) {
 
     /// Creates a new Vector2 instance.

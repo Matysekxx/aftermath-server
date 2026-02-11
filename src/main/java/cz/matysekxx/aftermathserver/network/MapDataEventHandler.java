@@ -6,7 +6,11 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-/// Handles `SEND_MAP_DATA` events by sending map layout and metadata to the client.
+/**
+ * Handles {@code SEND_MAP_DATA} events by sending map layout and metadata to the client.
+ *
+ * @author Matysekxx
+ */
 @Component
 public class MapDataEventHandler extends GameEventHandler {
 

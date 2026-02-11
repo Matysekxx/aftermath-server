@@ -16,34 +16,42 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.Consumer;
 
-/// Service responsible for handling player movement logic.
-///
-/// It validates movement requests, checks for collisions with obstacles,
-/// updates player positions, and triggers tile-based events (like teleports or metro entry).
+/**
+ * Service responsible for handling player movement logic.
+ * <p>
+ * It validates movement requests, checks for collisions with obstacles,
+ * updates player positions, and triggers tile-based events (like teleports or metro entry).
+ *
+ * @author Matysekxx
+ */
 @Service
 public class MovementService {
     private final WorldManager worldManager;
     private final GameEventQueue gameEventQueue;
     private final MetroService metroService;
 
-    /// Constructs the MovementService.
-    ///
-    /// @param worldManager   The world manager for map data.
-    /// @param gameEventQueue The event queue for sending updates.
-    /// @param metroService   The service for metro travel logic.
+    /**
+     * Constructs the MovementService.
+     *
+     * @param worldManager   The world manager for map data.
+     * @param gameEventQueue The event queue for sending updates.
+     * @param metroService   The service for metro travel logic.
+     */
     public MovementService(WorldManager worldManager, GameEventQueue gameEventQueue, MetroService metroService) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.metroService = metroService;
     }
 
-    /// Processes a movement request for a player.
-    ///
-    /// Calculates the target position, checks for walkability, updates the player's
-    /// coordinates, and executes any triggers present on the destination tile.
-    ///
-    /// @param player      The player attempting to move.
-    /// @param moveRequest The DTO containing the movement direction.
+    /**
+     * Processes a movement request for a player.
+     * <p>
+     * Calculates the target position, checks for walkability, updates the player's
+     * coordinates, and executes any triggers present on the destination tile.
+     *
+     * @param player      The player attempting to move.
+     * @param moveRequest The DTO containing the movement direction.
+     */
     public void movementProcess(Player player, MoveRequest moveRequest) {
         int targetX = player.getX();
         int targetY = player.getY();
@@ -78,7 +86,13 @@ public class MovementService {
         gameEventQueue.enqueue(GameEventFactory.sendMapDataEvent(viewport, player.getId()));
     }
 
-    /// Checks if a player can move to target coordinates.
+    /**
+     * Checks if a player can move to target coordinates.
+     *
+     * @param player The player entity.
+     * @param target The target coordinates.
+     * @return true if the target tile is walkable.
+     */
     public boolean canMoveTo(Player player, Vector2 target) {
         return worldManager.isWalkable(
                 player.getMapId(),

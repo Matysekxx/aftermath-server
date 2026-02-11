@@ -22,10 +22,14 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static cz.matysekxx.aftermathserver.util.FloodFill.floodFill;
 
-/// Service responsible for managing the spawning of objects and entities in the game world.
-///
-/// Uses map analysis to ensure objects appear only in locations
-/// that are actually accessible to players.
+/**
+ * Service responsible for managing the spawning of objects and entities in the game world.
+ * <p>
+ * Uses map analysis to ensure objects appear only in locations
+ * that are actually accessible to players.
+ *
+ * @author Matysekxx
+ */
 @Slf4j
 @Service
 public class SpawnManager {
@@ -36,13 +40,15 @@ public class SpawnManager {
     private final ItemTable itemTable;
     private final Map<String, List<Vector3>> reachableTilesCache = new ConcurrentHashMap<>();
 
-    /// Constructs the SpawnManager.
-    ///
-    /// @param worldManager     The manager for world data.
-    /// @param mapObjectFactory Factory for creating map objects.
-    /// @param npcFactory       Factory for creating NPCs.
-    /// @param npcTable         Configuration table for NPCs.
-    /// @param itemTable        Configuration table for items.
+    /**
+     * Constructs the SpawnManager.
+     *
+     * @param worldManager     The manager for world data.
+     * @param mapObjectFactory Factory for creating map objects.
+     * @param npcFactory       Factory for creating NPCs.
+     * @param npcTable         Configuration table for NPCs.
+     * @param itemTable        Configuration table for items.
+     */
     public SpawnManager(WorldManager worldManager, MapObjectFactory mapObjectFactory, NpcFactory npcFactory, NpcTable npcTable, ItemTable itemTable) {
         this.worldManager = worldManager;
         this.mapObjectFactory = mapObjectFactory;
@@ -51,28 +57,37 @@ public class SpawnManager {
         this.itemTable = itemTable;
     }
 
-    /// Retrieves the list of reachable tiles for a specific map.
-    ///
-    /// If results for the given map are not in the cache, calculation via Flood Fill is triggered.
-    ///
-    /// @param mapId The ID of the map for which we want to get spawnable positions.
-    /// @return A list of coordinates where it is safe to spawn objects.
+    /**
+     * Retrieves the list of reachable tiles for a specific map.
+     * <p>
+     * If results for the given map are not in the cache, calculation via Flood Fill is triggered.
+     *
+     * @param mapId The ID of the map for which we want to get spawnable positions.
+     * @return A list of coordinates where it is safe to spawn objects.
+     */
     private List<Vector3> getReachableTiles(String mapId) {
         return reachableTilesCache.computeIfAbsent(mapId, s -> floodFill(worldManager.getMap(s)));
     }
 
-    /// Returns the number of reachable tiles on a map.
-    /// Useful for calculating dynamic entity limits based on map size.
+    /**
+     * Returns the number of reachable tiles on a map.
+     * Useful for calculating dynamic entity limits based on map size.
+     *
+     * @param mapId The ID of the map.
+     * @return The count of reachable tiles.
+     */
     public int getReachableTileCount(String mapId) {
         return getReachableTiles(mapId).size();
     }
 
-    /// Spawns a specified number of random NPCs on the given map.
-    ///
-    /// Selects random reachable tiles to ensure NPCs are not stuck in walls.
-    ///
-    /// @param mapId The ID of the target map.
-    /// @param count The number of NPCs to spawn.
+    /**
+     * Spawns a specified number of random NPCs on the given map.
+     * <p>
+     * Selects random reachable tiles to ensure NPCs are not stuck in walls.
+     *
+     * @param mapId The ID of the target map.
+     * @param count The number of NPCs to spawn.
+     */
     public void spawnRandomNpcs(String mapId, int count) {
         final List<Vector3> reachableTiles = getReachableTiles(mapId);
         final List<NpcTemplate> templates = npcTable.getDefinitions();
@@ -90,10 +105,12 @@ public class SpawnManager {
         }
     }
 
-    /// Spawns a specified number of random aggressive NPCs on the given map.
-    ///
-    /// @param mapId The ID of the target map.
-    /// @param count The number of NPCs to spawn.
+    /**
+     * Spawns a specified number of random aggressive NPCs on the given map.
+     *
+     * @param mapId The ID of the target map.
+     * @param count The number of NPCs to spawn.
+     */
     public void spawnRandomAggressiveNpcs(String mapId, int count) {
         final List<Vector3> reachableTiles = getReachableTiles(mapId);
         final List<NpcTemplate> templates = npcTable.getDefinitions().stream().filter(NpcTemplate::isAggressive).toList();
@@ -112,11 +129,13 @@ public class SpawnManager {
         spawnNpcs(mapId, count, reachableTiles, templates, mapData);
     }
 
-    /// Spawns a specific type of NPC on the map.
-    ///
-    /// @param mapId         The ID of the target map.
-    /// @param npcTemplateId The ID of the NPC template (e.g., "mutant_rat").
-    /// @param count         The number of instances to spawn.
+    /**
+     * Spawns a specific type of NPC on the map.
+     *
+     * @param mapId         The ID of the target map.
+     * @param npcTemplateId The ID of the NPC template (e.g., "mutant_rat").
+     * @param count         The number of instances to spawn.
+     */
     public void spawnSpecificNpc(String mapId, String npcTemplateId, int count) {
         final List<Vector3> reachableTiles = getReachableTiles(mapId);
         final GameMapData mapData = worldManager.getMap(mapId);
@@ -129,12 +148,14 @@ public class SpawnManager {
         }
     }
 
-    /// Spawns random loot items scattered across the map.
-    ///
-    /// Uses the ItemFactory to generate items and places them on valid tiles.
-    ///
-    /// @param mapId The ID of the target map.
-    /// @param count The number of items to spawn.
+    /**
+     * Spawns random loot items scattered across the map.
+     * <p>
+     * Uses the ItemFactory to generate items and places them on valid tiles.
+     *
+     * @param mapId The ID of the target map.
+     * @param count The number of items to spawn.
+     */
     public void spawnRandomLoot(String mapId, int count) {
         final List<Vector3> reachableTiles = getReachableTiles(mapId);
         final List<ItemTemplate> allTemplates = itemTable.getDefinitions();

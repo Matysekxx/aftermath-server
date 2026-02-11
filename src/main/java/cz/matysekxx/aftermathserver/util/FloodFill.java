@@ -7,19 +7,26 @@ import cz.matysekxx.aftermathserver.core.world.triggers.TeleportTrigger;
 
 import java.util.*;
 
-/// Utility class for calculating reachable areas on the map.
-///
-/// Uses the BFS (Breadth-First Search) algorithm to identify all tiles
-/// that a player can reach from the starting points (spawns).
+/**
+ * Utility class for calculating reachable areas on the map.
+ * <p>
+ * Uses the BFS (Breadth-First Search) algorithm to identify all tiles
+ * that a player can reach from the starting points (spawns). This is crucial
+ * for server-side validation of player movement and for AI pathfinding logic.
+ *
+ * @author Matysekxx
+ */
 public final class FloodFill {
 
-    /// Calculates reachable tiles for a given map.
-    ///
-    /// The algorithm starts at all defined spawn points of the map and spreads in all
-    /// directions. It considers terrain walkability and follows teleportation triggers (stairs, links).
-    ///
-    /// @param map The map data to be analyzed.
-    /// @return A list of unique coordinates that are reachable.
+    /**
+     * Calculates reachable tiles for a given map.
+     * <p>
+     * The algorithm starts at all defined spawn points of the map and spreads in all
+     * directions. It considers terrain walkability and follows teleportation triggers (stairs, links).
+     *
+     * @param map The map data to be analyzed.
+     * @return A list of unique coordinates that are reachable.
+     */
     public static List<Vector3> floodFill(GameMapData map) {
         if (map == null) return List.of();
 
@@ -62,6 +69,12 @@ public final class FloodFill {
         return getNeighbors(center).stream().filter(pos -> isWalkable(mapData, pos)).toList();
     }
 
+    /**
+     * Gets the four direct neighbors (up, down, left, right) of a given coordinate.
+     *
+     * @param c The central coordinate.
+     * @return A list of neighboring coordinates.
+     */
     private static List<Vector3> getNeighbors(Vector3 c) {
         return List.of(
                 Vector3.of(c.x(), c.y() - 1, c.z()),
@@ -71,6 +84,13 @@ public final class FloodFill {
         );
     }
 
+    /**
+     * Checks if a tile at a given coordinate is walkable.
+     *
+     * @param map The map data.
+     * @param c   The coordinate to check.
+     * @return {@code true} if the tile is within bounds and walkable, {@code false} otherwise.
+     */
     private static boolean isWalkable(GameMapData map, Vector3 c) {
         final ParsedMapLayer mapLayer = map.getLayer(c.z());
         if (mapLayer == null) return false;

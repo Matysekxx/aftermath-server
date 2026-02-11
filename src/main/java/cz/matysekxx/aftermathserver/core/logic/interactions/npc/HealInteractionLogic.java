@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Logic for handling healing interactions with NPCs.
+ *
+ * @author Matysekxx
+ */
 @Component
 public class HealInteractionLogic implements NpcInteractionLogic {
     @Override

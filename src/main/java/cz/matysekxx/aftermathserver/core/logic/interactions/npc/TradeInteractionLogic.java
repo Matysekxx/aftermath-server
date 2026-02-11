@@ -14,6 +14,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Logic for handling trading interactions with NPCs.
+ *
+ * @author Matysekxx
+ */
 @Component
 public class TradeInteractionLogic implements NpcInteractionLogic {
     @Override

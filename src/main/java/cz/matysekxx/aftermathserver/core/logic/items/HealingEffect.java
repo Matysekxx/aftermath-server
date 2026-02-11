@@ -4,7 +4,11 @@ import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import org.springframework.stereotype.Component;
 
-/// Logic for items that restore health (Medkits, Food).
+/**
+ * Logic for items that restore health (Medkits, Food).
+ *
+ * @author Matysekxx
+ */
 @Component("HEAL")
 public class HealingEffect implements ItemEffect {
     @Override

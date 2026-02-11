@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cz.matysekxx.aftermathserver.core.GameEngine;
 import org.springframework.stereotype.Component;
 
-/// Handles combat attacks.
-///
-/// Triggered by the `ATTACK` command.
-/// Calculates damage and applies it to the target entity.
+/**
+ * Handles combat attacks triggered by the client.
+ * Calculates damage and applies it to the target entity via GameEngine.
+ *
+ * @author Matysekxx
+ */
 @Component("ATTACK")
 public class AttackAction extends Action {
     protected AttackAction(GameEngine gameEngine) {

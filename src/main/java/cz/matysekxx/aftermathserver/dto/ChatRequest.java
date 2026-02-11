@@ -5,12 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/// DTO for incoming chat messages from the client.
+/**
+ * DTO for incoming chat messages from the client.
+ *
+ * @author Matysekxx
+ */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatRequest {
-    /// The content of the chat message.
+    /** The content of the chat message. */
     private String message;
 }

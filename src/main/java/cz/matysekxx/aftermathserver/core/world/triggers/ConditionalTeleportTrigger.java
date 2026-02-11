@@ -11,7 +11,13 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 import java.util.function.Predicate;
 
-/// Represents a single station in the metro network.
+/**
+ * A teleportation trigger that only activates if a specific condition is met.
+ * <p>
+ * Uses SpEL (Spring Expression Language) to evaluate conditions against the player entity.
+ *
+ * @author Matysekxx
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Slf4j

@@ -15,31 +15,39 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-/// Service responsible for managing and applying periodic changes to player statistics.
-///
-/// This service handles environmental effects such as radiation damage in hazard zones
-/// and health regeneration in safe zones.
+/**
+ * Service responsible for managing and applying periodic changes to player statistics.
+ * <p>
+ * This service handles environmental effects such as radiation damage in hazard zones
+ * and health regeneration in safe zones.
+ *
+ * @author Matysekxx
+ */
 @Service
 public class StatsService {
     private final WorldManager worldManager;
     private final GameEventQueue gameEventQueue;
     private final Map<String, ItemEffect> itemEffects;
 
-    /// Constructs the StatsService.
-    ///
-    /// @param worldManager   The world manager to access map data.
-    /// @param gameEventQueue The event queue for sending updates.
-    /// @param itemEffects    A map of item effects for consumables.
+    /**
+     * Constructs the StatsService.
+     *
+     * @param worldManager   The world manager to access map data.
+     * @param gameEventQueue The event queue for sending updates.
+     * @param itemEffects    A map of item effects for consumables.
+     */
     public StatsService(WorldManager worldManager, GameEventQueue gameEventQueue, Map<String, ItemEffect> itemEffects) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
         this.itemEffects = itemEffects;
     }
 
-    /// Applies environmental effects to a player based on the current map type.
-    ///
-    /// @param player The player to update.
-    /// @return true if any statistics were changed, false otherwise.
+    /**
+     * Applies environmental effects to a player based on the current map type.
+     *
+     * @param player The player to update.
+     * @return true if any statistics were changed, false otherwise.
+     */
     public boolean applyStats(Player player) {
         final GameMapData map = worldManager.getMap(player.getMapId());
         return switch (map.getType()) {
@@ -48,10 +56,12 @@ public class StatsService {
         };
     }
 
-    /// Restores health and reduces radiation for players in safe zones.
-    ///
-    /// @param player The player to regenerate.
-    /// @return true if health or radiation levels were modified.
+    /**
+     * Restores health and reduces radiation for players in safe zones.
+     *
+     * @param player The player to regenerate.
+     * @return true if health or radiation levels were modified.
+     */
     private boolean applyRegeneration(Player player) {
         if (player.getHp() < player.getMaxHp()) {
             player.setHp(player.getHp() + 1);
@@ -64,10 +74,13 @@ public class StatsService {
         return false;
     }
 
-    /// Increases radiation levels and applies damage if the radiation limit is exceeded.
-    ///
-    /// @param player The player affected by radiation.
-    /// @return true if radiation increased or health decreased.
+    /**
+     * Increases radiation levels and applies damage if the radiation limit is exceeded.
+     *
+     * @param player     The player affected by radiation.
+     * @param difficulty The difficulty level of the map.
+     * @return true if radiation increased or health decreased.
+     */
     private boolean applyRadiation(Player player, int difficulty) {
         player.setRads(player.getRads() + (difficulty / 3));
 
@@ -85,10 +98,12 @@ public class StatsService {
         return true;
     }
 
-    /// Processes the usage of a consumable item by delegating to the appropriate effect logic.
-    ///
-    /// @param player     The player using the item.
-    /// @param useRequest The request containing inventory slot information.
+    /**
+     * Processes the usage of a consumable item by delegating to the appropriate effect logic.
+     *
+     * @param player     The player using the item.
+     * @param useRequest The request containing inventory slot information.
+     */
     public void useConsumable(Player player, UseRequest useRequest) {
         final Inventory inventory = player.getInventory();
         final Item item = inventory.getSlots().get(useRequest.getSlotIndex());

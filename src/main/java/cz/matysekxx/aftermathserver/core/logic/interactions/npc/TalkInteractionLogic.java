@@ -11,6 +11,11 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Logic for handling simple talk interactions with NPCs.
+ *
+ * @author Matysekxx
+ */
 @Component
 public class TalkInteractionLogic implements NpcInteractionLogic {
     private final DialogRegistry dialogRegistry;

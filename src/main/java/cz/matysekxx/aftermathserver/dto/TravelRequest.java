@@ -3,7 +3,11 @@ package cz.matysekxx.aftermathserver.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/// DTO for metro travel requests.
+/**
+ * DTO for metro travel requests from the client.
+ *
+ * @author Matysekxx
+ */
 @Data
 @NoArgsConstructor
 public class TravelRequest {

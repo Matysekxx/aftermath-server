@@ -10,7 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/// Registry mapping characters in map files to `TileType` definitions.
+/**
+ * Registry mapping characters in map files to {@link TileType} definitions.
+ *
+ * @author Matysekxx
+ */
 @Slf4j
 @Data
 @Configuration
@@ -27,7 +31,11 @@ public class TileRegistry {
         }
     }
 
-    /// Looks up the TileType for a given character symbol.
+    /**
+     * Looks up the TileType for a given character symbol.
+     * @param c The character symbol.
+     * @return The corresponding TileType.
+     */
     public TileType getType(char c) {
         return mapping.getOrDefault(c, TileType.UNKNOWN);
     }

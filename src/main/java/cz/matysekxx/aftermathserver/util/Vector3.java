@@ -1,12 +1,16 @@
 package cz.matysekxx.aftermathserver.util;
 
-/// Represents a 3D coordinate point in the game world.
-///
-/// Includes the layer index (z) to identify the specific map depth or floor.
-///
-/// @param x The horizontal position.
-/// @param y The vertical position.
-/// @param z The layer index (Z-coordinate).
+/**
+ * Represents a 3D coordinate point in the game world.
+ * <p>
+ * Includes the layer index (z) to identify the specific map depth or floor level.
+ *
+ * @param x The horizontal position.
+ * @param y The vertical position.
+ * @param z The layer index (Z-coordinate).
+ *
+ * @author Matysekxx
+ */
 public record Vector3(int x, int y, int z) {
 
     /// Creates a new Vector3 instance.

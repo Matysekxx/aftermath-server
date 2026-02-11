@@ -5,6 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Data Transfer Object representing an NPC for the client.
+ *
+ * @author Matysekxx
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

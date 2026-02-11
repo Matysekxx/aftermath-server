@@ -11,9 +11,15 @@ import lombok.Getter;
 
 import java.util.*;
 
-/// Represents a single layer of a parsed map.
-///
-/// Contains the grid of TileTypes and original symbols.
+/**
+ * Represents a single layer of a parsed map from its text representation.
+ * <p>
+ * This class holds the grid of {@link TileType}s and the original character symbols,
+ * providing methods to access tile data and dimensions. It also processes
+ * special markers for spawns, NPCs, and other game objects during parsing.
+ *
+ * @author Matysekxx
+ */
 @Getter
 public class ParsedMapLayer {
     private final TileType[][] tiles;

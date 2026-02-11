@@ -6,7 +6,11 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-/// Handles `BROADCAST_CHAT_MSG` events by broadcasting a chat message to all players on the map.
+/**
+ * Handles {@code BROADCAST_CHAT_MSG} events by broadcasting a chat message to all players on the map.
+ *
+ * @author Matysekxx
+ */
 @Component
 public class ChatMessageEventHandler extends GameEventHandler {
     public ChatMessageEventHandler(@Lazy NetworkService networkService) {

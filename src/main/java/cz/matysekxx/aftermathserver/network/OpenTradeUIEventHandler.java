@@ -6,11 +6,15 @@ import cz.matysekxx.aftermathserver.event.GameEvent;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-/// Handles `OPEN_TRADE_UI` events by sending the trade offer to the client.
+/**
+ * Handles {@code OPEN_TRADE_UI} events by sending the trade offer to the client.
+ *
+ * @author Matysekxx
+ */
 @Component
 public class OpenTradeUIEventHandler extends GameEventHandler {
 
-    /// Constructs the OpenTradeUIEventHandler.
+    /** Constructs the OpenTradeUIEventHandler. */
     public OpenTradeUIEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }

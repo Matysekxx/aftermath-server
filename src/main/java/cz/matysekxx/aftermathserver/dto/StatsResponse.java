@@ -4,24 +4,33 @@ import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/// DTO for sending player statistics to the client.
+/**
+ * DTO for sending player statistics to the client.
+ *
+ * @author Matysekxx
+ */
 @Getter
 @AllArgsConstructor
 public class StatsResponse {
-    /// Current health points.
+    /** Current health points. */
     private int hp;
-    /// Maximum health points.
+    /** Maximum health points. */
     private int maxHp;
-    /// Current radiation level.
+    /** Current radiation level. */
     private int rads;
-    /// Current credits balance.
+    /** Current credits balance. */
     private int credits;
-    /// Current debt.
+    /** Current debt. */
     private int debt;
     private Integer equippedWeaponSlot;
     private Integer equippedMaskSlot;
 
-    /// Creates a StatsResponse from a Player entity.
+    /**
+     * Creates a StatsResponse from a Player entity.
+     *
+     * @param player The player entity.
+     * @return A new StatsResponse instance.
+     */
     public static StatsResponse of(Player player) {
         return new StatsResponse(
             player.getHp(), 

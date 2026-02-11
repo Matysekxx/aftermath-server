@@ -4,10 +4,15 @@ import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/// Trigger definition for healing tiles.
+/**
+ * Trigger definition for healing tiles.
+ *
+ * @author Matysekxx
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class HealTrigger extends TileTrigger {
+    /** The amount of health to restore. */
     private int healAmount;
 
     @Override
