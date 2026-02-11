@@ -10,6 +10,7 @@ game:
         maxStack: 5
         weight: 0.5
         price: 40
+        rarity: UNCOMMON
 
       - id: "antirad"
         name: "Anti-Rad Injection"
@@ -20,6 +21,7 @@ game:
         maxStack: 10
         weight: 0.3
         price: 35
+        rarity: UNCOMMON
 
       - id: "canned_food"
         name: "Canned Beef"
@@ -30,6 +32,7 @@ game:
         maxStack: 10
         weight: 0.4
         price: 10
+        rarity: COMMON
 
       - id: "vodka"
         name: "Vodka"
@@ -40,6 +43,7 @@ game:
         maxStack: 5
         weight: 0.5
         price: 40
+        rarity: COMMON
 
       - id: "filter"
         name: "Gas Mask Filter"
@@ -51,3 +55,70 @@ game:
         weight: 0.2
         price: 60
         durability: 5000
+        rarity: UNCOMMON
+
+      - id: "military_stim"
+        name: "Military Stimpack"
+        description: "Experimental combat drug. Heals rapidly."
+        type: CONSUMABLE
+        effect: "HEAL"
+        healAmount: 100
+        maxStack: 5
+        weight: 0.1
+        price: 150
+        rarity: RARE
+
+      - id: "clean_water"
+        name: "Purified Water"
+        description: "Rare bottle of clean water. Refreshing."
+        type: CONSUMABLE
+        effect: "HEAL"
+        healAmount: 10
+        maxStack: 10
+        weight: 0.5
+        price: 25
+        rarity: UNCOMMON
+
+      - id: "herbal_mix"
+        name: "Mutant Herbs"
+        description: "Strange glowing herbs. Might heal you or kill you."
+        type: CONSUMABLE
+        effect: "HEAL"
+        healAmount: 5
+        maxStack: 20
+        weight: 0.1
+        price: 5
+        rarity: COMMON
+
+      - id: "energy_drink"
+        name: "Rad-Bull"
+        description: "Gives you wings, and maybe a third arm. Restores some HP."
+        type: CONSUMABLE
+        effect: "HEAL"
+        healAmount: 20
+        maxStack: 10
+        weight: 0.3
+        price: 30
+        rarity: UNCOMMON
+
+      - id: "bandage"
+        name: "Dirty Bandage"
+        description: "Better than bleeding out."
+        type: CONSUMABLE
+        effect: "HEAL"
+        healAmount: 10
+        maxStack: 20
+        weight: 0.05
+        price: 5
+        rarity: COMMON
+
+      - id: "radiation_pills"
+        name: "Rad-X"
+        description: "Old world pills that provide radiation resistance."
+        type: CONSUMABLE
+        effect: "ANTIRAD"
+        healAmount: 50
+        maxStack: 10
+        weight: 0.1
+        price: 80
+        rarity: RARE
