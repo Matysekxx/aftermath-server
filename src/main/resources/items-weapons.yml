@@ -11,6 +11,7 @@ game:
         weight: 1.5
         cooldown: 700
         price: 10
+        rarity: COMMON
 
       - id: "pistol"
         name: "Pistol"
@@ -22,6 +23,7 @@ game:
         weight: 1.0
         cooldown: 500
         price: 150
+        rarity: UNCOMMON
 
       - id: "ak47"
         name: "AK-47"
@@ -33,6 +35,7 @@ game:
         weight: 3.5
         cooldown: 450
         price: 400
+        rarity: RARE
 
       - id: "shotgun"
         name: "Shotgun"
@@ -44,6 +47,7 @@ game:
         weight: 2.5
         cooldown: 1000
         price: 350
+        rarity: RARE
 
       - id: "knife"
         name: "Combat Knife"
@@ -55,3 +59,76 @@ game:
         weight: 0.5
         cooldown: 300
         price: 80
+        rarity: UNCOMMON
+
+      - id: "gauss_rifle"
+        name: "Gauss Rifle"
+        description: "High-tech weapon using electromagnetic coils."
+        type: WEAPON
+        damage: 80
+        maxStack: 1
+        range: 20
+        weight: 5.0
+        cooldown: 1500
+        price: 1200
+        rarity: LEGENDARY
+
+      - id: "flamethrower"
+        name: "Flamethrower"
+        description: "Burns everything in its path. Short range."
+        type: WEAPON
+        damage: 25
+        maxStack: 1
+        range: 3
+        weight: 6.0
+        cooldown: 100
+        price: 600
+        rarity: EPIC
+
+      - id: "sniper_rifle"
+        name: "Sniper Rifle"
+        description: "Precision rifle for long-range engagements."
+        type: WEAPON
+        damage: 60
+        maxStack: 1
+        range: 25
+        weight: 4.5
+        cooldown: 2000
+        price: 500
+        rarity: EPIC
+
+      - id: "machete"
+        name: "Machete"
+        description: "A large, heavy blade. Good for clearing brush and mutants."
+        type: WEAPON
+        damage: 18
+        maxStack: 1
+        range: 1
+        weight: 1.2
+        cooldown: 500
+        price: 120
+        rarity: UNCOMMON
+
+      - id: "crossbow"
+        name: "Crossbow"
+        description: "Silent and reusable ammo. Good for stealth."
+        type: WEAPON
+        damage: 25
+        maxStack: 1
+        range: 10
+        weight: 2.0
+        cooldown: 1200
+        price: 200
+        rarity: RARE
+
+      - id: "plasma_pistol"
+        name: "Plasma Pistol"
+        description: "Fires bolts of superheated plasma."
+        type: WEAPON
+        damage: 35
+        maxStack: 1
+        range: 6
+        weight: 1.5
+        cooldown: 800
+        price: 800
+        rarity: EPIC
