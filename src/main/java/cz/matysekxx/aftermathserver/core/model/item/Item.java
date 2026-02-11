@@ -43,6 +43,10 @@ public class Item {
     private Integer price;
     /** Identifier for the effect applied on use. */
     private String effect;
+    /** Whether the item can be dropped. */
+    private boolean droppable;
+    /** Current durability. */
+    private Integer durability;
 
     /**
      * Calculates the total weight of the item stack based on quantity.

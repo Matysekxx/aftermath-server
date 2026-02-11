@@ -12,11 +12,13 @@ package cz.matysekxx.aftermathserver.util;
  */
 public record Vector2(int x, int y) {
 
-    /// Creates a new Vector2 instance.
-    ///
-    /// @param x The horizontal coordinate.
-    /// @param y The vertical coordinate.
-    /// @return A new Vector2.
+    /**
+     * Creates a new Vector2 instance.
+     *
+     * @param x The horizontal coordinate.
+     * @param y The vertical coordinate.
+     * @return A new Vector2.
+     */
     public static Vector2 of(int x, int y) {
         return new Vector2(x, y);
     }

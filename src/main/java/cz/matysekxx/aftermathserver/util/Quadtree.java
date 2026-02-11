@@ -30,7 +30,7 @@ public class Quadtree<T extends Spatial> {
         this.objects = new ArrayList<>();
     }
 
-    /// Clears the quadtree.
+    /** Clears the quadtree. */
     public void clear() {
         objects.clear();
         if (nodes != null) {
@@ -41,7 +41,7 @@ public class Quadtree<T extends Spatial> {
         }
     }
 
-    /// Splits the node into 4 subnodes.
+    /** Splits the node into 4 subnodes. */
     private void split() {
         final int subWidth = this.bounds.width() / 2;
         final int subHeight = this.bounds.height() / 2;
@@ -55,7 +55,7 @@ public class Quadtree<T extends Spatial> {
         nodes[3] = new Quadtree<>(level + 1, Rectangle.of(x + subWidth, y + subHeight, subWidth, subHeight));
     }
 
-    /// Determine which node the object belongs to. -1 means object cannot completely fit within a child node.
+    /** Determine which node the object belongs to. -1 means object cannot completely fit within a child node. */
     private int getIndex(T p) {
         int index = -1;
         final double verticalMidpoint = bounds.x() + (bounds.width() >> 1);
@@ -74,7 +74,7 @@ public class Quadtree<T extends Spatial> {
         return index;
     }
 
-    /// Insert the object into the quadtree.
+    /** Insert the object into the quadtree. */
     @SuppressWarnings("unchecked")
     public void insert(T p) {
         if (nodes != null) {
@@ -101,7 +101,7 @@ public class Quadtree<T extends Spatial> {
         }
     }
 
-    /// Return all objects that could collide with the given object.
+    /** Return all objects that could collide with the given object. */
     @SuppressWarnings("unchecked")
     public List<T> retrieve(List<T> returnObjects, T p) {
         final int index = getIndex(p);

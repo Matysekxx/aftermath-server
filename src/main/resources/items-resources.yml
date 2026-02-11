@@ -40,3 +40,12 @@ game:
         maxStack: 10
         weight: 0.3
         price: 4
+
+      - id: "dust"
+        name: "Radioactive Dust"
+        description: "Sticky dust from the tunnels. You cannot get rid of it."
+        type: RESOURCE
+        maxStack: 10
+        weight: 0.1
+        price: 0
+        droppable: false

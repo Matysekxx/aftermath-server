@@ -21,11 +21,13 @@ public class ItemFactory {
         this.itemTable = itemTable;
     }
 
-    /// Creates a new item instance.
-    ///
-    /// @param id       The item ID.
-    /// @param quantity The quantity.
-    /// @return A new Item object.
+    /**
+     * Creates a new item instance.
+     *
+     * @param id       The item ID.
+     * @param quantity The quantity.
+     * @return A new Item object.
+     */
     public Item createItem(String id, int quantity) {
         final ItemTemplate template = itemTable.getItemTemplate(id);
         if (template == null) {

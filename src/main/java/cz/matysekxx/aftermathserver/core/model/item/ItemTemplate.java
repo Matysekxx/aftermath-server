@@ -35,4 +35,8 @@ public class ItemTemplate {
     private Integer price;
     /** Identifier for the effect applied on use. */
     private String effect;
+    /** Whether the item can be dropped. Default true. */
+    private boolean droppable = true;
+    /** Max durability for items like masks. */
+    private Integer durability;
 }

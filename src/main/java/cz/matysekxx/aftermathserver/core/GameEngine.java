@@ -31,11 +31,11 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class GameEngine {
-    /// Viewport constants for map rendering (radius from center)
+    /** Viewport constants for map rendering (radius from center) */
     public static final int VIEWPORT_RANGE_X = 60;
     public static final int VIEWPORT_RANGE_Y = 20;
     private static final int TICKS_PER_DAY = 1200;
-    /// Target density: 1 NPC per 1000 reachable tiles (0.001)
+    /** Target density: 1 NPC per 1000 reachable tiles (0.001) */
     private static final double NPC_DENSITY = 0.001;
     private static final int DAILY_RESPAWN_COUNT = 3;
     private final WorldManager worldManager;
@@ -178,6 +178,11 @@ public class GameEngine {
         final Optional<Player> maybePlayer = playerRegistry.getMaybePlayer(playerId);
         if (maybePlayer.isEmpty()) return;
         final Player player = maybePlayer.get();
+        final Item itemToCheck = player.getInventory().getSlots().get(slotIndex);
+        if (itemToCheck != null && !itemToCheck.isDroppable()) {
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("This item cannot be dropped.", playerId));
+            return;
+        }
         final Optional<Item> droppedItem = player.getInventory().removeItem(slotIndex, amount);
         droppedItem.ifPresentOrElse(item -> {
             final GameMapData map = worldManager.getMap(player.getMapId());

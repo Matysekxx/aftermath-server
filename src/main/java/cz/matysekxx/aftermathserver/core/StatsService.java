@@ -87,8 +87,17 @@ public class StatsService {
         int maskBonus = 0;
         if (player.getEquippedMaskSlot() != null) {
             final Item mask = player.getInventory().getSlots().get(player.getEquippedMaskSlot());
-            if (mask != null && mask.getHealAmount() != null) {
-                maskBonus = mask.getHealAmount();
+            if (mask != null) {
+                if (mask.getDurability() != null && mask.getDurability() > 0) {
+                    mask.setDurability(mask.getDurability() - 1);
+                    if (mask.getDurability() <= 0) {
+                        gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("WARNING: Your mask filter has depleted!", player.getId()));
+                    } else if (mask.getHealAmount() != null) {
+                        maskBonus = mask.getHealAmount();
+                    }
+                } else if (mask.getHealAmount() != null && mask.getDurability() == null) {
+                    maskBonus = mask.getHealAmount();
+                }
             }
         }
 

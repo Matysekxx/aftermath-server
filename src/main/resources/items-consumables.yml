@@ -50,3 +50,4 @@ game:
         maxStack: 5
         weight: 0.2
         price: 60
+        durability: 5000

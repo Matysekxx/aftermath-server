@@ -21,9 +21,9 @@ public enum Direction {
     LEFT(-1, 0),
     RIGHT(1, 0);
 
-    /// The change in X coordinate.
+    /** The change in X coordinate. */
     private final int dx;
-    /// The change in Y coordinate.
+    /** The change in Y coordinate. */
     private final int dy;
 
     /**
