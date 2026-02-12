@@ -150,8 +150,8 @@ public class MetroService {
      * <p>
      * Currently, a placeholder for future logic (e.g., cutscenes).
      */
+    @Deprecated
     public void completeTravel(Player player) {
-        //TODO: zatim se nepouziva pozdeji pridam napr poslani eventu na spusteni cutsceny na klientovi
     }
 
     /**
