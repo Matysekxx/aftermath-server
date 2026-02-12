@@ -29,8 +29,7 @@ public class TravelAction extends Action {
     public void execute(String sessionId, JsonNode payload) {
         final TravelRequest travelRequest = objectMapper.convertValue(payload, TravelRequest.class);
         final Optional<Player> player = gameEngine.getMaybePlayerById(sessionId);
-        if (player.isPresent() && player.get().getState() == State.TRAVELLING) {
-            metroService.startTravel(player.get(), travelRequest.getMapId(), travelRequest.getLineId());
-        }
+        player.ifPresent(value ->
+                metroService.startTravel(value, travelRequest.getMapId(), travelRequest.getLineId()));
     }
 }

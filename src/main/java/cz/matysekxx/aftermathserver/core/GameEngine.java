@@ -216,7 +216,7 @@ public class GameEngine {
     private void broadcastMapPlayers(String mapId) {
         final List<OtherPlayerDto> players = new ArrayList<>();
         playerRegistry.forEachWithPredicate(
-                p -> p.getMapId().equals(mapId) && p.getState() != State.DEAD && p.getState() != State.TRAVELLING,
+                p -> p.getMapId().equals(mapId) && p.getState() != State.DEAD,
                 p -> players.add(OtherPlayerDto.fromPlayer(p))
         );
 
@@ -314,7 +314,7 @@ public class GameEngine {
     private Set<String> updatePlayers() {
         final Set<String> activeMapIds = new HashSet<>();
         playerRegistry.forEachWithPredicate(
-                player -> player.getState() != State.DEAD && player.getState() != State.TRAVELLING,
+                player -> player.getState() != State.DEAD,
                 player -> {
                     final boolean statsChanged = statsService.applyStats(player);
                     if (player.getHp() <= 0) {

@@ -69,8 +69,6 @@ public class MetroService {
             gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Metro line not found", player.getId()));
             return;
         }
-
-        player.setState(State.TRAVELLING);
         final Map.Entry<String, List<MetroStation>> payload = Map.entry(lineId, availableDestinations);
         gameEventQueue.enqueue(
                 GameEventFactory.sendMetroUiEvent(payload, player.getId())
