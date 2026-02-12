@@ -13,13 +13,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class StatsServiceTest {
 
-    private WorldManager worldManager;
+    private FakeWorldManager worldManager;
     private GameEventQueue gameEventQueue;
     private StatsService statsService;
     private Player player;
@@ -28,11 +29,11 @@ class StatsServiceTest {
 
     @BeforeEach
     void setUp() {
-        worldManager = mock(WorldManager.class);
-        gameEventQueue = mock(GameEventQueue.class);
+        worldManager = new FakeWorldManager();
+        gameEventQueue = new GameEventQueue();
         statsService = new StatsService(worldManager, gameEventQueue, Collections.emptyMap());
 
-        PlayerClassConfig config = new PlayerClassConfig();
+        final PlayerClassConfig config = new PlayerClassConfig();
         config.setMaxHp(100);
         config.setInventoryCapacity(10);
         config.setMaxWeight(50.0);
@@ -41,18 +42,20 @@ class StatsServiceTest {
         player = new Player("session1", "TestPlayer", new Vector3(0, 0, 0), config, "prosek", "scavenger");
 
         hazardMap = new GameMapData();
+        hazardMap.setId("prosek");
         hazardMap.setType(MapType.HAZARD_ZONE);
         hazardMap.setDifficulty(3);
 
         safeMap = new GameMapData();
+        safeMap.setId("prosek");
         safeMap.setType(MapType.SAFE_ZONE);
     }
 
     @Test
     void testApplyRadiationWithoutMask() {
-        when(worldManager.getMap(anyString())).thenReturn(hazardMap);
+        worldManager.addMap(hazardMap);
 
-        boolean changed = statsService.applyStats(player);
+        final boolean changed = statsService.applyStats(player);
 
         assertTrue(changed);
         assertEquals(1, player.getRads());
@@ -60,10 +63,10 @@ class StatsServiceTest {
 
     @Test
     void testApplyRadiationDamageWhenLimitExceeded() {
-        when(worldManager.getMap(anyString())).thenReturn(hazardMap);
+        worldManager.addMap(hazardMap);
         player.setRads(25);
 
-        boolean changed = statsService.applyStats(player);
+        final boolean changed = statsService.applyStats(player);
 
         assertTrue(changed);
         assertEquals(97, player.getHp());
@@ -71,9 +74,9 @@ class StatsServiceTest {
 
     @Test
     void testMaskDurabilityDecreases() {
-        when(worldManager.getMap(anyString())).thenReturn(hazardMap);
+        worldManager.addMap(hazardMap);
 
-        Item mask = Item.builder()
+        final Item mask = Item.builder()
                 .id("filter")
                 .type(ItemType.MASK)
                 .durability(10)
@@ -88,17 +91,17 @@ class StatsServiceTest {
 
         statsService.applyStats(player);
 
-        Item equippedMask = player.getInventory().getSlots().get(0);
+        final Item equippedMask = player.getInventory().getSlots().get(0);
         assertEquals(9, equippedMask.getDurability());
     }
 
     @Test
     void testRegenerationInSafeZone() {
-        when(worldManager.getMap(anyString())).thenReturn(safeMap);
+        worldManager.addMap(safeMap);
         player.setHp(50);
         player.setRads(10);
 
-        boolean changed = statsService.applyStats(player);
+        final boolean changed = statsService.applyStats(player);
 
         assertTrue(changed);
         assertEquals(51, player.getHp());
@@ -106,13 +109,20 @@ class StatsServiceTest {
 
     @Test
     void testRadiationReductionInSafeZone() {
-        when(worldManager.getMap(anyString())).thenReturn(safeMap);
+        worldManager.addMap(safeMap);
         player.setHp(100);
         player.setRads(10);
 
-        boolean changed = statsService.applyStats(player);
+        final boolean changed = statsService.applyStats(player);
 
         assertTrue(changed);
         assertEquals(5, player.getRads());
+    }
+
+    private static class FakeWorldManager extends WorldManager {
+        private final Map<String, GameMapData> maps = new HashMap<>();
+        public FakeWorldManager() { super(null); }
+        public void addMap(GameMapData map) { maps.put(map.getId(), map); }
+        @Override public GameMapData getMap(String id) { return maps.get(id); }
     }
 }

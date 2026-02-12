@@ -15,97 +15,182 @@ import cz.matysekxx.aftermathserver.core.world.parser.ParsedMapLayer;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class SpawnManagerTest {
 
-    @Mock
-    private WorldManager worldManager;
-    @Mock
-    private MapObjectFactory mapObjectFactory;
-    @Mock
-    private NpcFactory npcFactory;
-    @Mock
-    private NpcTable npcTable;
-    @Mock
-    private ItemTable itemTable;
+    private FakeWorldManager worldManager;
+    private FakeMapObjectFactory mapObjectFactory;
+    private FakeNpcFactory npcFactory;
+    private FakeNpcTable npcTable;
+    private FakeItemTable itemTable;
 
     private SpawnManager spawnManager;
     private GameMapData testMap;
 
     @BeforeEach
     void setUp() {
+        worldManager = new FakeWorldManager();
+        mapObjectFactory = new FakeMapObjectFactory();
+        npcFactory = new FakeNpcFactory();
+        npcTable = new FakeNpcTable();
+        itemTable = new FakeItemTable();
+
         spawnManager = new SpawnManager(worldManager, mapObjectFactory, npcFactory, npcTable, itemTable);
-        
+
         testMap = new GameMapData();
         testMap.setId("test_map");
 
-        ParsedMapLayer layer = mock(ParsedMapLayer.class);
-        when(layer.getWidth()).thenReturn(3);
-        when(layer.getHeight()).thenReturn(3);
-        when(layer.getTileAt(anyInt(), anyInt())).thenReturn(TileType.FLOOR);
+        final ParsedMapLayer layer = new FakeParsedMapLayer(3, 3, TileType.FLOOR);
         testMap.setParsedLayers(Map.of(0, layer));
 
         testMap.getSpawns().put("start", new Vector3(1, 1, 0));
-        
-        when(worldManager.getMap("test_map")).thenReturn(testMap);
+
+        worldManager.addMap(testMap);
     }
 
     @Test
     void testSpawnRandomNpcs() {
-        NpcTemplate template = new NpcTemplate();
+        final NpcTemplate template = new NpcTemplate();
         template.setId("rat");
-        when(npcTable.getDefinitions()).thenReturn(List.of(template));
-        
-        Npc mockNpc = mock(Npc.class);
-        when(npcFactory.createNpc(eq("rat"), anyInt(), anyInt(), anyInt(), eq("test_map"))).thenReturn(mockNpc);
+        npcTable.setDefinitions(List.of(template));
 
         spawnManager.spawnRandomNpcs("test_map", 5);
 
         assertEquals(5, testMap.getNpcs().size());
-        verify(npcFactory, times(5)).createNpc(eq("rat"), anyInt(), anyInt(), anyInt(), eq("test_map"));
+        assertEquals(5, npcFactory.createNpcCallCount);
+        assertEquals("rat", npcFactory.lastCreatedId);
     }
 
     @Test
     void testSpawnRandomLoot() {
-        ItemTemplate template = new ItemTemplate();
+        final ItemTemplate template = new ItemTemplate();
         template.setId("scrap");
         template.setRarity("COMMON");
-        when(itemTable.getDefinitions()).thenReturn(List.of(template));
-        
-        MapObject mockLoot = new MapObject();
-        mockLoot.setId("loot_1"); 
-
-        when(mapObjectFactory.createLootBag(eq("scrap"), anyInt(), anyInt(), anyInt(), anyInt())).thenReturn(mockLoot);
+        itemTable.setDefinitions(List.of(template));
 
         spawnManager.spawnRandomLoot("test_map", 3);
 
         assertEquals(3, testMap.getObjects().size());
-        verify(mapObjectFactory, times(3)).createLootBag(eq("scrap"), anyInt(), anyInt(), anyInt(), anyInt());
+        assertEquals(3, mapObjectFactory.createLootBagCallCount);
+        assertEquals("scrap", mapObjectFactory.lastCreatedId);
     }
 
     @Test
     void testSpawnSpecificNpc() {
-        NpcTemplate template = new NpcTemplate();
+        final NpcTemplate template = new NpcTemplate();
         template.setId("boss");
-        when(npcTable.getTemplate("boss")).thenReturn(template);
-        
-        Npc mockNpc = mock(Npc.class);
-        when(npcFactory.createNpc(eq("boss"), anyInt(), anyInt(), anyInt(), eq("test_map"))).thenReturn(mockNpc);
+        npcTable.addTemplate("boss", template);
 
         spawnManager.spawnSpecificNpc("test_map", "boss", 1);
 
         assertEquals(1, testMap.getNpcs().size());
-        verify(npcFactory).createNpc(eq("boss"), anyInt(), anyInt(), anyInt(), eq("test_map"));
+        assertEquals(1, npcFactory.createNpcCallCount);
+        assertEquals("boss", npcFactory.lastCreatedId);
+    }
+
+
+    private static class FakeWorldManager extends WorldManager {
+        private final Map<String, GameMapData> maps = new HashMap<>();
+        public FakeWorldManager() { super(null); }
+        public void addMap(GameMapData map) { maps.put(map.getId(), map); }
+        @Override public GameMapData getMap(String id) { return maps.get(id); }
+    }
+
+    private static class FakeMapObjectFactory extends MapObjectFactory {
+        int createLootBagCallCount = 0;
+        String lastCreatedId;
+
+        public FakeMapObjectFactory() { super(null); }
+
+        @Override
+        public MapObject createLootBag(String itemId, int x, int y, int z, int amount) {
+            createLootBagCallCount++;
+            lastCreatedId = itemId;
+            MapObject obj = new MapObject();
+            obj.setId("loot_" + createLootBagCallCount);
+            return obj;
+        }
+    }
+
+    private static class FakeNpcFactory extends NpcFactory {
+        int createNpcCallCount = 0;
+        String lastCreatedId;
+
+        public FakeNpcFactory() { super(null, null, null); }
+
+        @Override
+        public Npc createNpc(String id, int x, int y, int z, String mapId) {
+            createNpcCallCount++;
+            lastCreatedId = id;
+            return new Npc(id + "-" + createNpcCallCount, id, x, y, z, mapId, 100, null, null);
+        }
+    }
+
+    private static class FakeNpcTable extends NpcTable {
+        private List<NpcTemplate> definitions = new ArrayList<>();
+        private final Map<String, NpcTemplate> templates = new HashMap<>();
+
+        public FakeNpcTable() { super(); }
+
+        public void setDefinitions(List<NpcTemplate> definitions) {
+            this.definitions = definitions;
+        }
+
+        public void addTemplate(String id, NpcTemplate template) {
+            templates.put(id, template);
+        }
+
+        @Override
+        public List<NpcTemplate> getDefinitions() {
+            return definitions;
+        }
+
+        @Override
+        public NpcTemplate getTemplate(String id) {
+            return templates.get(id);
+        }
+    }
+
+    private static class FakeItemTable extends ItemTable {
+        private List<ItemTemplate> definitions = new ArrayList<>();
+
+        public FakeItemTable() { super(); }
+
+        public void setDefinitions(List<ItemTemplate> definitions) {
+            this.definitions = definitions;
+        }
+
+        @Override
+        public List<ItemTemplate> getDefinitions() {
+            return definitions;
+        }
+    }
+
+    private static class FakeParsedMapLayer extends ParsedMapLayer {
+        private final int width;
+        private final int height;
+        private final TileType defaultTile;
+
+        public FakeParsedMapLayer(int width, int height, TileType defaultTile) {
+            super(new TileType[][]{{TileType.FLOOR}}, new char[][]{{'.'}}, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap());
+            this.width = width;
+            this.height = height;
+            this.defaultTile = defaultTile;
+        }
+
+        @Override
+        public int getWidth() { return width; }
+        @Override
+        public int getHeight() { return height; }
+        @Override
+        public TileType getTileAt(int x, int y) { return defaultTile; }
     }
 }

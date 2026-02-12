@@ -21,7 +21,7 @@ class InventoryTest {
                 .maxStack(10).weight(1.0)
                 .build();
 
-        boolean result = inventory.addItem(something);
+        final boolean result = inventory.addItem(something);
         assertTrue(result);
 
         inventory.addItem(something.cloneWithQuantity(5));
@@ -42,7 +42,7 @@ class InventoryTest {
                 .maxStack(10)
                 .weight(2.0)
                 .build();
-        boolean result = inventory.addItem(heavySomething);
+        final boolean result = inventory.addItem(heavySomething);
 
         assertFalse(result);
 

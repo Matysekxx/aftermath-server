@@ -1,79 +1,74 @@
 package cz.matysekxx.aftermathserver.util;
 
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
-import cz.matysekxx.aftermathserver.core.world.TileRegistry;
 import cz.matysekxx.aftermathserver.core.world.TileType;
 import cz.matysekxx.aftermathserver.core.world.parser.ParsedMapLayer;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.lang.NonNull;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class FloodFillTest {
 
-    private TileRegistry registry;
+    @Test
+    void testFloodFillSimpleRoom() {
+        final ParsedMapLayer layer = getParsedMapLayer();
+        final GameMapData mapData = new GameMapData();
+        
+        final Map<Integer, ParsedMapLayer> layers = new HashMap<>();
+        layers.put(0, layer);
+        mapData.setParsedLayers(layers);
 
-    @BeforeEach
-    void setUp() {
-        registry = new TileRegistry();
-        TileRegistry.TileDefinition floor = new TileRegistry.TileDefinition();
-        floor.setSymbol('.');
-        floor.setType(TileType.FLOOR);
+        final Map<String, Vector3> spawns = new HashMap<>();
+        spawns.put("default", Vector3.of(0, 0, 0));
+        mapData.setSpawns(spawns);
 
-        TileRegistry.TileDefinition wall = new TileRegistry.TileDefinition();
-        wall.setSymbol('#');
-        wall.setType(TileType.WALL);
+        final List<Vector3> reachable = FloodFill.floodFill(mapData);
 
-        TileRegistry.TileDefinition space = new TileRegistry.TileDefinition();
-        space.setSymbol(' ');
-        space.setType(TileType.FLOOR);
+        assertEquals(4, reachable.size(), "Should find exactly 4 reachable tiles");
+        
+        assertTrue(reachable.contains(Vector3.of(0, 0, 0)));
+        assertTrue(reachable.contains(Vector3.of(1, 0, 0)));
+        assertTrue(reachable.contains(Vector3.of(0, 1, 0)));
+        assertTrue(reachable.contains(Vector3.of(1, 1, 0)));
 
-        registry.setDefinitions(List.of(floor, wall, space));
-        registry.init();
+        assertFalse(reachable.contains(Vector3.of(2, 0, 0)), "Wall at (2,0) should not be reachable");
+        assertFalse(reachable.contains(Vector3.of(2, 2, 0)), "Wall at (2,2) should not be reachable");
+    }
+
+    @NonNull
+    private static ParsedMapLayer getParsedMapLayer() {
+        final TileType[][] tiles = {
+                {TileType.FLOOR, TileType.FLOOR, TileType.WALL},
+                {TileType.FLOOR, TileType.FLOOR, TileType.WALL},
+                {TileType.WALL, TileType.WALL, TileType.WALL}
+        };
+        final char[][] symbols = {
+                {'.', '.', '#'},
+                {'.', '.', '#'},
+                {'#', '#', '#'}
+        };
+
+        return new ParsedMapLayer(tiles, symbols, new HashMap<>(), new HashMap<>(), new HashMap<>());
     }
 
     @Test
-    void testFloodFillStaysInsideWalls() {
-
-        String layout = """
-                        #####
-                        #...#
-                        #.@.#
-                        #...#
-                        #####""";
-
-        GameMapData map = new GameMapData();
-        ParsedMapLayer layer = ParsedMapLayer.parse(layout, registry, 0, map);
-        map.setParsedLayers(Map.of(0, layer));
-        map.setSpawns(Map.of("start", new Vector3(2, 2, 0)));
-
-        List<Vector3> reachable = FloodFill.floodFill(map);
-
-        assertEquals(9, reachable.size(), "Flood fill leaked outside the room!");
-        for (Vector3 v : reachable) {
-            assertNotEquals(TileType.WALL, layer.getTileAt(v.x(), v.y()));
-        }
+    void testFloodFillNullMap() {
+        final List<Vector3> result = FloodFill.floodFill(null);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
     }
 
     @Test
-    void testFloodFillDoesNotSpreadToVoid() {
-        String layout =
-                "###\n" +
-                        "#.\n" +
-                        "###";
-
-        GameMapData map = new GameMapData();
-        ParsedMapLayer layer = ParsedMapLayer.parse(layout, registry, 0, map);
-        map.setParsedLayers(Map.of(0, layer));
-        map.setSpawns(Map.of("start", new Vector3(1, 1, 0)));
-
-        List<Vector3> reachable = FloodFill.floodFill(map);
-
-        assertEquals(1, reachable.size());
-        assertEquals(new Vector3(1, 1, 0), reachable.getFirst());
+    void testFloodFillNoSpawns() {
+        final GameMapData mapData = new GameMapData();
+        mapData.setSpawns(new HashMap<>());
+        
+        final List<Vector3> result = FloodFill.floodFill(mapData);
+        assertTrue(result.isEmpty(), "Reachable tiles should be empty if there are no spawns");
     }
 }

@@ -30,7 +30,7 @@ public class ParsedMapLayer {
     private final int width;
     private final int height;
 
-    private ParsedMapLayer(TileType[][] tiles, char[][] symbols, Map<String, List<Vector3>> markers, Map<Vector3, String> npcSpawns, Map<Vector3, String> objectSpawns) {
+    public ParsedMapLayer(TileType[][] tiles, char[][] symbols, Map<String, List<Vector3>> markers, Map<Vector3, String> npcSpawns, Map<Vector3, String> objectSpawns) {
         this.tiles = tiles;
         this.symbols = symbols;
         this.height = tiles.length;

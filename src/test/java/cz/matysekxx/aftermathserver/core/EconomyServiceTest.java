@@ -12,42 +12,38 @@ import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 class EconomyServiceTest {
 
     private EconomyService economyService;
-    private ItemFactory itemFactory;
+    private FakeItemFactory itemFactory;
 
     @BeforeEach
     void setUp() {
-        GameEventQueue gameEventQueue = Mockito.mock(GameEventQueue.class);
-        itemFactory = Mockito.mock(ItemFactory.class);
+        final GameEventQueue gameEventQueue = new GameEventQueue();
+        itemFactory = new FakeItemFactory();
         economyService = new EconomyService(gameEventQueue, itemFactory);
     }
 
     @Test
     void testProcessBuySuccess() {
-        PlayerClassConfig config = new PlayerClassConfig();
+        final PlayerClassConfig config = new PlayerClassConfig();
         config.setMaxHp(100);
         config.setInventoryCapacity(10);
         config.setMaxWeight(50.0);
-        Player player = new Player(
+        final Player player = new Player(
                 "p1", "Player", Vector3.of(0, 0, 0),
                 config, "map1", "SOLDIER");
         player.setCredits(100);
 
-        Npc npc = new Npc(
+        final Npc npc = new Npc(
                 "n1", "Trader", 1, 1, 0,
                 "map1", 100, null, InteractionType.TRADE);
-        Item shopItem = Item.builder()
+        final Item shopItem = Item.builder()
                 .id("medkit")
                 .name("Medkit")
                 .price(40)
@@ -58,9 +54,9 @@ class EconomyServiceTest {
                 .build();
         npc.setShopItems(List.of(shopItem));
 
-        when(itemFactory.createItem(anyString(), anyInt())).thenReturn(shopItem.cloneWithQuantity(1));
+        itemFactory.setItemToReturn(shopItem.cloneWithQuantity(1));
 
-        BuyRequest request = new BuyRequest();
+        final BuyRequest request = new BuyRequest();
         request.setNpcId("n1");
         request.setItemIndex(0);
 
@@ -73,20 +69,20 @@ class EconomyServiceTest {
 
     @Test
     void testProcessBuyInsufficientFunds() {
-        PlayerClassConfig config = new PlayerClassConfig();
+        final PlayerClassConfig config = new PlayerClassConfig();
         config.setMaxHp(100);
         config.setInventoryCapacity(10);
         config.setMaxWeight(50.0);
-        Player player = new Player("p1", "Player", Vector3.of(0, 0, 0), config, "map1", "SOLDIER");
+        final Player player = new Player("p1", "Player", Vector3.of(0, 0, 0), config, "map1", "SOLDIER");
         player.setCredits(10);
 
-        Npc npc = new Npc(
+        final Npc npc = new Npc(
                 "n1", "Trader", 1, 1, 0,
                 "map1", 100, null, InteractionType.TRADE);
-        Item shopItem = Item.builder().id("medkit").price(40).build();
+        final Item shopItem = Item.builder().id("medkit").price(40).build();
         npc.setShopItems(List.of(shopItem));
 
-        BuyRequest request = new BuyRequest();
+        final BuyRequest request = new BuyRequest();
         request.setNpcId("n1");
         request.setItemIndex(0);
 
@@ -98,22 +94,22 @@ class EconomyServiceTest {
 
     @Test
     void testProcessBuyTooFar() {
-        PlayerClassConfig config = new PlayerClassConfig();
+        final PlayerClassConfig config = new PlayerClassConfig();
         config.setMaxHp(100);
         config.setInventoryCapacity(10);
         config.setMaxWeight(50.0);
-        Player player = new Player(
+        final Player player = new Player(
                 "p1", "Player", Vector3.of(0, 0, 0),
                 config, "map1", "SOLDIER");
         player.setCredits(100);
 
-        Npc npc = new Npc(
+        final Npc npc = new Npc(
                 "n1", "Trader", 10, 10, 0,
                 "map1", 100, null, InteractionType.TRADE);
-        Item shopItem = Item.builder().id("medkit").price(40).build();
+        final Item shopItem = Item.builder().id("medkit").price(40).build();
         npc.setShopItems(List.of(shopItem));
 
-        BuyRequest request = new BuyRequest();
+        final BuyRequest request = new BuyRequest();
         request.setNpcId("n1");
         request.setItemIndex(0);
 
@@ -125,11 +121,11 @@ class EconomyServiceTest {
 
     @Test
     void testDailyDebtAccumulation() {
-        PlayerClassConfig config = new PlayerClassConfig();
+        final PlayerClassConfig config = new PlayerClassConfig();
         config.setMaxHp(100);
         config.setInventoryCapacity(10);
         config.setMaxWeight(50.0);
-        Player player = new Player(
+        final Player player = new Player(
                 "p1", "Player", Vector3.of(0, 0, 0), config,
                 "map1", "SOLDIER");
         player.setDebt(100);
@@ -138,5 +134,15 @@ class EconomyServiceTest {
         economyService.processDailyDebt(player);
         assertEquals(170, player.getDebt());
         assertEquals(0, player.getPendingCosts());
+    }
+
+    private static class FakeItemFactory extends ItemFactory {
+        private Item itemToReturn;
+        public FakeItemFactory() { super(null); }
+        public void setItemToReturn(Item item) { this.itemToReturn = item; }
+        @Override public Item createItem(String id, int quantity) {
+            if (itemToReturn != null) return itemToReturn;
+            return Item.builder().id(id).quantity(quantity).build();
+        }
     }
 }
