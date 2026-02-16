@@ -6,12 +6,14 @@ import cz.matysekxx.aftermathserver.core.model.entity.NpcTable;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTemplate;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Factory for creating NPC instances from templates.
@@ -42,15 +44,8 @@ public class NpcFactory {
      */
     public Npc createNpc(String id, int x, int y, int layerIndex, String mapId) {
         final NpcTemplate template = npcTable.getTemplate(id);
-        if (template == null) {
-            throw new IllegalArgumentException("Unknown NPC template: " + id);
-        }
-        final Behavior behavior = switch (template.getBehavior().toUpperCase()) {
-            case "AGGRESSIVE" -> new AggressiveBehavior(gameEventQueue);
-            case "STATIONARY" -> new StationaryBehavior();
-            case "IDLE" -> new IdleBehavior();
-            default -> throw new IllegalStateException("Unexpected value: " + template.getBehavior());
-        };
+        final Behavior behavior = getBehavior(id, template);
+
         final String instanceId = template.getId() + "_" + UUID.randomUUID().toString().substring(0, 8);
         final Npc npc = Npc.fromTemplate(instanceId, template, x, y, layerIndex, mapId, behavior);
 
@@ -75,7 +70,10 @@ public class NpcFactory {
         if (template.getLoot() != null) {
             for (Item item : template.getLoot()) {
                 try {
-                    loot.add(itemFactory.createItem(item.getId(), item.getQuantity()));
+                    final Item createdItem = itemFactory.createItem(item.getId(), item.getQuantity());
+                    if (shouldSpawnItem(createdItem)) {
+                        loot.add(createdItem);
+                    }
                 } catch (IllegalArgumentException e) {
                     System.err.println("Error creating loot item for NPC " + id + ": " + e.getMessage());
                 }
@@ -83,5 +81,32 @@ public class NpcFactory {
         }
         npc.setLoot(loot);
         return npc;
+    }
+
+    private @NonNull Behavior getBehavior(String id, NpcTemplate template) {
+        if (template == null) {
+            throw new IllegalArgumentException("Unknown NPC template: " + id);
+        }
+
+        final String behaviorType = template.getBehavior() != null ? template.getBehavior().toUpperCase() : "STATIONARY";
+        return switch (behaviorType) {
+            case "AGGRESSIVE" -> new AggressiveBehavior(gameEventQueue);
+            case "IDLE" -> new IdleBehavior();
+            case "STATIONARY" -> new StationaryBehavior();
+            default -> new StationaryBehavior();
+        };
+    }
+
+    private boolean shouldSpawnItem(Item item) {
+        if (item.getRarity() == null) return true;
+        final double chance = switch (item.getRarity().toUpperCase()) {
+            case "COMMON" -> 1.0;
+            case "UNCOMMON" -> 0.5;
+            case "RARE" -> 0.25;
+            case "EPIC" -> 0.1;
+            case "LEGENDARY" -> 0.01;
+            default -> 1.0;
+        };
+        return ThreadLocalRandom.current().nextDouble() < chance;
     }
 }
