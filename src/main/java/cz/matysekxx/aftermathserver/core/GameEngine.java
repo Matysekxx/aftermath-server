@@ -12,7 +12,6 @@ import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.dto.*;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
-import cz.matysekxx.aftermathserver.util.Spatial;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -47,7 +46,6 @@ public class GameEngine {
     private final EconomyService economyService;
     private final SpawnManager spawnManager;
     private final CombatService combatService;
-    private final SpatialService spatialService;
     private final PlayerRegistry playerRegistry;
     private final LoginService loginService;
     private long tickCounter = 0;
@@ -64,13 +62,12 @@ public class GameEngine {
      * @param economyService     Manages economy and debts.
      * @param spawnManager       Handles spawning of entities.
      * @param combatService      Handles combat logic.
-     * @param spatialService     Manages spatial indexing.
      * @param playerRegistry     Registry of active players.
      * @param loginService       Handles login operations.
      */
     public GameEngine(WorldManager worldManager, GameEventQueue gameEventQueue, MapObjectFactory mapObjectFactory, MovementService movementService, StatsService statsService,
                       InteractionService interactionService, EconomyService economyService,
-                      SpawnManager spawnManager, CombatService combatService, SpatialService spatialService,
+                      SpawnManager spawnManager, CombatService combatService,
                       PlayerRegistry playerRegistry, LoginService loginService) {
         this.worldManager = worldManager;
         this.gameEventQueue = gameEventQueue;
@@ -81,7 +78,6 @@ public class GameEngine {
         this.economyService = economyService;
         this.spawnManager = spawnManager;
         this.combatService = combatService;
-        this.spatialService = spatialService;
         this.playerRegistry = playerRegistry;
         this.loginService = loginService;
     }
@@ -282,7 +278,7 @@ public class GameEngine {
     }
 
     /**
-     * Updates the AI logic for all NPCs on active maps and rebuilds spatial indices.
+     * Updates the AI logic for all NPCs on active maps.
      *
      * @param activeMaps The set of map IDs that currently have active players.
      */
@@ -297,12 +293,6 @@ public class GameEngine {
 
             final List<NpcDto> npcDtos = map.getNpcs().stream().map(NpcDto::fromEntity).collect(Collectors.toList());
             gameEventQueue.enqueue(GameEventFactory.broadcastNpcs(npcDtos, map.getId()));
-
-            final List<Spatial> allEntities = new ArrayList<>();
-            allEntities.addAll(map.getNpcs());
-            allEntities.addAll(playersOnMap);
-            allEntities.addAll(map.getObjects());
-            spatialService.rebuildIndex(map.getId(), allEntities);
         });
     }
 
