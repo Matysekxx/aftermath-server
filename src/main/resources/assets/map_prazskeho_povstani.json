@@ -1,0 +1,19 @@
+{
+  "id": "prazskeho-povstani",
+  "name": "Pražského povstání",
+  "type": "HAZARD_ZONE",
+  "difficulty": 2,
+  "layout": {
+    "0": "assets/maps_c/map_prazskeho_povstani.txt"
+  },
+  "objects": [
+  ],
+  "tileTriggers": {
+    "-": {
+      "lineId": "line_c"
+    }
+  },
+  "spawnMarkers": {
+    "@": "line_c"
+  }
+}
