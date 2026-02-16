@@ -8,9 +8,8 @@
 
     <bean id="baseStationA" class="cz.matysekxx.aftermathserver.core.model.metro.MetroStation" abstract="true"/>
 
-
-    <bean id="zlicin-a" parent="baseStationA" p:id="zlicin" name="Zličín"/>
-    <bean id="bila-hora" parent="baseStationA" p:id="bila-hora" name="Bílá Hora"/>
+    <bean id="zlicin-a" parent="baseStationA" p:id="zlicin" p:name="Zličín"/>
+    <bean id="repy" parent="baseStationA" p:id="repy" p:name="Řepy"/>
     <bean id="nemocnice-motol" parent="baseStationA" p:id="nemocnice-motol" p:name="Nemocnice Motol"/>
     <bean id="petriny" parent="baseStationA" p:id="petriny" p:name="Petřiny"/>
     <bean id="nadrazi-veleslavin" parent="baseStationA" p:id="nadrazi-veleslavin" p:name="Veleslavín"/>
@@ -30,7 +29,7 @@
 
     <util:list id="line-a">
         <ref bean="zlicin-a"/>
-        <ref bean="bila-hora"/>
+        <ref bean="repy"/>
         <ref bean="nemocnice-motol"/>
         <ref bean="petriny"/>
         <ref bean="nadrazi-veleslavin"/>
