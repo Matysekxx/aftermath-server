@@ -24,7 +24,6 @@
     <bean id="nadrazi-holesovice" parent="baseStationC" p:id="nadrazi-holesovice" p:name="Nádraží Holešovice"/>
     <bean id="kobylisy-c" parent="baseStationC" p:id="kobylisy" p:name="Kobylisy"/>
     <bean id="ladvi" parent="baseStationC" p:id="ladvi" p:name="Ladví"/>
-    <bean id="strizkov" parent="baseStationC" p:id="strizkov" p:name="Střížkov"/>
     <bean id="prosek" parent="baseStationC" p:id="prosek" p:name="Prosek"/>
     <bean id="letnany" parent="baseStationC" p:id="letnany" p:name="Letňany"/>
     <bean id="cakovice" parent="baseStationC" p:id="cakovice" p:name="Čakovice"/>
@@ -46,7 +45,6 @@
         <ref bean="nadrazi-holesovice"/>
         <ref bean="kobylisy-c"/>
         <ref bean="ladvi"/>
-        <ref bean="strizkov"/>
         <ref bean="prosek"/>
         <ref bean="letnany"/>
         <ref bean="cakovice"/>

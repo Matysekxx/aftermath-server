@@ -1,0 +1,24 @@
+{
+  "id": "pankrac",
+  "name": "Pankrác",
+  "type": "SAFE_ZONE",
+  "difficulty": 1,
+  "layout": {
+    "0": "assets/maps_c/map_pankrac.txt"
+  },
+  "objects": [],
+  "tileTriggers": {
+    "-": {
+      "lineId": "line_c"
+    },
+    "~": {
+      "lineId": "line_d"
+    }
+  },
+  "spawnMarkers": {
+    "@": "line_c",
+    "$": "line_d"
+  },
+  "npcMarkers": {},
+  "objectMarkers": {}
+}

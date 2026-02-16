@@ -16,13 +16,6 @@
     <bean id="pankrac-d" parent="baseStationD" p:id="pankrac" p:name="Pankrác"/>
     <bean id="namesti-bratri-synku" parent="baseStationD" p:id="namesti-bratri-synku" p:name="Namestí bratří Synků"/>
     <bean id="namesti-miru-d" parent="baseStationD" p:id="namesti-miru" p:name="Náměstí Míru"/>
-    <bean id="prokopovo-namesti" parent="baseStationD" p:id="prokopovo-namesti" p:name="Prokopovo náměstí"/>
-    <bean id="basilejske-namesti" parent="baseStationD" p:id="basilejske-namesti" p:name="Basilejské náměstí"/>
-    <bean id="chmelnice-d" parent="baseStationD" p:id="chmelnice" p:name="Chmelnice"/>
-    <bean id="nadrazi-liben" parent="baseStationD" p:id="nadrazi-liben" p:name="Nádraží Libeň"/>
-    <bean id="vysocanska-d" parent="baseStationD" p:id="vysocanska" p:name="Vysočanská"/>
-    <bean id="letecke-muzeum" parent="baseStationD" p:id="letecke-muzeum" p:name="Letecké muzeum"/>
-    <bean id="kbely" parent="baseStationD" p:id="kbely" p:name="Kbely"/>
 
     <util:list id="line-d">
         <ref bean="pisnice"/>
@@ -34,12 +27,5 @@
         <ref bean="pankrac-d"/>
         <ref bean="namesti-bratri-synku"/>
         <ref bean="namesti-miru-d"/>
-        <ref bean="prokopovo-namesti"/>
-        <ref bean="basilejske-namesti"/>
-        <ref bean="chmelnice-d"/>
-        <ref bean="nadrazi-liben"/>
-        <ref bean="vysocanska-d"/>
-        <ref bean="letecke-muzeum"/>
-        <ref bean="kbely"/>
     </util:list>
 </beans>

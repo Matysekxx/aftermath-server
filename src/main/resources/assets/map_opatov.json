@@ -1,0 +1,20 @@
+{
+  "id": "opatov",
+  "name": "Opatov",
+  "type": "HAZARD_ZONE",
+  "difficulty": 1,
+  "layout": {
+    "0": "assets/maps_c/map_opatov.txt"
+  },
+  "objects": [],
+  "tileTriggers": {
+    "-": {
+      "lineId": "line_c"
+    }
+  },
+  "spawnMarkers": {
+    "@": "line_c"
+  },
+  "npcMarkers": {},
+  "objectMarkers": {}
+}

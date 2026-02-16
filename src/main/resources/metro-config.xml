@@ -9,15 +9,11 @@
     <import resource="line-b.xml"/>
     <import resource="line-c.xml"/>
     <import resource="line-d.xml"/>
-    <import resource="line-e.xml"/>
-    <import resource="line-f.xml"/>
 
     <util:map id="metroMapData" map-class="java.util.LinkedHashMap">
         <entry key="line_a" value-ref="line-a"/>
         <entry key="line_b" value-ref="line-b"/>
         <entry key="line_c" value-ref="line-c"/>
         <entry key="line_d" value-ref="line-d"/>
-        <entry key="line_e" value-ref="line-e"/>
-        <entry key="line_f" value-ref="line-f"/>
     </util:map>
 </beans>
