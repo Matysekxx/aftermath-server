@@ -11,7 +11,6 @@
     <import resource="line-d.xml"/>
     <import resource="line-e.xml"/>
     <import resource="line-f.xml"/>
-    <import resource="line-g.xml"/>
 
     <util:map id="metroMapData" map-class="java.util.LinkedHashMap">
         <entry key="line_a" value-ref="line-a"/>
@@ -20,6 +19,5 @@
         <entry key="line_d" value-ref="line-d"/>
         <entry key="line_e" value-ref="line-e"/>
         <entry key="line_f" value-ref="line-f"/>
-        <entry key="line_g" value-ref="line-g"/>
     </util:map>
 </beans>

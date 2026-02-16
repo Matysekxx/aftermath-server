@@ -15,14 +15,6 @@
     <bean id="palmovka-e" parent="baseStationE" p:id="palmovka" p:name="Palmovka"/>
     <bean id="lodenice" parent="baseStationE" p:id="lodenice" p:name="Loděnice"/>
     <bean id="vltavska-e" parent="baseStationE" p:id="vltavska" p:name="Vltavská"/>
-    <bean id="letna-e" parent="baseStationE" p:id="letna" p:name="letná"/>
-    <bean id="hradcanska-e" parent="baseStationE" p:id="hradcanska" p:name="Hradčanská"/>
-    <bean id="prazsky-hrad" parent="baseStationE" p:id="prazsky-hrad" p:name="Pražský hrad"/>
-    <bean id="stresovice" parent="baseStationE" p:id="stresovice" p:name="Střešovice"/>
-    <bean id="stadion-strahov" parent="baseStationE" p:id="stadion-strahov" p:name="Station Strahov"/>
-    <bean id="andel-e" parent="baseStationE" p:id="andel" p:name="Anděl"/>
-    <bean id="smichovske-nadrazi-e" parent="baseStationE" p:id="smichovske-nadrazi" p:name="Smíchovské nádraží"/>
-    <bean id="dvorce-e" parent="baseStationE" p:id="dvorce" p:name="Dvorce"/>
 
     <util:list id="line-e">
         <ref bean="pankrac-e"/>
@@ -34,14 +26,6 @@
         <ref bean="palmovka-e"/>
         <ref bean="lodenice"/>
         <ref bean="vltavska-e"/>
-        <ref bean="letna-e"/>
-        <ref bean="hradcanska-e"/>
-        <ref bean="prazsky-hrad"/>
-        <ref bean="stresovice"/>
-        <ref bean="stadion-strahov"/>
-        <ref bean="andel-e"/>
-        <ref bean="smichovske-nadrazi-e"/>
-        <ref bean="dvorce-e"/>
     </util:list>
 
 </beans>

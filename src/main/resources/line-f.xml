@@ -8,12 +8,6 @@
 
     <bean id="baseStationF" class="cz.matysekxx.aftermathserver.core.model.metro.MetroStation" abstract="true"/>
 
-    <bean id="zbraslav" parent="baseStationF" p:id="zbraslav" p:name="Zbraslav"/>
-    <bean id="radotin" parent="baseStationF" p:id="radotin" p:name="Radotín"/>
-    <bean id="lochkov" parent="baseStationF" p:id="lochkov" p:name="Lochkov"/>
-    <bean id="slivenec" parent="baseStationF" p:id="slivenec" p:name="Slivenec"/>
-    <bean id="barrandov" parent="baseStationF" p:id="barrandov" p:name="Barrandov"/>
-    <bean id="hlubocepy" parent="baseStationF" p:id="hlubocepy" p:name="Hlubočepy"/>
     <bean id="smichovske-nadrazi" parent="baseStationF" p:id="smichovske-nadrazi" p:name="Smíchovské nádraží"/>
     <bean id="arbesovo-namesti" parent="baseStationF" p:id="arbesovo-namesti" p:name="Arbesovo náměstí"/>
     <bean id="malostranske-namesti" parent="baseStationF" p:id="malostranske-namesti" p:name="Malostranské náměstí"/>
@@ -26,12 +20,6 @@
     <bean id="kobylisy" parent="baseStationF" p:id="kobylisy" p:name="Kobylisy"/>
 
     <util:list id="line-f">
-        <ref bean="zbraslav"/>
-        <ref bean="radotin"/>
-        <ref bean="lochkov"/>
-        <ref bean="slivenec"/>
-        <ref bean="barrandov"/>
-        <ref bean="hlubocepy"/>
         <ref bean="smichovske-nadrazi"/>
         <ref bean="arbesovo-namesti"/>
         <ref bean="malostranske-namesti"/>
