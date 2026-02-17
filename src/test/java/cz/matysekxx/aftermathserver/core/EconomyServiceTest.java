@@ -26,7 +26,7 @@ class EconomyServiceTest {
     void setUp() {
         final GameEventQueue gameEventQueue = new GameEventQueue();
         itemFactory = new FakeItemFactory();
-        economyService = new EconomyService(gameEventQueue, itemFactory);
+        economyService = new EconomyService(gameEventQueue, itemFactory, new GlobalState(1000000));
     }
 
     @Test

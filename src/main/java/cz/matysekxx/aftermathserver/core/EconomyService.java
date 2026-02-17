@@ -4,17 +4,14 @@ import cz.matysekxx.aftermathserver.core.factory.ItemFactory;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
-import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.dto.BuyRequest;
 import cz.matysekxx.aftermathserver.dto.SellRequest;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
 import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.MathUtil;
-import cz.matysekxx.aftermathserver.util.Vector2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,13 +27,14 @@ import java.util.Optional;
 @Slf4j
 public class EconomyService {
 
-
     private final GameEventQueue gameEventQueue;
     private final ItemFactory itemFactory;
+    private final GlobalState globalState;
 
-    public EconomyService(GameEventQueue gameEventQueue, ItemFactory itemFactory) {
+    public EconomyService(GameEventQueue gameEventQueue, ItemFactory itemFactory, GlobalState globalState) {
         this.gameEventQueue = gameEventQueue;
         this.itemFactory = itemFactory;
+        this.globalState = globalState;
     }
 
     /**
@@ -105,13 +103,52 @@ public class EconomyService {
 
         final Item item = itemOpt.get();
         final int sellPrice = calculateSellPrice(item, player);
-        addCredits(player, sellPrice);
+
+        if (player.getDebt() > 0) {
+            int debtPayment = Math.min(player.getDebt(), sellPrice);
+            player.setDebt(player.getDebt() - debtPayment);
+            int remaining = sellPrice - debtPayment;
+            if (remaining > 0) {
+                addCredits(player, remaining);
+            }
+            gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Sold " + item.getName() + ". Debt paid: " + debtPayment, player.getId()));
+        } else {
+            addCredits(player, sellPrice);
+            gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Sold " + item.getName() + " for " + sellPrice + " CR", player.getId()));
+        }
         
         log.info("Player {} sold {} for {} CR. New balance: {}", player.getName(), item.getName(), sellPrice, player.getCredits());
 
         gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(player));
         gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
-        gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Sold " + item.getName() + " for " + sellPrice + " CR", player.getId()));
+    }
+
+    /**
+     * Contributes to the global debt if the player has no personal debt.
+     *
+     * @param player The player contributing.
+     * @param amount The amount to contribute.
+     */
+    public void contributeToGlobalDebt(Player player, int amount) {
+        if (player.getDebt() > 0) {
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You must pay your personal debt first!", player.getId()));
+            return;
+        }
+        if (!canAfford(player, amount)) {
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Not enough credits.", player.getId()));
+            return;
+        }
+
+        removeCredits(player, amount);
+        long remainingGlobalDebt = globalState.payGlobalDebt(amount);
+        
+        gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
+        gameEventQueue.enqueue(GameEventFactory.sendGlobalAnnouncementEvent(
+                "Player " + player.getName() + " contributed " + amount + " CR to the Global Debt. Remaining: " + remainingGlobalDebt));
+        
+        if (remainingGlobalDebt <= 0) {
+            gameEventQueue.enqueue(GameEventFactory.sendGlobalAnnouncementEvent("THE GLOBAL DEBT HAS BEEN PAID! THE METRO IS FREE!"));
+        }
     }
 
     /**

@@ -135,9 +135,8 @@ public class GameEngine {
      * @param id       The session ID of the sender.
      */
     public void handleChatMessage(ChatRequest chatData, String id) {
-        playerRegistry.getMaybePlayer(id).ifPresent(player -> {
-            gameEventQueue.enqueue(GameEventFactory.broadcastChatMsgEvent(chatData, player.getMapId()));
-        });
+        playerRegistry.getMaybePlayer(id).ifPresent(player ->
+                gameEventQueue.enqueue(GameEventFactory.broadcastChatMsgEvent(chatData, player.getMapId())));
     }
 
     /**
@@ -284,10 +283,10 @@ public class GameEngine {
      */
     private void updateNpcs(Set<String> activeMaps) {
         final Map<String, List<Player>> playersByMap = new HashMap<>();
-        playerRegistry.forEach(p -> {
-            playersByMap.computeIfAbsent(p.getMapId(), k -> new ArrayList<>()).add(p);
-        });
-        worldManager.forEachWithPredicate(map -> activeMaps.contains(map.getId()), map -> {
+        playerRegistry.forEach(p ->
+                playersByMap.computeIfAbsent(p.getMapId(), k -> new ArrayList<>()).add(p));
+        worldManager.forEachWithPredicate(
+                map -> activeMaps.contains(map.getId()), map -> {
             final List<Player> playersOnMap = playersByMap.getOrDefault(map.getId(), List.of());
             map.getNpcs().forEach(npc -> npc.update(map, playersOnMap));
 

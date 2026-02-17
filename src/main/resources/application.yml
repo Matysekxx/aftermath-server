@@ -14,3 +14,4 @@ game:
   tick-rate: 250
   starting-map-id: "nadrazi-veleslavin"
   line-id: "line_a"
+  global-debt: 1000000

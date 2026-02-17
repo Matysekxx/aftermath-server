@@ -175,7 +175,7 @@ public class GameEventFactory {
      * @param message The announcement message.
      * @return A new GameEvent.
      */
-    public static GameEvent broadcastGlobalAnnouncement(String message) {
+    public static GameEvent sendGlobalAnnouncementEvent(String message) {
         return GameEvent.create(EventType.GLOBAL_ANNOUNCEMENT, message, null, null, true);
     }
 

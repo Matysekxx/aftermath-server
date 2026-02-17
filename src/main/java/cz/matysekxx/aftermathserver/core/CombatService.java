@@ -132,27 +132,5 @@ public class CombatService {
         gameEventQueue.enqueue(GameEventFactory.broadcastNpcs(remainingNpcs, map.getId()));
 
         gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("You killed " + npc.getName(), killerId));
-
-        final boolean hasAggressiveNpcs = map.getNpcs()
-                .stream().anyMatch(Npc::isAggressive);
-        if (!hasAggressiveNpcs && !map.isCleared()) {
-            map.setCleared(true);
-            final var announcement = "STATION SECURED: " + map.getName() + " has been liberated by " + killerId + "!";
-            gameEventQueue.enqueue(GameEventFactory.broadcastGlobalAnnouncement(announcement));
-            log.info("Map {} has been cleared by player {}", map.getId(), killerId);
-            checkTotalVictory();
-        }
-    }
-
-    private void checkTotalVictory() {
-        boolean allCleared = worldManager.getMaps().stream()
-                .filter(m -> m.getType() == MapType.HAZARD_ZONE)
-                .allMatch(GameMapData::isCleared);
-        if (allCleared) {
-            gameEventQueue.enqueue(GameEventFactory.broadcastGlobalAnnouncement(
-                "!!! TOTAL VICTORY !!! The entire Metro system is now safe. Humanity has reclaimed its home. " +
-                "All survivors are requested to report to their local Administrators to finalize their debts."
-            ));
-        }
     }
 }
