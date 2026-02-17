@@ -1,5 +1,6 @@
 package cz.matysekxx.aftermathserver.network;
 
+import cz.matysekxx.aftermathserver.core.GlobalState;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.event.EventType;
 import cz.matysekxx.aftermathserver.event.GameEvent;
@@ -14,8 +15,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class StatsEventHandler extends GameEventHandler {
 
-    public StatsEventHandler(@Lazy NetworkService networkService) {
+    private final GlobalState globalState;
+
+    public StatsEventHandler(@Lazy NetworkService networkService, GlobalState globalState) {
         super(networkService);
+        this.globalState = globalState;
     }
 
     @Override
@@ -25,6 +29,8 @@ public class StatsEventHandler extends GameEventHandler {
 
     @Override
     public void handleEvent(GameEvent event) {
-        if (event.payload() instanceof Player player) networkService.sendStatsToClient(player);
+        if (event.payload() instanceof Player player) {
+            networkService.sendStatsToClient(player, globalState.getGlobalDebt());
+        }
     }
 }

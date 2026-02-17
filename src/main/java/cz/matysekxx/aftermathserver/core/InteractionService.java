@@ -107,7 +107,7 @@ public class InteractionService {
                 .filter(n -> (n instanceof MapObject || (n instanceof Npc npc && !npc.isDead())))
                 .filter(n -> MathUtil.getChebyshevDistance(
                         Vector2.of(player.getX(), player.getY()),
-                        Vector2.of(n.getX(), n.getY())) <= 2)
+                        Vector2.of(n.getX(), n.getY())) <= 1)
                 .min(Comparator.comparingInt(n -> MathUtil.getChebyshevDistance(
                         Vector2.of(player.getX(), player.getY()),
                         Vector2.of(n.getX(), n.getY())

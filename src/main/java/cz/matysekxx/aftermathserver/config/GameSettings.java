@@ -29,6 +29,8 @@ public class GameSettings {
     private int tickRate;
     /** The default player class assigned to new players. */
     private String defaultClass;
+    /** The starting personal debt for new players. */
+    private int startingDebt;
     /** A map of player class configurations, keyed by class name. */
     private Map<String, PlayerClassConfig> classes;
 }

@@ -22,6 +22,8 @@ public class StatsResponse {
     private int credits;
     /** Current debt. */
     private int debt;
+    /** Current global debt. */
+    private long globalDebt;
     private Integer equippedWeaponSlot;
     private Integer equippedMaskSlot;
 
@@ -29,15 +31,17 @@ public class StatsResponse {
      * Creates a StatsResponse from a Player entity.
      *
      * @param player The player entity.
+     * @param globalDebt The current global debt.
      * @return A new StatsResponse instance.
      */
-    public static StatsResponse of(Player player) {
+    public static StatsResponse of(Player player, long globalDebt) {
         return new StatsResponse(
             player.getHp(), 
             player.getMaxHp(), 
             player.getRads(), 
             player.getCredits(), 
             player.getDebt(),
+            globalDebt,
             player.getEquippedWeaponSlot(),
             player.getEquippedMaskSlot()
         );

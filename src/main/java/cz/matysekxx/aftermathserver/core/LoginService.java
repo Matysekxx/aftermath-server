@@ -108,6 +108,7 @@ public class LoginService {
             final Player newPlayer = new Player(sessionId, request.getUsername(),
                     spawn, classConfig, mapId, className
             );
+            newPlayer.setDebt(settings.getStartingDebt());
             playerRegistry.put(newPlayer);
             sendInitialGameState(newPlayer, startingMap);
         }

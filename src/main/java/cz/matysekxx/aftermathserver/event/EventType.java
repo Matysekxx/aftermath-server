@@ -37,5 +37,7 @@ public enum EventType {
     /** Broadcast a message to all players on the server. */
     GLOBAL_ANNOUNCEMENT,
     /** Broadcast positions of other players on the map. */
-    BROADCAST_PLAYERS;
+    BROADCAST_PLAYERS,
+    /** Request to pay debt. */
+    PAY_DEBT;
 }

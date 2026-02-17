@@ -114,7 +114,7 @@ public class MetroService {
                     if (stations.get(i).getId().equals(targetMapId)) targetIndex = i;
                 }
                 final int distance = (startIndex != -1 && targetIndex != -1) ? Math.abs(targetIndex - startIndex) : 1;
-                economyService.recordActivityCost(player, 15 * Math.max(1, distance));
+                economyService.recordActivityCost(player, 5 * Math.max(1, distance));
 
                 final var viewport = MapViewportPayload.of(
                         targetMap, player.getX(), player.getY(), player.getLayerIndex(), GameEngine.VIEWPORT_RANGE_X, GameEngine.VIEWPORT_RANGE_Y

@@ -62,7 +62,7 @@ public class LootLogicObject implements ObjectInteractionLogic {
         events.add(GameEventFactory.sendMessageEvent(message.toString(), player.getId()));
 
         if (target.getItems().isEmpty()) {
-            final var maybeMap = worldManager.getMaybeMap(target.getId());
+            final var maybeMap = worldManager.getMaybeMap(player.getMapId());
             if (maybeMap.isPresent()) {
                 maybeMap.get().getObjects().remove(target);
                 events.add(GameEventFactory.broadcastMapObjects(maybeMap.get().getObjects(), player.getMapId()));

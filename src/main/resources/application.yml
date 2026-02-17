@@ -15,3 +15,4 @@ game:
   starting-map-id: "nadrazi-veleslavin"
   line-id: "line_a"
   global-debt: 1000000
+  starting-debt: 5000

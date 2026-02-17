@@ -175,8 +175,8 @@ public class NetworkService {
     }
 
     /** Sends updated player statistics to a client. */
-    void sendStatsToClient(Player p) {
-        sendJson(p.getId(), "SEND_STATS", StatsResponse.of(p));
+    void sendStatsToClient(Player p, long globalDebt) {
+        sendJson(p.getId(), "SEND_STATS", StatsResponse.of(p, globalDebt));
     }
 
     /** Sends the player's inventory data to a client. */

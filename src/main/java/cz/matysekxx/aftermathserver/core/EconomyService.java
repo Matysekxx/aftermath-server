@@ -103,23 +103,38 @@ public class EconomyService {
 
         final Item item = itemOpt.get();
         final int sellPrice = calculateSellPrice(item, player);
-
-        if (player.getDebt() > 0) {
-            int debtPayment = Math.min(player.getDebt(), sellPrice);
-            player.setDebt(player.getDebt() - debtPayment);
-            int remaining = sellPrice - debtPayment;
-            if (remaining > 0) {
-                addCredits(player, remaining);
-            }
-            gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Sold " + item.getName() + ". Debt paid: " + debtPayment, player.getId()));
-        } else {
-            addCredits(player, sellPrice);
-            gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Sold " + item.getName() + " for " + sellPrice + " CR", player.getId()));
-        }
+        
+        addCredits(player, sellPrice);
+        gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Sold " + item.getName() + " for " + sellPrice + " CR", player.getId()));
         
         log.info("Player {} sold {} for {} CR. New balance: {}", player.getName(), item.getName(), sellPrice, player.getCredits());
 
         gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(player));
+        gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
+    }
+
+    /**
+     * Allows the player to pay off a specific amount of their personal debt.
+     *
+     * @param player The player making the payment.
+     * @param amount The amount to pay.
+     */
+    public void payPersonalDebt(Player player, int amount) {
+        if (amount <= 0) return;
+        if (player.getDebt() <= 0) {
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("You have no debt to pay!", player.getId()));
+            return;
+        }
+        if (!canAfford(player, amount)) {
+            gameEventQueue.enqueue(GameEventFactory.sendErrorEvent("Not enough credits.", player.getId()));
+            return;
+        }
+
+        final int actualPayment = Math.min(amount, player.getDebt());
+        removeCredits(player, actualPayment);
+        player.setDebt(player.getDebt() - actualPayment);
+
+        gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Paid " + actualPayment + " CR towards personal debt.", player.getId()));
         gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
     }
 
