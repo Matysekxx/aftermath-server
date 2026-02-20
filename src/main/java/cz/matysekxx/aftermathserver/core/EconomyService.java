@@ -155,14 +155,14 @@ public class EconomyService {
         }
 
         removeCredits(player, amount);
-        long remainingGlobalDebt = globalState.payGlobalDebt(amount);
+        final long remainingGlobalDebt = globalState.payGlobalDebt(amount);
         
         gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
         gameEventQueue.enqueue(GameEventFactory.sendGlobalAnnouncementEvent(
                 "Player " + player.getName() + " contributed " + amount + " CR to the Global Debt. Remaining: " + remainingGlobalDebt));
         
         if (remainingGlobalDebt <= 0) {
-            gameEventQueue.enqueue(GameEventFactory.sendGlobalAnnouncementEvent("THE GLOBAL DEBT HAS BEEN PAID! THE METRO IS FREE!"));
+            gameEventQueue.enqueue(GameEventFactory.sendGlobalAnnouncementEvent("THE GLOBAL DEBT HAS BEEN PAID!"));
         }
     }
 
