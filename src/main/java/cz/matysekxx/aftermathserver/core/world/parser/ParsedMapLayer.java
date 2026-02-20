@@ -70,7 +70,6 @@ public class ParsedMapLayer {
     }
 
     private static void parseLine(String line, int y, int width, ParseContext ctx) {
-        boolean inQuotes = false;
         for (int x = 0; x < width; x++) {
             if (x < line.length()) {
                 final char c = line.charAt(x);
@@ -78,11 +77,8 @@ public class ParsedMapLayer {
                 if (processSpecialMarkers(x, y, c, ctx)) {
                     continue;
                 }
-
                 ctx.symbols[y][x] = c;
-                if (c == '"') inQuotes = !inQuotes;
-
-                processRegularTile(x, y, c, inQuotes, ctx);
+                processRegularTile(x, y, c, ctx);
             } else {
                 ctx.symbols[y][x] = ' ';
                 ctx.tiles[y][x] = TileType.VOID;
@@ -130,9 +126,9 @@ public class ParsedMapLayer {
         ctx.tiles[y][x] = TileType.FLOOR;
     }
 
-    private static void processRegularTile(int x, int y, char c, boolean inQuotes, ParseContext ctx) {
+    private static void processRegularTile(int x, int y, char c, ParseContext ctx) {
         final TileType type = ctx.registry.getType(c);
-        if (!inQuotes && c != '"' && type == TileType.UNKNOWN && c != ' ') {
+        if (type == TileType.UNKNOWN && c != ' ') {
             ctx.markers.computeIfAbsent(String.valueOf(c), k -> new ArrayList<>())
                     .add(new Vector3(x, y, ctx.layerIndex));
             ctx.tiles[y][x] = TileType.FLOOR;
