@@ -1,7 +1,8 @@
 {
   "id": "hradcanska",
   "name": "Hradčanská",
-  "type": "SAFE_ZONE",
+  "type": "HAZARD_ZONE",
+  "difficulty": 2,
   "layout": {
     "0": "assets/maps_a/map_hradcanska0.txt",
     "1": "assets/maps_a/map_hradcanska1.txt"

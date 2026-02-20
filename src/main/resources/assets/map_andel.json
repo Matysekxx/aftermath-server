@@ -1,0 +1,18 @@
+{
+  "id": "andel",
+  "name": "Anděl",
+  "type": "HAZARD_ZONE",
+  "layout": {
+    "0": "assets/maps_b/map_andel.txt"
+  },
+  "objects": [
+  ],
+  "tileTriggers": {
+    "-": {
+      "lineId": "line_b"
+    }
+  },
+  "spawnMarkers": {
+    "@": "line_b"
+  }
+}

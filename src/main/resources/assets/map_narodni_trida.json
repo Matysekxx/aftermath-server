@@ -1,0 +1,18 @@
+{
+  "id": "narodni-trida",
+  "name": "Národní třída",
+  "type": "HAZARD_ZONE",
+  "layout": {
+    "0": "assets/maps_b/map_narodni_trida.txt"
+  },
+  "objects": [
+  ],
+  "tileTriggers": {
+    "-": {
+      "lineId": "line_b"
+    }
+  },
+  "spawnMarkers": {
+    "@": "line_b"
+  }
+}

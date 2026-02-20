@@ -1,7 +1,8 @@
 {
   "id": "nemocnice-motol",
   "name": "Nemocnice Motol",
-  "type": "SAFE_ZONE",
+  "type": "HAZARD_ZONE",
+  "difficulty": 1,
   "layout": {
     "0": "assets/maps_a/map_nemocnice_motol0.txt"
   },

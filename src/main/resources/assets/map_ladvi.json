@@ -1,7 +1,8 @@
 {
   "id": "ladvi",
   "name": "Ládví",
-  "type": "SAFE_ZONE",
+  "type": "HAZARD_ZONE",
+  "difficulty": 1,
   "layout": {
     "0": "assets/maps_c/map_ladvi.txt"
   },

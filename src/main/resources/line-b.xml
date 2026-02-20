@@ -30,8 +30,7 @@
     <bean id="vysocanska-b" parent="baseStationB" p:id="vysocanska" p:name="Vysočanská"/>
     <bean id="kolbenova" parent="baseStationB" p:id="kolbenova" p:name="Kolbenova"/>
     <bean id="hloubetin" parent="baseStationB" p:id="hloubetin" p:name="Hloubětín"/>
-    <bean id="rajska-zahrada" parent="baseStationB" p:id="rajska-zahrada" p:name="Rajská zahrada"/>
-    <bean id="cerny-most" parent="baseStationB" p:id="cerny-most" p:name="Černý most"/>
+    <bean id="cerny-most" parent="baseStationB" p:id="cerny-most" p:name="Černý Most"/>
 
     <util:list id="line-b">
         <ref bean="zlicin"/>
@@ -56,7 +55,6 @@
         <ref bean="vysocanska-b"/>
         <ref bean="kolbenova"/>
         <ref bean="hloubetin"/>
-        <ref bean="rajska-zahrada"/>
         <ref bean="cerny-most"/>
     </util:list>
 </beans>

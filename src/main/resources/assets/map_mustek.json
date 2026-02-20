@@ -10,9 +10,13 @@
   "tileTriggers": {
     "-": {
       "lineId": "line_a"
+    },
+    "~": {
+      "lineId": "line_b"
     }
   },
   "spawnMarkers": {
-    "@": "line_a"
+    "@": "line_a",
+    "$": "line_b"
   }
 }

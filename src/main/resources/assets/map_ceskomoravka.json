@@ -1,19 +1,19 @@
 {
-  "id": "letnany",
-  "name": " Letňany",
+  "id": "ceskomoravska",
+  "name": "Českomoravská",
   "type": "HAZARD_ZONE",
   "difficulty": 1,
   "layout": {
-    "0": "assets/maps_c/map_letnany0.txt"
+    "0": "assets/maps_b/map_ceskomoravka.txt"
   },
   "objects": [
   ],
   "tileTriggers": {
     "-": {
-      "lineId": "line_c"
+      "lineId": "line_b"
     }
   },
   "spawnMarkers": {
-    "@": "line_c"
+    "@": "line_b"
   }
 }
