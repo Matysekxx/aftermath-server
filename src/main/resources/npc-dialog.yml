@@ -1,30 +1,30 @@
 game:
   dialog:
     dialog-map:
-      mr-cibulka:
-        - "Prague doesn't exist anymore!  This is a KGB-GRU virtual simulation run from a bunker in Beijing! Use your pendulum to find the exit pixel!"
-        - "Don't eat! Every ration is a Russian-Chinese psychotronic chip designed to turn your soul into a biological robot!  My pendulum sees the antenna in your soup!"
-        - "Mutants are just KGB agents in high-frequency costumes!  They aren't biting you, they are uploading GRU malware into your biopole! Wake up!"
+      pan-cibulka:
+        - "Prague doesn't exist anymore! This is a KGB-GRU virtual simulation run from a bunker in Beijing! Use your pendulum to find the exit pixel!"
+        - "Don't eat! Every ration is a Russian-Chinese psychotronic chip designed to turn your soul into a biological robot! My pendulum sees the antenna in your soup!"
+        - "Mutants are just KGB agents in high-frequency costumes! They aren't biting you, they are uploading GRU malware into your biopole! Wake up!"
       the-commander:
-        - "Strategy is simple: Line E must remain operational at all costs to ensure our survival. If Anděl falls, the entire metro network follows."
-        - "I don't care about your stories; I only care about results and cleared maps. Check your filters and ammunition now, because the tunnels offer no second chances."
-        - "Your objective is the pacification of the target station and the recovery of essential materials. Report back once all mutant threats have been eliminated."
+        - "Anděl was a disaster, a bloody lesson in complacency. We fell back to Smíchov, but we're not beaten. Line B is our artery, and we will use it to take back what's ours."
+        - "Forget the ghost stories from the tunnels. I need stalkers who can clear a station, not ones who jump at shadows. Your gear, your ammo, your problem. Now get out there and make the map safer."
+        - "Every station we lose is another nail in our coffin. Your mission is to pull those nails out. Clear the mutants, secure resources, and don't make me send a recovery team for your corpse."
       the-bartender:
-        - "Welcome to the end of the world. Sit down, unless you're too busy counting your scrap or praying to a God who clearly forgot about Line B."
-        - "I watched a merchant and a soldier walk into a radiation zone. The soldier died for glory, and the merchant probably sold the body for a discount on filters."
-        - "Careful with that drink; it’s stronger than a survivor's ego. You all look the same when the radiation starts melting your nose off."
-      the-administrator:
-        - "Your balance is in the red, citizen. According to my records, you've been breathing more air than your current debt allowance permits."
-        - "Insolvency is a crime against the Metro Administration. Failure to pay your daily fees will result in the immediate cut-off of all life-support services."
-        - "Sign form 0-TP-V-RIT to authorize your soul's collateral for the next twenty-four hours. Precision in bureaucracy is the only thing keeping us alive."
+        - "Another fresh face. Don't get too comfortable. The only thing permanent down here is the radiation and the debt. What'll it be?"
+        - "I've seen it all. Heroes, cowards, fools. They all end up here, trading their last bits of scrap for a moment of peace. The metro always collects."
+        - "This stuff? It'll either kill the radiation in your gut or make you wish it had. You won't find anything better on Line A or B, I guarantee it."
+      the-admin:
+        - "Citizen, your account is delinquent. My records indicate you have consumed 1.7 cubic meters of un-allotted oxygen. Please remit payment or cease respiration."
+        - "The Administration is the only thing separating us from the chaos. Your station fees are not a request; they are the price of order. Pay them."
+        - "Please complete form 7B-Stroke-6. It's a standard waiver acknowledging that any 'incidents' outside this safe zone are a personal liability. No signature, no exit."
       the-engineer:
-        - "Look at your train! She’s crying because you treat her like a piece of scrap. She has a soul, and right now, she’s feeling very insulted."
-        - "I can fix the armor, but you must apologize to the engine first. She needs love, grease, and high-frequency components from Malešice."
-        - "Don't listen to the propaganda; machines have feelings too. One more trip into the toxic slime and she might just decide to quit on you."
+        - "You see this crack? This is not just metal fatigue. This is a cry for help! You push her too hard through the dark zones. She needs respect... and a new compression coil."
+        - "I can patch her up, but her spirit is weak. If you find any pre-war spark plugs near Kolbenova, her heart will sing again."
+        - "This engine... she hums a sad tune. She misses the open tracks. Keep her maintained, and she'll get you through hell. Neglect her, and she'll leave you there."
       the-smuggler:
-        - "Pst! You have something that officially 'doesn't exist'? The Administrator would fine you, but I know how to make it disappear for the right price."
-        - "Florenc is a labyrinth, my friend. Perfect for hiding things from the KGB... I mean, the Administration. Interested in some illegal contraband?"
-        - "I buy what the honest merchants fear to touch. High value, high risk, and absolutely no receipts. That's the Florenc way."
+        - "The station merchants sell you what you need to survive. I sell you what you need to live. Big difference. Got anything... interesting?"
+        - "Florenc is a crossroads, not just for Line B and C, but for... opportunities. The Administration's eyes don't see everything in these shadows."
+        - "Official channels are for fools and martyrs. You look like neither. Show me what you've got. No questions, no records, just a fair trade."
       the-aviatik:
         - "The Great Wings are calling from the hangars! Do you hear the whisper of the turbines, or is your spirit too grounded in this hole?"
         - "I collect the relics of the sky. Bring me aircraft parts from the Ruzyň hangars, and I might show you how to truly fly above this misery."
@@ -34,10 +34,22 @@ game:
         - "Don't touch my alofoil hat! It’s the only thing stopping the Chinese satellites from downloading my biopole into their central mainframe!"
         - "I’m not 'blundering' in the tunnels; I’m gathering 'Dust' because the Master says it’s the only physical matter the KGB cannot track!"
       the-merchant:
-        - "I don't care if the world ended; business is business. Buy a filter now or pay for a funeral later—I offer discounts on neither."
-        - "You look like you've been rummaging through a mutant's stomach. Toss your scrap on the table and let's see if it's worth the oxygen you're wasting."
-        - "Filters, medkits, ammo—everything you need to die another day. Just don't ask where I got the scotch; you couldn't afford the answer."
+        - "I don't care if the world ended; business is business. Another day, another credit."
+        - "You look like you've been rummaging through a mutant's stomach. Life is tough, I get it."
+        - "Filters, medkits, ammo—everything you need to die another day. A survivor's shopping list."
       the-doctor:
-        - "Stop twitching. If I wanted to listen to screaming, I’d move my clinic to a mutant nest. Now, let’s see how much of your skin is still yours."
-        - "You’re glowing, and not in a 'healthy glow' kind of way. Take this injection and try not to breathe near anyone you actually like for the next hour."
-        - "I can patch the hole in your chest, but I can't fix the stupidity that got you shot. That’ll be extra credits for the emotional trauma of treating you."
+        - "Another hero. Let me guess, you tried to pet one of the big ones? Get on the table. And try not to bleed on the floor, I just cleaned it."
+        - "You've got a mild case of... everything. Radiation, infection, and a terminal case of bad luck. The anti-rads will stop the glowing, but I can't fix the bad luck."
+        - "I can stitch you up, but the scars are on you. Consider them a reminder of what not to do. That'll be 50 credits. 60 if you want the clean needle."
+      old-man-vysehrad:
+        - "These trains... they have names, you know. This one's 'Jitka'. She's a bit rusty, but her heart is strong. She remembers the sun, even if we don't."
+        - "The maps only show you the official routes. But the metro is alive, it breathes. The real paths are in the dark, between the lines. Kačerov depot is the key to all of them."
+        - "People see scrap metal. I see stories. Every dent on these carriages is a memory of a journey. A life saved, or a life lost. They're more alive than most people down here."
+      scout-pankrac:
+        - "Don't go to Pankrác unless you've got a death wish. But... the filtration units in the old courthouse are pre-war. Gold, if you can get to them."
+        - "I was on the surface, just for a minute. Saw the sky. It wasn't grey. It was... blue. I'll never forget that. It's why I keep going out there."
+        - "The maps they give you are a lie. Tunnels collapse, new nests appear overnight. The only map that matters is the one in your head, updated daily with fresh terror."
+      historian-muzeum:
+        - "This... this is a 'mobilní telefon'. People used it to talk to anyone, anywhere in the world. Instantly. Now we shout down a tunnel and hope for an echo."
+        - "They see junk. I see the ghost of a world where people worried about... traffic. We worry about clean water and if that noise is a rat or something worse."
+        - "Don't touch that! It's a 20th-century painting. It survived wars, the Fall, and the mutants. It deserves our respect. It's seen more history than we ever will."

@@ -122,3 +122,14 @@ game:
         weight: 0.1
         price: 80
         rarity: RARE
+
+      - id: "water_bottle"
+        name: "Dirty Water Bottle"
+        description: "A bottle of murky water. Better than nothing."
+        type: CONSUMABLE
+        effect: "HEAL"
+        healAmount: 5
+        maxStack: 10
+        weight: 0.5
+        price: 5
+        rarity: COMMON

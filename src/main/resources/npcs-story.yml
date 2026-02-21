@@ -2,12 +2,12 @@ game:
   npcs:
     storyNpcs:
       - id: "commander_andel"
-        name: "Commander (Anděl)"
+        name: "Commander"
         type: "HUMAN"
         aggressive: false
         maxHp: 150
         behavior: "STATIONARY"
-        interaction: "QUEST"
+        interaction: "TALK"
         dialogId: "the-commander"
 
       - id: "engineer_malesice"
@@ -28,8 +28,8 @@ game:
         interaction: "TALK"
         dialogId: "the-aviatik"
 
-      - id: "merchant_mustek"
-        name: "Merchant (Můstek)"
+      - id: "merchant_budejovicka"
+        name: "Merchant (Budějovická)"
         type: "HUMAN"
         aggressive: false
         maxHp: 100
@@ -46,8 +46,8 @@ game:
         interaction: "HEAL"
         dialogId: "the-doctor"
 
-      - id: "bartender_mustek"
-        name: "Bartender"
+      - id: "bartender_florenc"
+        name: "Bartender (Florenc)"
         type: "HUMAN"
         aggressive: false
         maxHp: 100
@@ -61,5 +61,62 @@ game:
         aggressive: false
         maxHp: 100
         behavior: "STATIONARY"
-        interaction: "DEBT_PAYMENT"
+        interaction: "TALK"
         dialogId: "the-admin"
+
+      - id: "old_man_vysehrad"
+        name: "Děda z Depa"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 80
+        behavior: "STATIONARY"
+        interaction: "TALK"
+        dialogId: "old-man-vysehrad"
+
+      - id: "scout_pankrac"
+        name: "Scout"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 120
+        behavior: "STATIONARY"
+        interaction: "TALK"
+        dialogId: "scout-pankrac"
+
+      - id: "historian_muzeum"
+        name: "Historian"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 100
+        behavior: "STATIONARY"
+        interaction: "TALK"
+        dialogId: "historian-muzeum"
+
+      - id: "pan_cibulka"
+        name: "Pan Cibulka"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 50
+        behavior: "STATIONARY"
+        interaction: "TALK"
+        dialogId: "pan-cibulka"
+        loot:
+          - id: "kyvadlo"
+            quantity: 1
+            
+      - id: "smuggler_florenc"
+        name: "The Smuggler"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 110
+        behavior: "IDLE"
+        interaction: "TALK"
+        dialogId: "the-smuggler"
+
+      - id: "pendulum_cultist"
+        name: "Pendulum Cultist"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 70
+        behavior: "IDLE"
+        interaction: "TALK"
+        dialogId: "pendulum-cultist"

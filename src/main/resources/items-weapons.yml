@@ -132,3 +132,27 @@ game:
         cooldown: 800
         price: 800
         rarity: EPIC
+
+      - id: "rubber_chicken"
+        name: "Rubber Chicken"
+        description: "A weapon of poultry destruction. Squeaks when swung."
+        type: WEAPON
+        damage: 1
+        maxStack: 1
+        range: 1
+        weight: 0.5
+        cooldown: 400
+        price: 500
+        rarity: LEGENDARY
+
+      - id: "lubosovo_ukazovatko"
+        name: "Lubošovo Ukazovátko"
+        description: "A legendary pointer once wielded by Luboš, an exceptional physics teacher at SPŠE Ječná. It is said he could explain the most complex quantum theories with it, and that his favorite weapons were hexagonal dice, which he threw with uncanny precision. This pointer seems to channel his academic wrath."
+        type: WEAPON
+        damage: 999
+        maxStack: 1
+        range: 30
+        weight: 0.2
+        cooldown: 100
+        price: 9999
+        rarity: LEGENDARY

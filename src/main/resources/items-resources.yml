@@ -217,3 +217,21 @@ game:
         weight: 1.2
         price: 450
         rarity: RARE
+
+      - id: "mutant_gland"
+        name: "Mutant Gland"
+        description: "A pulsating gland from a powerful mutant. It seems to have some alchemical properties."
+        type: RESOURCE
+        maxStack: 5
+        weight: 0.2
+        price: 150
+        rarity: RARE
+
+      - id: "kyvadlo"
+        name: "Kyvadlo"
+        description: "A strange pendulum. It seems to react to something unseen."
+        type: VALUABLE
+        maxStack: 1
+        weight: 0.1
+        price: 1000
+        rarity: LEGENDARY

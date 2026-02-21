@@ -66,3 +66,19 @@ game:
             quantity: 20
           - id: "cloth"
             quantity: 50
+
+      - id: "trader_food"
+        name: "Food Vendor"
+        type: "HUMAN"
+        aggressive: false
+        maxHp: 100
+        behavior: "IDLE"
+        interaction: "TRADE"
+        dialogId: "the-bartender"
+        shopItems:
+          - id: "canned_food"
+            quantity: 30
+          - id: "vodka"
+            quantity: 10
+          - id: "water_bottle"
+            quantity: 20

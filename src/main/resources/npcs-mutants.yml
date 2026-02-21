@@ -33,3 +33,31 @@ game:
         range: 20
         maxHp: 30
         behavior: "AGGRESSIVE"
+
+      - id: "mutant_brute"
+        name: "Mutant Brute"
+        type: "MUTANT"
+        aggressive: true
+        damage: 25
+        range: 25
+        maxHp: 100
+        behavior: "AGGRESSIVE"
+        loot:
+          - id: "scrap_metal"
+            quantity: 5
+          - id: "chemicals"
+            quantity: 1
+
+      - id: "shadow_stalker"
+        name: "Shadow Stalker"
+        type: "MUTANT"
+        aggressive: true
+        damage: 18
+        range: 50
+        maxHp: 70
+        behavior: "AGGRESSIVE"
+        loot:
+          - id: "electronics"
+            quantity: 2
+          - id: "mutant_gland"
+            quantity: 1
