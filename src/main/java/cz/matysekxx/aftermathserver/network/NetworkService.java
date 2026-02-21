@@ -277,6 +277,13 @@ public class NetworkService {
     }
 
     /**
+     * Sends a dialog message to a client.
+     */
+    void sendDialog(String sessionId, DialogResponse response) {
+        sendJson(sessionId, "DIALOG", response);
+    }
+
+    /**
      * Helper method to serialize and send a message to a specific session.
      */
     private void sendJson(String sessionId, String type, Object payload) {

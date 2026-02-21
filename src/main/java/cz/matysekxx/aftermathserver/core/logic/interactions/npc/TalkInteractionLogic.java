@@ -26,11 +26,11 @@ public class TalkInteractionLogic implements NpcInteractionLogic {
 
     @Override
     public Collection<GameEvent> interact(Npc target, Player player) {
-        String text = dialogRegistry.getRandomDialog(target.getId());
+        String text = dialogRegistry.getRandomDialog(target.getDialogueId());
         if (text == null) {
             text = "...";
         }
-        return List.of(GameEventFactory.sendMessageEvent(target.getName() + ": " + text, player.getId()));
+        return List.of(GameEventFactory.sendDialogEvent(target.getName(), text, player.getId()));
     }
 
     @Override

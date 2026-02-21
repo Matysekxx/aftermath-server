@@ -37,9 +37,9 @@ public class GameEngine {
     public static final int VIEWPORT_RANGE_Y = 20;
     private static final int TICKS_PER_DAY = 1200;
     /**
-     * Target density: 1 NPC per 5000 reachable tiles (0.005)
+     * Target density: 1 NPC per 1000 reachable tiles (0.001)
      */
-    private static final double NPC_DENSITY = 0.005;
+    private static final double NPC_DENSITY = 0.001;
     private static final int DAILY_RESPAWN_COUNT = 3;
     private final WorldManager worldManager;
     private final GameEventQueue gameEventQueue;

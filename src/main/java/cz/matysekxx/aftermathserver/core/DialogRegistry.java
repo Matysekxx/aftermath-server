@@ -42,7 +42,10 @@ public class DialogRegistry {
      */
     public String getRandomDialog(String key) {
         final List<String> dialogs = dialogMap.get(key);
-        if (dialogs == null || dialogs.isEmpty()) return null;
+        if (dialogs == null || dialogs.isEmpty()) {
+            log.warn("No dialogs found for key: {}", key);
+            return null;
+        }
         return dialogs.get(ThreadLocalRandom.current().nextInt(0, dialogs.size()));
     }
 }

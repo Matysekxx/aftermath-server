@@ -205,4 +205,16 @@ public class GameEventFactory {
     public static GameEvent broadcastPlayers(Collection<OtherPlayerDto> players, String mapId) {
         return GameEvent.create(EventType.BROADCAST_PLAYERS, players, null, mapId, true);
     }
+
+    /**
+     * Creates an event to send a dialog message to a specific player.
+     *
+     * @param npcName   The name of the NPC.
+     * @param text      The dialog text.
+     * @param sessionId The session ID of the recipient.
+     * @return A new GameEvent.
+     */
+    public static GameEvent sendDialogEvent(String npcName, String text, String sessionId) {
+        return GameEvent.create(EventType.SEND_DIALOG, DialogResponse.of(npcName, text), sessionId, null, false);
+    }
 }

@@ -38,36 +38,37 @@ public class LootLogicObject implements ObjectInteractionLogic {
      * @return A collection of GameEvents resulting from the interaction.
      */
     @Override
-    public synchronized Collection<GameEvent> interact(MapObject target, Player player) {
-        if (target.getItems().isEmpty()) {
-            return List.of(GameEventFactory.sendMessageEvent(target.getDescription() + " - It is empty", player.getId()));
-        }
-
-        final StringBuilder message = new StringBuilder(target.getDescription() + "\nYou found:");
-        final Collection<Item> itemsToRemove = new ArrayList<>();
-
-        for (Item item : target.getItems()) {
-            if (player.getInventory().addItem(item)) {
-                message.append("\n + ").append(item.getQuantity()).append("x ").append(item.getName());
-                itemsToRemove.add(item);
-            } else {
-                message.append("\n ! ").append(item.getName()).append("It is too heavy for you");
+    public Collection<GameEvent> interact(MapObject target, Player player) {
+        synchronized (target) {
+            if (target.getItems().isEmpty()) {
+                return List.of(GameEventFactory.sendMessageEvent(target.getDescription() + " - It is empty", player.getId()));
             }
-        }
-        target.getItems().removeAll(itemsToRemove);
 
-        final Collection<GameEvent> events = new ArrayList<>();
-        events.add(GameEventFactory.sendInventoryEvent(player));
-        events.add(GameEventFactory.sendMessageEvent(message.toString(), player.getId()));
+            final StringBuilder message = new StringBuilder(target.getDescription() + "\nYou found:");
+            final Collection<Item> itemsToRemove = new ArrayList<>();
 
-        if (target.getItems().isEmpty()) {
-            final var maybeMap = worldManager.getMaybeMap(player.getMapId());
-            if (maybeMap.isPresent()) {
-                maybeMap.get().getObjects().remove(target);
-                events.add(GameEventFactory.broadcastMapObjects(maybeMap.get().getObjects(), player.getMapId()));
+            for (Item item : target.getItems()) {
+                if (player.getInventory().addItem(item)) {
+                    message.append("\n + ").append(item.getQuantity()).append("x ").append(item.getName());
+                    itemsToRemove.add(item);
+                } else {
+                    message.append("\n ! ").append(item.getName()).append("It is too heavy for you");
+                }
             }
-        }
+            target.getItems().removeAll(itemsToRemove);
 
-        return events;
+            final Collection<GameEvent> events = new ArrayList<>();
+            events.add(GameEventFactory.sendInventoryEvent(player));
+            events.add(GameEventFactory.sendMessageEvent(message.toString(), player.getId()));
+
+            if (target.getItems().isEmpty()) {
+                final var maybeMap = worldManager.getMaybeMap(player.getMapId());
+                if (maybeMap.isPresent()) {
+                    maybeMap.get().removeObject(target);
+                    events.add(GameEventFactory.broadcastMapObjects(maybeMap.get().getObjects(), player.getMapId()));
+                }
+            }
+            return events;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package cz.matysekxx.aftermathserver.dto;
 
+import cz.matysekxx.aftermathserver.core.model.entity.InteractionType;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class NpcDto {
     private int hp;
     private int maxHp;
     private boolean aggressive;
+    private InteractionType interaction;
 
     public static NpcDto fromEntity(Npc npc) {
         return new NpcDto(
@@ -32,7 +34,8 @@ public class NpcDto {
                 npc.getY(),
                 npc.getHp(),
                 npc.getMaxHp(),
-                npc.isAggressive()
+                npc.isAggressive(),
+                npc.getInteraction()
         );
     }
 }

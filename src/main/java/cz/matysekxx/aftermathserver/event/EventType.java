@@ -71,5 +71,9 @@ public enum EventType {
     /**
      * Request to pay debt.
      */
-    PAY_DEBT;
+    PAY_DEBT,
+    /**
+     * Send a dialog message to client.
+     */
+    SEND_DIALOG;
 }

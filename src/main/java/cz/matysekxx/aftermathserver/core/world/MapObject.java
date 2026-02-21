@@ -3,6 +3,7 @@ package cz.matysekxx.aftermathserver.core.world;
 import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.util.Spatial;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -18,7 +19,9 @@ import java.util.Collection;
  */
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class MapObject implements Spatial {
+    @EqualsAndHashCode.Include
     private String id;
     private String type;
     private int x, y;

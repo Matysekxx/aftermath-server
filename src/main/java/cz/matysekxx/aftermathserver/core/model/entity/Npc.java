@@ -116,4 +116,5 @@ public class Npc extends Entity {
     public void update(GameMapData gameMapData, Collection<Player> players) {
         behavior.update(this, gameMapData, players);
     }
+
 }

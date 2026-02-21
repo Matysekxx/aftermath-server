@@ -90,6 +90,12 @@ public class GameMapData {
         return objectCache.get(id);
     }
 
+    public void removeObject(MapObject object) {
+        if (object == null) return;
+        objectCache.remove(object.getId());
+        objects.remove(object);
+    }
+
     public void initializeCache() {
         objectCache.clear();
         objects.forEach(obj -> objectCache.put(obj.getId(), obj));
