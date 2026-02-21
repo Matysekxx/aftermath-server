@@ -20,6 +20,7 @@ public class NpcDto {
     private String type;
     private int x;
     private int y;
+    private int z;
     private int hp;
     private int maxHp;
     private boolean aggressive;
@@ -32,6 +33,7 @@ public class NpcDto {
                 npc.getType(),
                 npc.getX(),
                 npc.getY(),
+                npc.getLayerIndex(),
                 npc.getHp(),
                 npc.getMaxHp(),
                 npc.isAggressive(),

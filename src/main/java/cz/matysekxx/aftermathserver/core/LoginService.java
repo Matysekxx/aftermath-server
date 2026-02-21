@@ -109,7 +109,7 @@ public class LoginService {
                     spawn, classConfig, mapId, className
             );
             newPlayer.setDebt(settings.getStartingDebt());
-            newPlayer.setCredits(1_000_000_000);
+            //newPlayer.setCredits(1_000_000_000);
             playerRegistry.put(newPlayer);
             sendInitialGameState(newPlayer, startingMap);
         }

@@ -29,4 +29,8 @@ public class TradeOfferDto {
      * The list of items available for purchase.
      */
     private List<Item> items;
+    /**
+     * Optional welcome message from the trader.
+     */
+    private String welcomeMessage;
 }
