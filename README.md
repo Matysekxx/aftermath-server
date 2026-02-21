@@ -66,7 +66,7 @@ Follow these steps to host your own instance of the Prague Metro and invite your
 1.  **Get the Client:** Download the latest native Windows client.
 <div align="center">
 
-## 👉 DOWNLOAD AFTERMATH CLIENT (C++) 👈
+## 👉 [DOWNLOAD AFTERMATH CLIENT (C++)](https://github.com/Matysekxx/aftermath_client) 👈
 </div>
 
 2.  **Connect:** Open your terminal and run the client with the host's WebSocket URL:
