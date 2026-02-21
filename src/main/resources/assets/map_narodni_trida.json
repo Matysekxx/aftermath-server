@@ -2,6 +2,7 @@
   "id": "narodni-trida",
   "name": "Národní třída",
   "type": "HAZARD_ZONE",
+  "difficulty": 3,
   "layout": {
     "0": "assets/maps_b/map_narodni_trida.txt"
   },

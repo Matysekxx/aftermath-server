@@ -2,6 +2,7 @@
   "id": "budejovicka",
   "name": "Budějovická",
   "type": "SAFE_ZONE",
+  "difficulty": 1,
   "layout": {
     "0": "assets/maps_c/map_budejovicka0.txt",
     "1": "assets/maps_c/map_budejovicka1.txt"

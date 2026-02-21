@@ -1,7 +1,8 @@
 {
   "id": "nadrazi-veleslavin",
   "name": "Veleslavín",
-  "type": "SAFE_ZONE",
+  "type": "HAZARD_ZONE",
+  "difficulty": 1,
   "layout": {
     "0": "assets/maps_a/map_nadrazi_veleslavin0.txt",
     "1": "assets/maps_a/map_nadrazi_veleslavin1.txt"

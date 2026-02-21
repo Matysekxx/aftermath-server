@@ -2,6 +2,7 @@
   "id": "kobylisy",
   "name": "Kobylisy",
   "type": "SAFE_ZONE",
+  "difficulty": 1,
   "layout": {
     "0": "assets/maps_c/map_kobylisy.txt"
   },

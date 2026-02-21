@@ -2,6 +2,7 @@
   "id": "mustek",
   "name": "Můstek",
   "type": "SAFE_ZONE",
+  "difficulty": 1,
   "layout": {
     "0": "assets/maps_a/map_mustek0.txt"
   },

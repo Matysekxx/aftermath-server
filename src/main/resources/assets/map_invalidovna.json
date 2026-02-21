@@ -2,6 +2,7 @@
   "id": "invalidovna",
   "name": "Invalidovna",
   "type": "HAZARD_ZONE",
+  "difficulty": 1,
   "layout": {
     "0": "assets/maps_b/map_invalidovna.txt"
   },

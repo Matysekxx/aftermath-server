@@ -16,8 +16,7 @@
     }
   },
   "spawnMarkers": {
-    "@": "line_c",
-    "$": "line_d"
+    "@": "line_c"
   },
   "npcMarkers": {
     "S": "scout_pankrac"
