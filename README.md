@@ -71,7 +71,7 @@ Follow these steps to host your own instance of the Prague Metro and invite your
 
 2.  **Connect:** Open your terminal and run the client with the host's WebSocket URL:
     ```powershell
-    aftermath-client.exe ws://<HOST_IP>:8080/game
+    aftermath_client.exe ws://<HOST_IP>:8080/game
     ```
     *(Replace `<HOST_IP>` with the address provided by the server host, e.g., `192.168.100.244`)*
 
