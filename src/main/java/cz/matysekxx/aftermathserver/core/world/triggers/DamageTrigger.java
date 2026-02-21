@@ -12,7 +12,9 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class DamageTrigger extends TileTrigger {
-    /** The amount of damage to deal. */
+    /**
+     * The amount of damage to deal.
+     */
     private int damage;
 
     @Override

@@ -13,26 +13,46 @@ import java.util.List;
  */
 @Data
 public class NpcTemplate {
-    /** Unique identifier for the NPC template (e.g., "mutant_rat"). */
+    /**
+     * Unique identifier for the NPC template (e.g., "mutant_rat").
+     */
     private String id;
-    /** Display name of the NPC. */
+    /**
+     * Display name of the NPC.
+     */
     private String name;
-    /** Category of the NPC (e.g., "MUTANT", "HUMAN"). */
+    /**
+     * Category of the NPC (e.g., "MUTANT", "HUMAN").
+     */
     private String type;
-    /** The behavior strategy identifier (e.g., "AGGRESSIVE"). */
+    /**
+     * The behavior strategy identifier (e.g., "AGGRESSIVE").
+     */
     private String behavior;
-    /** Whether the NPC initiates combat on sight. */
+    /**
+     * Whether the NPC initiates combat on sight.
+     */
     private boolean aggressive;
-    /** Base damage dealt by the NPC. */
+    /**
+     * Base damage dealt by the NPC.
+     */
     private int damage;
-    /** Attack range in tiles. */
+    /**
+     * Attack range in tiles.
+     */
     private int range;
-    /** Maximum health points. */
+    /**
+     * Maximum health points.
+     */
     private int maxHp;
     private InteractionType interaction;
     private String dialogId;
-    /** List of items that can drop from this NPC. */
+    /**
+     * List of items that can drop from this NPC.
+     */
     private List<Item> loot = new ArrayList<>();
-    /** List of items available for purchase from the npc. */
+    /**
+     * List of items available for purchase from the npc.
+     */
     private List<Item> shopItems = new ArrayList<>();
 }

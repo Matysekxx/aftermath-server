@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.TileRegistry;
 import cz.matysekxx.aftermathserver.core.world.TileType;
-import cz.matysekxx.aftermathserver.util.Spatial;
 import cz.matysekxx.aftermathserver.util.Vector2;
 import cz.matysekxx.aftermathserver.util.Vector3;
 import lombok.Getter;
@@ -24,9 +23,12 @@ import java.util.*;
 public class ParsedMapLayer {
     private final TileType[][] tiles;
     private final char[][] symbols;
-    @JsonIgnore private final Map<String, List<Vector3>> markers;
-    @JsonIgnore private final Map<Vector3, String> npcSpawns;
-    @JsonIgnore private final Map<Vector3, String> objectSpawns;
+    @JsonIgnore
+    private final Map<String, List<Vector3>> markers;
+    @JsonIgnore
+    private final Map<Vector3, String> npcSpawns;
+    @JsonIgnore
+    private final Map<Vector3, String> objectSpawns;
     private final int width;
     private final int height;
 

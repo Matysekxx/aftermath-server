@@ -31,7 +31,9 @@ public class MapObjectFactory {
         return prefix + "_" + UUID.randomUUID().toString().substring(0, 8);
     }
 
-    /** Creates a corpse container from a dead player. */
+    /**
+     * Creates a corpse container from a dead player.
+     */
     public MapObject createPlayerCorpse(Player deadPlayer) {
         final MapObject corpse = new MapObject();
         corpse.setId("corpse_" + deadPlayer.getName());
@@ -48,7 +50,9 @@ public class MapObjectFactory {
         return corpse;
     }
 
-    /** Creates a loot bag containing a specific item. */
+    /**
+     * Creates a loot bag containing a specific item.
+     */
     public MapObject createLootBag(String itemId, int quantity, int x, int y, int z) {
         final MapObject bag = new MapObject();
         bag.setId(generateId("loot"));
@@ -62,7 +66,9 @@ public class MapObjectFactory {
         return bag;
     }
 
-    /** Creates a static map object from a marker definition. */
+    /**
+     * Creates a static map object from a marker definition.
+     */
     public MapObject createStaticObject(String type, String action, String description, Vector3 pos) {
         final MapObject obj = new MapObject();
         obj.setId(type.toLowerCase() + "_" + UUID.randomUUID().toString().substring(0, 8));

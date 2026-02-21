@@ -4,7 +4,6 @@ import cz.matysekxx.aftermathserver.core.logic.metro.MetroService;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
-import cz.matysekxx.aftermathserver.core.world.triggers.TileTrigger;
 import cz.matysekxx.aftermathserver.core.world.triggers.TriggerContext;
 import cz.matysekxx.aftermathserver.dto.MapViewportPayload;
 import cz.matysekxx.aftermathserver.dto.MoveRequest;
@@ -13,8 +12,6 @@ import cz.matysekxx.aftermathserver.event.GameEventQueue;
 import cz.matysekxx.aftermathserver.util.Direction;
 import cz.matysekxx.aftermathserver.util.Vector2;
 import org.springframework.stereotype.Service;
-
-import java.util.function.Consumer;
 
 /**
  * Service responsible for handling player movement logic.
@@ -75,7 +72,7 @@ public class MovementService {
                 .ifPresentOrElse(
                         tileTrigger -> tileTrigger.onEnter(player, triggerContext),
                         () -> currentMap.getMaybeTileTrigger(
-                                String.valueOf(currentMap.getLayer(player.getLayerIndex()).getSymbolAt(target)))
+                                        String.valueOf(currentMap.getLayer(player.getLayerIndex()).getSymbolAt(target)))
                                 .ifPresent(tileTrigger -> tileTrigger.onEnter(player, triggerContext)));
 
         gameEventQueue.enqueue(GameEventFactory.sendPositionEvent(player));

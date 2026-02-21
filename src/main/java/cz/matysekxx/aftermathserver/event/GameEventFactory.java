@@ -23,6 +23,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to update a specific player's inventory.
+     *
      * @param player The player whose inventory is being sent.
      * @return A new GameEvent.
      */
@@ -32,6 +33,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to update a specific player's statistics (HP, Rads, etc.).
+     *
      * @param player The player whose stats are being sent.
      * @return A new GameEvent.
      */
@@ -41,6 +43,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to send map viewport data to a specific player.
+     *
      * @param mapViewportPayload The viewport data.
      * @param sessionId          The session ID of the recipient.
      * @return A new GameEvent.
@@ -51,6 +54,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to send the "Game Over" screen to a specific player.
+     *
      * @param player The player who died.
      * @return A new GameEvent.
      */
@@ -60,6 +64,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to update a specific player's position.
+     *
      * @param player The player whose position is being sent.
      * @return A new GameEvent.
      */
@@ -69,6 +74,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to send a system message to a specific player.
+     *
      * @param message   The message content.
      * @param sessionId The session ID of the recipient.
      * @return A new GameEvent.
@@ -79,6 +85,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to send an error message to a specific player.
+     *
      * @param message   The error message content.
      * @param sessionId The session ID of the recipient.
      * @return A new GameEvent.
@@ -89,6 +96,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to open the Metro UI for a specific player.
+     *
      * @param stations  The list of available stations.
      * @param sessionId The session ID of the recipient.
      * @return A new GameEvent.
@@ -99,6 +107,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to open the Trade UI for a specific player.
+     *
      * @param tradeOffer The trade offer details.
      * @param sessionId  The session ID of the recipient.
      * @return A new GameEvent.
@@ -109,6 +118,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to send login options (classes, maps) to a specific session.
+     *
      * @param response  The login options.
      * @param sessionId The session ID of the recipient.
      * @return A new GameEvent.
@@ -120,6 +130,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to send a list of map objects to a specific player (e.g., on join).
+     *
      * @param objects   The collection of map objects.
      * @param sessionId The session ID of the recipient.
      * @return A new GameEvent.
@@ -130,6 +141,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to broadcast a list of map objects to all players on a specific map.
+     *
      * @param objects The collection of map objects.
      * @param mapId   The ID of the map.
      * @return A new GameEvent.
@@ -141,6 +153,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to send a list of NPCs to a specific player (e.g., on join).
+     *
      * @param npcs      The collection of NPCs.
      * @param sessionId The session ID of the recipient.
      * @return A new GameEvent.
@@ -151,6 +164,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to broadcast a list of NPCs to all players on a specific map.
+     *
      * @param npcs  The collection of NPCs.
      * @param mapId The ID of the map.
      * @return A new GameEvent.
@@ -162,6 +176,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to broadcast a chat message to all players on a specific map.
+     *
      * @param request The chat request.
      * @param mapId   The ID of the map.
      * @return A new GameEvent.
@@ -172,6 +187,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to broadcast a global announcement to all players on the server.
+     *
      * @param message The announcement message.
      * @return A new GameEvent.
      */
@@ -181,6 +197,7 @@ public class GameEventFactory {
 
     /**
      * Creates an event to broadcast the list of other players on the map.
+     *
      * @param players The collection of other players.
      * @param mapId   The ID of the map.
      * @return A new GameEvent.

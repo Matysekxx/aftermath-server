@@ -11,8 +11,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class SellRequest {
-    /** The ID of the NPC trader. */
+    /**
+     * The ID of the NPC trader.
+     */
     private String npcId;
-    /** The inventory slot index of the item to sell. */
+    /**
+     * The inventory slot index of the item to sell.
+     */
     private int slotIndex;
 }

@@ -13,6 +13,7 @@ public final class MathUtil {
     /**
      * Calculates the Manhattan distance (|dx| + |dy|).
      * Ideal for grid-based movement where diagonals are not allowed.
+     *
      * @param a Start point.
      * @param b End point.
      * @return Manhattan distance.
@@ -24,6 +25,7 @@ public final class MathUtil {
     /**
      * Calculates Euclidean distance.
      * Ideal for checking radius (e.g. interaction range, explosion range).
+     *
      * @param a Start point.
      * @param b End point.
      * @return Euclidean distance.
@@ -35,6 +37,7 @@ public final class MathUtil {
     /**
      * Calculates the Chebyshev distance (max(|dx|, |dy|)).
      * Useful for grid-based logic where diagonals count as 1 step.
+     *
      * @param a Start point.
      * @param b End point.
      * @return Chebyshev distance.

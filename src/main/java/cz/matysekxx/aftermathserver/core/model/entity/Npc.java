@@ -5,8 +5,6 @@ import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,29 +22,47 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class Npc extends Entity {
-    /** The AI behavior strategy assigned to this NPC. */
+    /**
+     * The AI behavior strategy assigned to this NPC.
+     */
     private Behavior behavior;
 
-    /** The type of the NPC (e.g., "MUTANT", "TRADER", "SOLDIER"). */
+    /**
+     * The type of the NPC (e.g., "MUTANT", "TRADER", "SOLDIER").
+     */
     private String type;
 
-    /** Indicates if the NPC is hostile towards players. */
+    /**
+     * Indicates if the NPC is hostile towards players.
+     */
     private boolean aggressive;
 
-    /** Base damage dealt by this NPC in combat. */
+    /**
+     * Base damage dealt by this NPC in combat.
+     */
     private int damage;
 
-    /** Range of vision or attack. */
+    /**
+     * Range of vision or attack.
+     */
     private int range;
 
-    /** Items dropped when this NPC dies. */
+    /**
+     * Items dropped when this NPC dies.
+     */
     private Collection<Item> loot = new ArrayList<>();
-    /** Items available for purchase from the npc. */
+    /**
+     * Items available for purchase from the npc.
+     */
     private List<Item> shopItems = new ArrayList<>();
 
-    /** ID of the dialogue tree associated with this NPC (if interactive). */
+    /**
+     * ID of the dialogue tree associated with this NPC (if interactive).
+     */
     private String dialogueId;
-    /** The type of interaction this NPC provides. */
+    /**
+     * The type of interaction this NPC provides.
+     */
     private InteractionType interaction;
 
     /**
@@ -66,16 +82,6 @@ public class Npc extends Entity {
         super(x, y, layerIndex, mapId, id, name, maxHp, maxHp, State.ALIVE);
         this.behavior = behavior;
         this.interaction = interaction;
-    }
-
-    /**
-     * Updates the NPC state by executing its behavior logic.
-     *
-     * @param gameMapData The map data.
-     * @param players     The collection of players on the map.
-     */
-    public void update(GameMapData gameMapData, Collection<Player> players) {
-        behavior.update(this, gameMapData, players);
     }
 
     /**
@@ -99,5 +105,15 @@ public class Npc extends Entity {
         npc.setDialogueId(template.getDialogId());
         npc.setShopItems(new ArrayList<>(template.getShopItems()));
         return npc;
+    }
+
+    /**
+     * Updates the NPC state by executing its behavior logic.
+     *
+     * @param gameMapData The map data.
+     * @param players     The collection of players on the map.
+     */
+    public void update(GameMapData gameMapData, Collection<Player> players) {
+        behavior.update(this, gameMapData, players);
     }
 }

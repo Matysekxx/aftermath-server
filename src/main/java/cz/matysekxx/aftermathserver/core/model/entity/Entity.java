@@ -13,23 +13,41 @@ import lombok.Data;
  */
 @Data
 public abstract class Entity implements Spatial {
-    /** The X coordinate of the entity. */
+    /**
+     * The X coordinate of the entity.
+     */
     protected int x;
-    /** The Y coordinate of the entity. */
+    /**
+     * The Y coordinate of the entity.
+     */
     protected int y;
-    /** The layer index (Z coordinate) of the entity. */
+    /**
+     * The layer index (Z coordinate) of the entity.
+     */
     protected int layerIndex;
-    /** The ID of the map the entity is currently on. */
+    /**
+     * The ID of the map the entity is currently on.
+     */
     protected String mapId;
-    /** Unique identifier for the entity. */
+    /**
+     * Unique identifier for the entity.
+     */
     protected String id;
-    /** Display name of the entity. */
+    /**
+     * Display name of the entity.
+     */
     protected String name;
-    /** Current health points of the entity. */
+    /**
+     * Current health points of the entity.
+     */
     protected int hp;
-    /** Maximum health points of the entity. */
+    /**
+     * Maximum health points of the entity.
+     */
     protected int maxHp;
-    /** Current state of the entity. */
+    /**
+     * Current state of the entity.
+     */
     protected State state;
 
     /**

@@ -12,7 +12,9 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class MetroTrigger extends TileTrigger {
-    /** The ID of the metro line associated with this trigger. */
+    /**
+     * The ID of the metro line associated with this trigger.
+     */
     private String lineId;
 
     @Override

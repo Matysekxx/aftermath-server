@@ -6,8 +6,12 @@ package cz.matysekxx.aftermathserver.core.world;
  * @author Matysekxx
  */
 public enum MapType {
-    /** Area with environmental hazards (radiation). */
+    /**
+     * Area with environmental hazards (radiation).
+     */
     HAZARD_ZONE,
-    /** Safe area where players regenerate. */
+    /**
+     * Safe area where players regenerate.
+     */
     SAFE_ZONE
 }

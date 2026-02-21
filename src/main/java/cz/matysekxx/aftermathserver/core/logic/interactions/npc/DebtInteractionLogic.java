@@ -30,7 +30,7 @@ public class DebtInteractionLogic implements NpcInteractionLogic {
     @Override
     public Collection<GameEvent> interact(Npc target, Player player) {
         final List<GameEvent> events = new ArrayList<>();
-        
+
         if (player.getDebt() <= 0) {
             events.add(GameEventFactory.sendMessageEvent(
                     target.getName() + ": You don't owe us anything. Get back to work!", player.getId()));
@@ -38,14 +38,14 @@ public class DebtInteractionLogic implements NpcInteractionLogic {
         }
 
         final int amountToPay = Math.min(player.getCredits(), player.getDebt());
-        
+
         if (amountToPay > 0) {
             log.info("player {} paid {} credits", player.getName(), amountToPay);
             economyService.applyPayment(player, amountToPay);
             events.add(GameEventFactory.sendMessageEvent(
                     target.getName() + ": Payment received. Your remaining debt is " + player.getDebt() + " credits.", player.getId()));
             events.add(GameEventFactory.sendStatsEvent(player));
-            
+
             if (player.getDebt() <= 0) {
                 log.info("player {} paid all debt", player.getName());
                 events.add(GameEventFactory.sendMessageEvent(

@@ -16,7 +16,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class MovementServiceTest {
 
@@ -83,10 +84,22 @@ class MovementServiceTest {
 
     private static class FakeWorldManager extends WorldManager {
         private final Map<String, GameMapData> maps = new HashMap<>();
-        public FakeWorldManager() { super(null); }
-        public void addMap(GameMapData map) { maps.put(map.getId(), map); }
-        @Override public GameMapData getMap(String id) { return maps.get(id); }
-        @Override public boolean isWalkable(String id, int l, int x, int y) {
+
+        public FakeWorldManager() {
+            super(null);
+        }
+
+        public void addMap(GameMapData map) {
+            maps.put(map.getId(), map);
+        }
+
+        @Override
+        public GameMapData getMap(String id) {
+            return maps.get(id);
+        }
+
+        @Override
+        public boolean isWalkable(String id, int l, int x, int y) {
             GameMapData m = getMap(id);
             return m != null && m.getLayer(l).getTileAt(x, y).isWalkable();
         }
@@ -94,6 +107,10 @@ class MovementServiceTest {
 
     private static class FakeGameEventQueue extends GameEventQueue {
         GameEvent lastEvent;
-        @Override public void enqueue(GameEvent event) { lastEvent = event; }
+
+        @Override
+        public void enqueue(GameEvent event) {
+            lastEvent = event;
+        }
     }
 }

@@ -17,6 +17,7 @@ public class GameEventQueue {
 
     /**
      * Adds an event to the queue.
+     *
      * @param gameEvent The event to enqueue.
      */
     public void enqueue(GameEvent gameEvent) {
@@ -25,6 +26,7 @@ public class GameEventQueue {
 
     /**
      * Retrieves and removes the head of the queue, waiting if necessary.
+     *
      * @return The next game event.
      * @throws InterruptedException if interrupted while waiting.
      */

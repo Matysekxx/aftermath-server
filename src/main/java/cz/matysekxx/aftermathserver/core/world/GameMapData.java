@@ -50,6 +50,7 @@ public class GameMapData {
 
     /**
      * Retrieves a specific layer by index.
+     *
      * @param index The layer index.
      * @return The parsed map layer.
      */
@@ -59,6 +60,7 @@ public class GameMapData {
 
     /**
      * Checks if a symbol corresponds to a tile trigger.
+     *
      * @param symbol The character symbol.
      * @return An Optional containing the TileTrigger.
      */

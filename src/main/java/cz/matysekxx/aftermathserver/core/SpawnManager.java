@@ -7,7 +7,6 @@ import cz.matysekxx.aftermathserver.core.model.entity.NpcTable;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTemplate;
 import cz.matysekxx.aftermathserver.core.model.item.ItemTable;
 import cz.matysekxx.aftermathserver.core.model.item.ItemTemplate;
-import cz.matysekxx.aftermathserver.core.model.item.ItemType;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
 import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;

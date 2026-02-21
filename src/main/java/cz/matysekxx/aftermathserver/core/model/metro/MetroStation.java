@@ -9,8 +9,12 @@ import lombok.Data;
  */
 @Data
 public class MetroStation {
-    /** Unique identifier for the station (usually map ID). */
+    /**
+     * Unique identifier for the station (usually map ID).
+     */
     private String id;
-    /** Display name of the station. */
+    /**
+     * Display name of the station.
+     */
     private String name;
 }

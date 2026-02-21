@@ -15,7 +15,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EconomyServiceTest {
 
@@ -138,9 +139,17 @@ class EconomyServiceTest {
 
     private static class FakeItemFactory extends ItemFactory {
         private Item itemToReturn;
-        public FakeItemFactory() { super(null); }
-        public void setItemToReturn(Item item) { this.itemToReturn = item; }
-        @Override public Item createItem(String id, int quantity) {
+
+        public FakeItemFactory() {
+            super(null);
+        }
+
+        public void setItemToReturn(Item item) {
+            this.itemToReturn = item;
+        }
+
+        @Override
+        public Item createItem(String id, int quantity) {
             if (itemToReturn != null) return itemToReturn;
             return Item.builder().id(id).quantity(quantity).build();
         }

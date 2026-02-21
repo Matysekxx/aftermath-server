@@ -12,17 +12,29 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class StatsResponse {
-    /** Current health points. */
+    /**
+     * Current health points.
+     */
     private int hp;
-    /** Maximum health points. */
+    /**
+     * Maximum health points.
+     */
     private int maxHp;
-    /** Current radiation level. */
+    /**
+     * Current radiation level.
+     */
     private int rads;
-    /** Current credits balance. */
+    /**
+     * Current credits balance.
+     */
     private int credits;
-    /** Current debt. */
+    /**
+     * Current debt.
+     */
     private int debt;
-    /** Current global debt. */
+    /**
+     * Current global debt.
+     */
     private long globalDebt;
     private Integer equippedWeaponSlot;
     private Integer equippedMaskSlot;
@@ -30,20 +42,20 @@ public class StatsResponse {
     /**
      * Creates a StatsResponse from a Player entity.
      *
-     * @param player The player entity.
+     * @param player     The player entity.
      * @param globalDebt The current global debt.
      * @return A new StatsResponse instance.
      */
     public static StatsResponse of(Player player, long globalDebt) {
         return new StatsResponse(
-            player.getHp(), 
-            player.getMaxHp(), 
-            player.getRads(), 
-            player.getCredits(), 
-            player.getDebt(),
-            globalDebt,
-            player.getEquippedWeaponSlot(),
-            player.getEquippedMaskSlot()
+                player.getHp(),
+                player.getMaxHp(),
+                player.getRads(),
+                player.getCredits(),
+                player.getDebt(),
+                globalDebt,
+                player.getEquippedWeaponSlot(),
+                player.getEquippedMaskSlot()
         );
     }
 }

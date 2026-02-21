@@ -16,7 +16,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StatsServiceTest {
 
@@ -121,8 +122,18 @@ class StatsServiceTest {
 
     private static class FakeWorldManager extends WorldManager {
         private final Map<String, GameMapData> maps = new HashMap<>();
-        public FakeWorldManager() { super(null); }
-        public void addMap(GameMapData map) { maps.put(map.getId(), map); }
-        @Override public GameMapData getMap(String id) { return maps.get(id); }
+
+        public FakeWorldManager() {
+            super(null);
+        }
+
+        public void addMap(GameMapData map) {
+            maps.put(map.getId(), map);
+        }
+
+        @Override
+        public GameMapData getMap(String id) {
+            return maps.get(id);
+        }
     }
 }

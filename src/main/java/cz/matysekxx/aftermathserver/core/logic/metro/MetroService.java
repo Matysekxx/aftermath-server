@@ -32,13 +32,21 @@ import java.util.Map;
 @Slf4j
 @Service
 public class MetroService {
-    /** Map of metro line IDs to their list of stations. */
+    /**
+     * Map of metro line IDs to their list of stations.
+     */
     private final Map<String, List<MetroStation>> metroStations;
-    /** Queue for dispatching game events. */
+    /**
+     * Queue for dispatching game events.
+     */
     private final GameEventQueue gameEventQueue;
-    /** Manager for world and map data. */
+    /**
+     * Manager for world and map data.
+     */
     private final WorldManager worldManager;
-    /** Service for handling economic transactions. */
+    /**
+     * Service for handling economic transactions.
+     */
     private final EconomyService economyService;
 
     /**

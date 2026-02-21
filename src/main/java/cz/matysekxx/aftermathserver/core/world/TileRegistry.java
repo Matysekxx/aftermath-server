@@ -33,6 +33,7 @@ public class TileRegistry {
 
     /**
      * Looks up the TileType for a given character symbol.
+     *
      * @param c The character symbol.
      * @return The corresponding TileType.
      */

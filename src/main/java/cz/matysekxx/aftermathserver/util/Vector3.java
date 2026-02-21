@@ -8,7 +8,6 @@ package cz.matysekxx.aftermathserver.util;
  * @param x The horizontal position.
  * @param y The vertical position.
  * @param z The layer index (Z-coordinate).
- *
  * @author Matysekxx
  */
 public record Vector3(int x, int y, int z) {

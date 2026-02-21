@@ -53,7 +53,9 @@ public class NetworkService {
         }
     }
 
-    /** Starts the background thread for processing events from the queue. */
+    /**
+     * Starts the background thread for processing events from the queue.
+     */
     @PostConstruct
     private void startEventLoop() {
         final Runnable runnable = () -> {
@@ -76,7 +78,9 @@ public class NetworkService {
         eventLoopExecutor.execute(runnable);
     }
 
-    /** Stops the event processing loop. */
+    /**
+     * Stops the event processing loop.
+     */
     @PreDestroy
     private void stopEventLoop() {
         if (eventLoopExecutor != null && !eventLoopExecutor.isShutdown()) {
@@ -87,6 +91,7 @@ public class NetworkService {
 
     /**
      * Registers a new WebSocket session.
+     *
      * @param session The session to add.
      */
     public void addSession(WebSocketSession session) {
@@ -95,6 +100,7 @@ public class NetworkService {
 
     /**
      * Removes a closed WebSocket session.
+     *
      * @param sessionId The ID of the session to remove.
      */
     public void removeSession(String sessionId) {
@@ -104,6 +110,7 @@ public class NetworkService {
 
     /**
      * Updates the map ID associated with a session.
+     *
      * @param sessionId The session ID.
      * @param mapId     The new map ID.
      */
@@ -113,6 +120,7 @@ public class NetworkService {
 
     /**
      * Broadcasts a message to all players on a specific map.
+     *
      * @param payload The message payload.
      * @param mapId   The target map ID.
      */
@@ -132,7 +140,9 @@ public class NetworkService {
         });
     }
 
-    /** Broadcasts a message to all connected players regardless of their location. */
+    /**
+     * Broadcasts a message to all connected players regardless of their location.
+     */
     void broadcastGlobalAnnouncement(String message) {
         try {
             final String json = objectMapper.writeValueAsString(WebSocketResponse.of("GLOBAL_ANNOUNCEMENT", message));
@@ -140,18 +150,20 @@ public class NetworkService {
             sessions.values().stream()
                     .filter(WebSocketSession::isOpen)
                     .forEach(session -> {
-                try {
-                    session.sendMessage(textMessage);
-                } catch (IOException e) {
-                    log.error("Error sending global announcement to {}: {}", session.getId(), e.getMessage());
-                }
-            });
+                        try {
+                            session.sendMessage(textMessage);
+                        } catch (IOException e) {
+                            log.error("Error sending global announcement to {}: {}", session.getId(), e.getMessage());
+                        }
+                    });
         } catch (JsonProcessingException e) {
             log.error("Error serializing global announcement: {}", e.getMessage());
         }
     }
 
-    /** Sends the Metro UI data to a client. */
+    /**
+     * Sends the Metro UI data to a client.
+     */
     void sendUIList(Map.Entry<String, List<MetroStation>> metroStations, String id) {
         final UILoadResponse dto = new UILoadResponse();
         dto.setLineId(metroStations.getKey());
@@ -159,37 +171,51 @@ public class NetworkService {
         sendJson(id, "OPEN_METRO_UI", dto);
     }
 
-    /** Sends a trade offer to a client to open the trading UI. */
+    /**
+     * Sends a trade offer to a client to open the trading UI.
+     */
     void sendTradeOffer(String sessionId, TradeOfferDto offer) {
         sendJson(sessionId, "OPEN_TRADE_UI", offer);
     }
 
-    /** Sends a notification message to a client. */
+    /**
+     * Sends a notification message to a client.
+     */
     void sendToClient(String payload, String sessionId) {
         sendJson(sessionId, "SEND_MESSAGE", payload);
     }
 
-    /** Sends the Game Over signal to a client. */
+    /**
+     * Sends the Game Over signal to a client.
+     */
     void sendGameOver(String sessionId) {
         sendJson(sessionId, "SEND_GAME_OVER", Map.of("message", "YOU DIED"));
     }
 
-    /** Sends updated player statistics to a client. */
+    /**
+     * Sends updated player statistics to a client.
+     */
     void sendStatsToClient(Player p, long globalDebt) {
         sendJson(p.getId(), "SEND_STATS", StatsResponse.of(p, globalDebt));
     }
 
-    /** Sends the player's inventory data to a client. */
+    /**
+     * Sends the player's inventory data to a client.
+     */
     void sendInventory(Player p) {
         sendJson(p.getId(), "SEND_INVENTORY", p.getInventory().getSlots());
     }
 
-    /** Sends the map viewport data to a client. */
+    /**
+     * Sends the map viewport data to a client.
+     */
     void sendMapData(String sessionId, MapViewportPayload payload) {
         sendJson(sessionId, "SEND_MAP_DATA", payload);
     }
 
-    /** Broadcasts the list of map objects to all players on a map. */
+    /**
+     * Broadcasts the list of map objects to all players on a map.
+     */
     void broadcastMapObjects(List<MapObject> objects, String mapId) {
         try {
             broadcastToMap(objectMapper.writeValueAsString(WebSocketResponse.of("SEND_MAP_OBJECTS", objects)), mapId);
@@ -198,12 +224,16 @@ public class NetworkService {
         }
     }
 
-    /** Sends the list of map objects to a specific client. */
+    /**
+     * Sends the list of map objects to a specific client.
+     */
     void sendMapObjects(String sessionId, List<MapObject> objects) {
         sendJson(sessionId, "SEND_MAP_OBJECTS", objects);
     }
 
-    /** Sends the list of NPCs to a client or broadcasts it to a map. */
+    /**
+     * Sends the list of NPCs to a client or broadcasts it to a map.
+     */
     void sendNpcs(String sessionId, String mapId, boolean isBroadcast, List<NpcDto> npcs) {
         try {
             final String json = objectMapper.writeValueAsString(WebSocketResponse.of("SEND_NPCS", npcs));
@@ -215,7 +245,9 @@ public class NetworkService {
         }
     }
 
-    /** Sends the player's updated position to the client. */
+    /**
+     * Sends the player's updated position to the client.
+     */
     void sendPosition(Player p) {
         sendJson(p.getId(), "SEND_PLAYER_POSITION", PlayerUpdatePayload.of(p));
     }
@@ -230,17 +262,23 @@ public class NetworkService {
         }
     }
 
-    /** Sends an error message to a client. */
+    /**
+     * Sends an error message to a client.
+     */
     void sendError(String sessionId, String message) {
         sendJson(sessionId, "SEND_ERROR", message);
     }
 
-    /** Sends the login options (classes, maps) to a client. */
+    /**
+     * Sends the login options (classes, maps) to a client.
+     */
     void sendLoginOptions(String sessionId, LoginOptionsResponse response) {
         sendJson(sessionId, "SEND_LOGIN_OPTIONS", response);
     }
 
-    /** Helper method to serialize and send a message to a specific session. */
+    /**
+     * Helper method to serialize and send a message to a specific session.
+     */
     private void sendJson(String sessionId, String type, Object payload) {
         final WebSocketSession session = sessions.get(sessionId);
         if (session != null && session.isOpen()) {

@@ -14,10 +14,12 @@ import org.springframework.stereotype.Component;
 @Component("HELP")
 public class HelpAction extends Action {
     private final GameEventQueue gameEventQueue;
+
     public HelpAction(GameEngine gameEngine, GameEventQueue gameEventQueue) {
         super(gameEngine);
         this.gameEventQueue = gameEventQueue;
     }
+
     @Override
     public void execute(String sessionId, JsonNode payload) {
         gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Commands: MOVE, ATTACK, USE, EQUIP, DROP, BUY, SELL, TRAVEL, CHAT", sessionId));

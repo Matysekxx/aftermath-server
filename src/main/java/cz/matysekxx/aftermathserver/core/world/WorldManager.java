@@ -63,6 +63,7 @@ public class WorldManager {
 
     /**
      * Retrieves a map by its ID.
+     *
      * @param mapId The ID of the map.
      * @return The GameMapData or null if not found.
      */
@@ -91,7 +92,9 @@ public class WorldManager {
         return maps.values();
     }
 
-    /** Checks if a map exists. */
+    /**
+     * Checks if a map exists.
+     */
     public boolean containsMap(String mapId) {
         return maps.containsKey(mapId);
     }
@@ -109,7 +112,9 @@ public class WorldManager {
         return parsedLayer.getTileAt(x, y);
     }
 
-    /** Checks if a specific coordinate is walkable. */
+    /**
+     * Checks if a specific coordinate is walkable.
+     */
     public boolean isWalkable(String mapId, int layer, int x, int y) {
         return getTileAt(mapId, layer, x, y).isWalkable();
     }

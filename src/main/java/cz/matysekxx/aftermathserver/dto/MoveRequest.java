@@ -15,6 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MoveRequest {
-    /** The direction of movement (UP, DOWN, LEFT, RIGHT). */
+    /**
+     * The direction of movement (UP, DOWN, LEFT, RIGHT).
+     */
     private String direction;
 }

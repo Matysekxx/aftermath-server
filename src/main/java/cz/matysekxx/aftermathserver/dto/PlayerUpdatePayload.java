@@ -12,13 +12,21 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class PlayerUpdatePayload {
-    /** The ID of the player. */
+    /**
+     * The ID of the player.
+     */
     private String playerId;
-    /** The X coordinate. */
+    /**
+     * The X coordinate.
+     */
     private int x;
-    /** The Y coordinate. */
+    /**
+     * The Y coordinate.
+     */
     private int y;
-    /** The Z coordinate (layer index). */
+    /**
+     * The Z coordinate (layer index).
+     */
     private int z;
 
     /**

@@ -19,13 +19,21 @@ import java.util.stream.Collectors;
 @Configuration
 @ConfigurationProperties(prefix = "game.items")
 public class ItemTable {
-    /** List of resource item templates. */
+    /**
+     * List of resource item templates.
+     */
     private List<ItemTemplate> resourceItems;
-    /** List of weapon item templates. */
+    /**
+     * List of weapon item templates.
+     */
     private List<ItemTemplate> weaponItems;
-    /** List of consumable item templates. */
+    /**
+     * List of consumable item templates.
+     */
     private List<ItemTemplate> consumableItems;
-    /** Lookup map for item templates by their ID. */
+    /**
+     * Lookup map for item templates by their ID.
+     */
     private Map<String, ItemTemplate> itemsById = new HashMap<>();
 
     /**

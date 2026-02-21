@@ -5,8 +5,8 @@ import cz.matysekxx.aftermathserver.core.logic.interactions.object.ObjectInterac
 import cz.matysekxx.aftermathserver.core.model.entity.InteractionType;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
-import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.core.world.GameMapData;
+import cz.matysekxx.aftermathserver.core.world.MapObject;
 import cz.matysekxx.aftermathserver.core.world.WorldManager;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;

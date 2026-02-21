@@ -6,10 +6,16 @@ package cz.matysekxx.aftermathserver.core.model.entity;
  * @author Matysekxx
  */
 public enum State {
-    /** Entity is alive and active. */
+    /**
+     * Entity is alive and active.
+     */
     ALIVE,
-    /** Entity is dead. */
+    /**
+     * Entity is dead.
+     */
     DEAD,
-    /** Entity is suffering from poison/radiation effects. */
+    /**
+     * Entity is suffering from poison/radiation effects.
+     */
     POISONED
 }

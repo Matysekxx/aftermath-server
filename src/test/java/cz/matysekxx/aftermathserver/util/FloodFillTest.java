@@ -14,32 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FloodFillTest {
 
-    @Test
-    void testFloodFillSimpleRoom() {
-        final ParsedMapLayer layer = getParsedMapLayer();
-        final GameMapData mapData = new GameMapData();
-        
-        final Map<Integer, ParsedMapLayer> layers = new HashMap<>();
-        layers.put(0, layer);
-        mapData.setParsedLayers(layers);
-
-        final Map<String, Vector3> spawns = new HashMap<>();
-        spawns.put("default", Vector3.of(0, 0, 0));
-        mapData.setSpawns(spawns);
-
-        final List<Vector3> reachable = FloodFill.floodFill(mapData);
-
-        assertEquals(4, reachable.size(), "Should find exactly 4 reachable tiles");
-        
-        assertTrue(reachable.contains(Vector3.of(0, 0, 0)));
-        assertTrue(reachable.contains(Vector3.of(1, 0, 0)));
-        assertTrue(reachable.contains(Vector3.of(0, 1, 0)));
-        assertTrue(reachable.contains(Vector3.of(1, 1, 0)));
-
-        assertFalse(reachable.contains(Vector3.of(2, 0, 0)), "Wall at (2,0) should not be reachable");
-        assertFalse(reachable.contains(Vector3.of(2, 2, 0)), "Wall at (2,2) should not be reachable");
-    }
-
     @NonNull
     private static ParsedMapLayer getParsedMapLayer() {
         final TileType[][] tiles = {
@@ -57,6 +31,32 @@ class FloodFillTest {
     }
 
     @Test
+    void testFloodFillSimpleRoom() {
+        final ParsedMapLayer layer = getParsedMapLayer();
+        final GameMapData mapData = new GameMapData();
+
+        final Map<Integer, ParsedMapLayer> layers = new HashMap<>();
+        layers.put(0, layer);
+        mapData.setParsedLayers(layers);
+
+        final Map<String, Vector3> spawns = new HashMap<>();
+        spawns.put("default", Vector3.of(0, 0, 0));
+        mapData.setSpawns(spawns);
+
+        final List<Vector3> reachable = FloodFill.floodFill(mapData);
+
+        assertEquals(4, reachable.size(), "Should find exactly 4 reachable tiles");
+
+        assertTrue(reachable.contains(Vector3.of(0, 0, 0)));
+        assertTrue(reachable.contains(Vector3.of(1, 0, 0)));
+        assertTrue(reachable.contains(Vector3.of(0, 1, 0)));
+        assertTrue(reachable.contains(Vector3.of(1, 1, 0)));
+
+        assertFalse(reachable.contains(Vector3.of(2, 0, 0)), "Wall at (2,0) should not be reachable");
+        assertFalse(reachable.contains(Vector3.of(2, 2, 0)), "Wall at (2,2) should not be reachable");
+    }
+
+    @Test
     void testFloodFillNullMap() {
         final List<Vector3> result = FloodFill.floodFill(null);
         assertNotNull(result);
@@ -67,7 +67,7 @@ class FloodFillTest {
     void testFloodFillNoSpawns() {
         final GameMapData mapData = new GameMapData();
         mapData.setSpawns(new HashMap<>());
-        
+
         final List<Vector3> result = FloodFill.floodFill(mapData);
         assertTrue(result.isEmpty(), "Reachable tiles should be empty if there are no spawns");
     }

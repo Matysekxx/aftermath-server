@@ -9,6 +9,8 @@ import lombok.Data;
  */
 @Data
 public class UseRequest {
-    /** The inventory slot index of the item to use. */
+    /**
+     * The inventory slot index of the item to use.
+     */
     private int slotIndex;
 }

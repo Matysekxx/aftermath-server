@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class InteractionServiceTest {
 
@@ -50,9 +50,9 @@ class InteractionServiceTest {
         final Player player = new Player("p1", "Player", Vector3.of(0, 0, 0), config, "map1", "SOLDIER");
         final MapObject obj = new MapObject();
         obj.setAction("LOOT");
-        
+
         interactionService.processObjectInteraction(player, obj);
-        
+
         assertNotNull(gameEventQueue.lastEvent);
     }
 
@@ -64,9 +64,9 @@ class InteractionServiceTest {
         config.setMaxWeight(50.0);
         final Player player = new Player("p1", "Player", Vector3.of(0, 0, 0), config, "map1", "SOLDIER");
         final Npc npc = new Npc("n1", "Npc", 0, 0, 0, "map1", 100, null, InteractionType.TALK);
-        
+
         interactionService.processNpcInteraction(player, npc);
-        
+
         assertNotNull(gameEventQueue.lastEvent);
     }
 
@@ -79,33 +79,49 @@ class InteractionServiceTest {
         final Player player = new Player("p1", "Player", Vector3.of(10, 10, 0), config, "map1", "SOLDIER");
         final GameMapData map = new GameMapData();
         map.setId("map1");
-        
+
         final MapObject farObj = new MapObject();
         farObj.setId("far_obj");
-        farObj.setX(20); farObj.setY(20); farObj.setZ(0);
+        farObj.setX(20);
+        farObj.setY(20);
+        farObj.setZ(0);
         farObj.setAction("LOOT");
         map.addObject(farObj);
-        
+
         final Npc nearNpc = new Npc("n1", "Npc", 11, 10, 0, "map1", 100, null, InteractionType.TALK);
         map.addNpc(nearNpc);
-        
+
         worldManager.addMap(map);
-        
+
         interactionService.processInteraction(player);
-        
+
         assertNotNull(gameEventQueue.lastEvent);
     }
 
     private static class FakeWorldManager extends WorldManager {
         private final Map<String, GameMapData> maps = new HashMap<>();
-        public FakeWorldManager() { super(null); }
-        public void addMap(GameMapData map) { maps.put(map.getId(), map); }
-        @Override public Optional<GameMapData> getMaybeMap(String id) { return Optional.ofNullable(maps.get(id)); }
+
+        public FakeWorldManager() {
+            super(null);
+        }
+
+        public void addMap(GameMapData map) {
+            maps.put(map.getId(), map);
+        }
+
+        @Override
+        public Optional<GameMapData> getMaybeMap(String id) {
+            return Optional.ofNullable(maps.get(id));
+        }
     }
 
     private static class FakeGameEventQueue extends GameEventQueue {
         GameEvent lastEvent;
-        @Override public void enqueue(GameEvent event) { lastEvent = event; }
+
+        @Override
+        public void enqueue(GameEvent event) {
+            lastEvent = event;
+        }
     }
 
     private static class FakeObjectLogic implements ObjectInteractionLogic {
@@ -117,11 +133,19 @@ class InteractionServiceTest {
 
     private static class FakeNpcLogic implements NpcInteractionLogic {
         private final InteractionType type;
-        public FakeNpcLogic(InteractionType type) { this.type = type; }
+
+        public FakeNpcLogic(InteractionType type) {
+            this.type = type;
+        }
+
         @Override
         public Collection<GameEvent> interact(Npc target, Player player) {
             return List.of(GameEventFactory.sendMessageEvent("NPC interaction", player.getId()));
         }
-        @Override public InteractionType getType() { return type; }
+
+        @Override
+        public InteractionType getType() {
+            return type;
+        }
     }
 }

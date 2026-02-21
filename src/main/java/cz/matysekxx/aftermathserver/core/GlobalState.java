@@ -12,7 +12,9 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @Component
 public class GlobalState {
-    /** The total debt of the metro community that needs to be repaid. */
+    /**
+     * The total debt of the metro community that needs to be repaid.
+     */
     private final AtomicLong globalDebt;
 
     public GlobalState(@Value("${game.global-debt}") long initialDebt) {
@@ -21,6 +23,7 @@ public class GlobalState {
 
     /**
      * Gets the current global debt.
+     *
      * @return The remaining global debt.
      */
     public long getGlobalDebt() {
@@ -29,6 +32,7 @@ public class GlobalState {
 
     /**
      * Contributes to paying off the global debt.
+     *
      * @param amount The amount to pay.
      * @return The new remaining debt.
      */

@@ -30,11 +30,15 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class GameEngine {
-    /** Viewport constants for map rendering (radius from center) */
+    /**
+     * Viewport constants for map rendering (radius from center)
+     */
     public static final int VIEWPORT_RANGE_X = 60;
     public static final int VIEWPORT_RANGE_Y = 20;
     private static final int TICKS_PER_DAY = 1200;
-    /** Target density: 1 NPC per 5000 reachable tiles (0.005) */
+    /**
+     * Target density: 1 NPC per 5000 reachable tiles (0.005)
+     */
     private static final double NPC_DENSITY = 0.005;
     private static final int DAILY_RESPAWN_COUNT = 3;
     private final WorldManager worldManager;
@@ -94,6 +98,7 @@ public class GameEngine {
 
     /**
      * Sends available login options (classes, maps) to the client.
+     *
      * @param sessionId The session ID of the client.
      */
     public void sendLoginOptions(String sessionId) {
@@ -102,6 +107,7 @@ public class GameEngine {
 
     /**
      * Adds a new player session to the game.
+     *
      * @param sessionId The session ID.
      * @param request   The login request data.
      */
@@ -111,6 +117,7 @@ public class GameEngine {
 
     /**
      * Removes a player session from the registry.
+     *
      * @param sessionId The session ID to remove.
      */
     public void removePlayer(String sessionId) {
@@ -119,6 +126,7 @@ public class GameEngine {
 
     /**
      * Retrieves the map ID for a given player.
+     *
      * @param playerId The session ID of the player.
      * @return The map ID or null if not found.
      */
@@ -287,17 +295,18 @@ public class GameEngine {
                 playersByMap.computeIfAbsent(p.getMapId(), k -> new ArrayList<>()).add(p));
         worldManager.forEachWithPredicate(
                 map -> activeMaps.contains(map.getId()), map -> {
-            final List<Player> playersOnMap = playersByMap.getOrDefault(map.getId(), List.of());
-            map.getNpcs().forEach(npc -> npc.update(map, playersOnMap));
+                    final List<Player> playersOnMap = playersByMap.getOrDefault(map.getId(), List.of());
+                    map.getNpcs().forEach(npc -> npc.update(map, playersOnMap));
 
-            final List<NpcDto> npcDtos = map.getNpcs().stream().map(NpcDto::fromEntity).collect(Collectors.toList());
-            gameEventQueue.enqueue(GameEventFactory.broadcastNpcs(npcDtos, map.getId()));
-        });
+                    final List<NpcDto> npcDtos = map.getNpcs().stream().map(NpcDto::fromEntity).collect(Collectors.toList());
+                    gameEventQueue.enqueue(GameEventFactory.broadcastNpcs(npcDtos, map.getId()));
+                });
     }
 
     /**
      * Updates the state of all active players.
      * Applies environmental effects and checks for death conditions.
+     *
      * @return A set of map IDs that currently have active players.
      */
     private Set<String> updatePlayers() {
@@ -351,7 +360,7 @@ public class GameEngine {
         player.getInventory().clear();
         player.setEquippedWeaponSlot(null);
         player.setEquippedMaskSlot(null);
-        
+
         gameEventQueue.enqueue(GameEventFactory.sendGameOverEvent(player));
 
         sendLoginOptions(player.getId());

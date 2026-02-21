@@ -11,10 +11,16 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class LoginRequest {
-    /** The desired username. */
+    /**
+     * The desired username.
+     */
     private String username;
-    /** The selected player class. */
+    /**
+     * The selected player class.
+     */
     private String playerClass;
-    /** The ID of the starting map. */
+    /**
+     * The ID of the starting map.
+     */
     private String startingMapId;
 }

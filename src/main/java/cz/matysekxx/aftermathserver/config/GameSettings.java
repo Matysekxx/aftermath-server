@@ -19,18 +19,32 @@ import java.util.Map;
 @Configuration
 @ConfigurationProperties(prefix = "game")
 public class GameSettings {
-    /** The ID of the map where new players start. */
+    /**
+     * The ID of the map where new players start.
+     */
     private String startingMapId;
-    /** List of map IDs allowed for player spawning. */
+    /**
+     * List of map IDs allowed for player spawning.
+     */
     private List<String> spawnableMaps;
-    /** Default line ID for metro initialization. */
+    /**
+     * Default line ID for metro initialization.
+     */
     private String lineId;
-    /** The rate at which the game engine ticks (in milliseconds). */
+    /**
+     * The rate at which the game engine ticks (in milliseconds).
+     */
     private int tickRate;
-    /** The default player class assigned to new players. */
+    /**
+     * The default player class assigned to new players.
+     */
     private String defaultClass;
-    /** The starting personal debt for new players. */
+    /**
+     * The starting personal debt for new players.
+     */
     private int startingDebt;
-    /** A map of player class configurations, keyed by class name. */
+    /**
+     * A map of player class configurations, keyed by class name.
+     */
     private Map<String, PlayerClassConfig> classes;
 }

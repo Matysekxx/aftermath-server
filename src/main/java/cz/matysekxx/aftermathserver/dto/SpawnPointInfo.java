@@ -13,8 +13,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SpawnPointInfo {
-    /** The ID of the map. */
+    /**
+     * The ID of the map.
+     */
     private String mapId;
-    /** The display name of the map. */
+    /**
+     * The display name of the map.
+     */
     private String mapName;
 }

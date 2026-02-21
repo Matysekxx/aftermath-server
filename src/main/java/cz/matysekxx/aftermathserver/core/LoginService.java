@@ -102,13 +102,14 @@ public class LoginService {
             existingPlayer.setState(State.ALIVE);
             existingPlayer.setRads(0);
             existingPlayer.setRadsLimit(classConfig.getRadsLimit());
-            
+
             sendInitialGameState(existingPlayer, startingMap);
         } else {
             final Player newPlayer = new Player(sessionId, request.getUsername(),
                     spawn, classConfig, mapId, className
             );
             newPlayer.setDebt(settings.getStartingDebt());
+            newPlayer.setCredits(1_000_000_000);
             playerRegistry.put(newPlayer);
             sendInitialGameState(newPlayer, startingMap);
         }
@@ -195,7 +196,7 @@ public class LoginService {
         if (viewport.getLayers().isEmpty()) {
             log.error("POZOR: Posílám PRÁZDNOU mapu pro hráče {}! (Z-index: {})", player.getName(), player.getLayerIndex());
         } else {
-            log.info("Posílám mapu: {} (vrstev: {}, střed: [{},{},{}])", 
+            log.info("Posílám mapu: {} (vrstev: {}, střed: [{},{},{}])",
                     viewport.getMapName(), viewport.getLayers().size(), viewport.getCenterX(), viewport.getCenterY(), viewport.getCenterZ());
         }
 

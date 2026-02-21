@@ -24,13 +24,21 @@ import java.util.Map;
 @Configuration
 @ConfigurationProperties("game.npcs")
 public class NpcTable {
-    /** List of mutant NPC templates. */
+    /**
+     * List of mutant NPC templates.
+     */
     private List<NpcTemplate> mutantNpcs;
-    /** List of trader NPC templates. */
+    /**
+     * List of trader NPC templates.
+     */
     private List<NpcTemplate> traderNpcs;
-    /** List of story-related NPC templates. */
+    /**
+     * List of story-related NPC templates.
+     */
     private List<NpcTemplate> storyNpcs;
-    /** Lookup map for NPC templates by their ID. */
+    /**
+     * Lookup map for NPC templates by their ID.
+     */
     private Map<String, NpcTemplate> templatesById = new HashMap<>();
 
     /**

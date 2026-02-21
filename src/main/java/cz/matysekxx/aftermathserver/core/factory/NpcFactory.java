@@ -1,6 +1,9 @@
 package cz.matysekxx.aftermathserver.core.factory;
 
-import cz.matysekxx.aftermathserver.core.model.behavior.*;
+import cz.matysekxx.aftermathserver.core.model.behavior.AggressiveBehavior;
+import cz.matysekxx.aftermathserver.core.model.behavior.Behavior;
+import cz.matysekxx.aftermathserver.core.model.behavior.IdleBehavior;
+import cz.matysekxx.aftermathserver.core.model.behavior.StationaryBehavior;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTable;
 import cz.matysekxx.aftermathserver.core.model.entity.NpcTemplate;
@@ -60,7 +63,7 @@ public class NpcFactory {
             }
         }
         npc.setShopItems(shopItems);
-        
+
         npc.setType(template.getType());
         npc.setAggressive(template.isAggressive());
         npc.setDamage(template.getDamage());

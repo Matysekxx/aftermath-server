@@ -1,7 +1,6 @@
 package cz.matysekxx.aftermathserver.action;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.dto.PayDebtRequest;
 import cz.matysekxx.aftermathserver.event.EventType;

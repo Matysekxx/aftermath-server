@@ -23,6 +23,8 @@ public interface NpcInteractionLogic {
      */
     Collection<GameEvent> interact(Npc target, Player player);
 
-    /** @return The type of interaction this logic handles. */
+    /**
+     * @return The type of interaction this logic handles.
+     */
     InteractionType getType();
 }

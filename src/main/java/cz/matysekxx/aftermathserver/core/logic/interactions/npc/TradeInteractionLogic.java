@@ -3,7 +3,6 @@ package cz.matysekxx.aftermathserver.core.logic.interactions.npc;
 import cz.matysekxx.aftermathserver.core.model.entity.InteractionType;
 import cz.matysekxx.aftermathserver.core.model.entity.Npc;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
-import cz.matysekxx.aftermathserver.core.model.item.Item;
 import cz.matysekxx.aftermathserver.dto.TradeOfferDto;
 import cz.matysekxx.aftermathserver.event.GameEvent;
 import cz.matysekxx.aftermathserver.event.GameEventFactory;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Logic for handling trading interactions with NPCs.

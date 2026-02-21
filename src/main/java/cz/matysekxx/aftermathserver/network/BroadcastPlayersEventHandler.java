@@ -29,8 +29,7 @@ public class BroadcastPlayersEventHandler extends GameEventHandler {
     @Override
     public void handleEvent(GameEvent event) {
         if (event.payload() instanceof Collection<?> players) {
-            @SuppressWarnings("unchecked")
-            final List<OtherPlayerDto> otherPlayers = (List<OtherPlayerDto>) players;
+            @SuppressWarnings("unchecked") final List<OtherPlayerDto> otherPlayers = (List<OtherPlayerDto>) players;
             networkService.broadcastPlayers(otherPlayers, event.mapId());
         }
     }

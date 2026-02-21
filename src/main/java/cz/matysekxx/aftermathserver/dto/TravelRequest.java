@@ -11,8 +11,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TravelRequest {
-    /** The ID of the destination map (station). */
+    /**
+     * The ID of the destination map (station).
+     */
     private String mapId;
-    /** The ID of the metro line being used. */
+    /**
+     * The ID of the metro line being used.
+     */
     private String lineId;
 }

@@ -49,25 +49,29 @@ public class EconomyService {
     public void processBuy(Player player, Npc npc, BuyRequest request) {
         if (MathUtil.getChebyshevDistance(player, npc) > 2) {
             gameEventQueue.enqueue(
-                    GameEventFactory.sendErrorEvent("Too far away from trader", player.getId()));return;
+                    GameEventFactory.sendErrorEvent("Too far away from trader", player.getId()));
+            return;
         }
 
         final List<Item> shopItems = npc.getShopItems();
         if (shopItems == null || request.getItemIndex() < 0 || request.getItemIndex() >= shopItems.size()) {
             gameEventQueue.enqueue(
-                    GameEventFactory.sendErrorEvent("Invalid item selection", player.getId()));return;
+                    GameEventFactory.sendErrorEvent("Invalid item selection", player.getId()));
+            return;
         }
         final Item itemToBuy = shopItems.get(request.getItemIndex());
-        
+
         final int price = itemToBuy.getPrice() != null ? itemToBuy.getPrice() : 0;
         if (price <= 0) {
-             gameEventQueue.enqueue(
-                    GameEventFactory.sendErrorEvent("Item has no price", player.getId()));return;
+            gameEventQueue.enqueue(
+                    GameEventFactory.sendErrorEvent("Item has no price", player.getId()));
+            return;
         }
 
         if (!canAfford(player, price)) {
             gameEventQueue.enqueue(
-                    GameEventFactory.sendErrorEvent("Not enough credits", player.getId()));return;
+                    GameEventFactory.sendErrorEvent("Not enough credits", player.getId()));
+            return;
         }
         final Item newItem = itemFactory.createItem(itemToBuy.getId(), 1);
         if (player.getInventory().addItem(newItem)) {
@@ -103,10 +107,10 @@ public class EconomyService {
 
         final Item item = itemOpt.get();
         final int sellPrice = calculateSellPrice(item, player);
-        
+
         addCredits(player, sellPrice);
         gameEventQueue.enqueue(GameEventFactory.sendMessageEvent("Sold " + item.getName() + " for " + sellPrice + " CR", player.getId()));
-        
+
         log.info("Player {} sold {} for {} CR. New balance: {}", player.getName(), item.getName(), sellPrice, player.getCredits());
 
         gameEventQueue.enqueue(GameEventFactory.sendInventoryEvent(player));
@@ -156,11 +160,11 @@ public class EconomyService {
 
         removeCredits(player, amount);
         final long remainingGlobalDebt = globalState.payGlobalDebt(amount);
-        
+
         gameEventQueue.enqueue(GameEventFactory.sendStatsEvent(player));
         gameEventQueue.enqueue(GameEventFactory.sendGlobalAnnouncementEvent(
                 "Player " + player.getName() + " contributed " + amount + " CR to the Global Debt. Remaining: " + remainingGlobalDebt));
-        
+
         if (remainingGlobalDebt <= 0) {
             gameEventQueue.enqueue(GameEventFactory.sendGlobalAnnouncementEvent("THE GLOBAL DEBT HAS BEEN PAID!"));
         }

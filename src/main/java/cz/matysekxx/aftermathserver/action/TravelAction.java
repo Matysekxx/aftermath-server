@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cz.matysekxx.aftermathserver.core.GameEngine;
 import cz.matysekxx.aftermathserver.core.logic.metro.MetroService;
 import cz.matysekxx.aftermathserver.core.model.entity.Player;
-import cz.matysekxx.aftermathserver.core.model.entity.State;
 import cz.matysekxx.aftermathserver.dto.TravelRequest;
 import org.springframework.stereotype.Component;
 

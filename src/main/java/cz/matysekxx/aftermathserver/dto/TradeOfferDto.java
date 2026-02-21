@@ -17,10 +17,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TradeOfferDto {
-    /** The ID of the NPC trader. */
+    /**
+     * The ID of the NPC trader.
+     */
     private String npcId;
-    /** The name of the NPC trader. */
+    /**
+     * The name of the NPC trader.
+     */
     private String npcName;
-    /** The list of items available for purchase. */
+    /**
+     * The list of items available for purchase.
+     */
     private List<Item> items;
 }

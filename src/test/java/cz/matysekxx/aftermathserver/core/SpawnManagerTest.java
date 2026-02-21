@@ -16,11 +16,7 @@ import cz.matysekxx.aftermathserver.util.Vector3;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -99,16 +95,28 @@ class SpawnManagerTest {
 
     private static class FakeWorldManager extends WorldManager {
         private final Map<String, GameMapData> maps = new HashMap<>();
-        public FakeWorldManager() { super(null); }
-        public void addMap(GameMapData map) { maps.put(map.getId(), map); }
-        @Override public GameMapData getMap(String id) { return maps.get(id); }
+
+        public FakeWorldManager() {
+            super(null);
+        }
+
+        public void addMap(GameMapData map) {
+            maps.put(map.getId(), map);
+        }
+
+        @Override
+        public GameMapData getMap(String id) {
+            return maps.get(id);
+        }
     }
 
     private static class FakeMapObjectFactory extends MapObjectFactory {
         int createLootBagCallCount = 0;
         String lastCreatedId;
 
-        public FakeMapObjectFactory() { super(null); }
+        public FakeMapObjectFactory() {
+            super(null);
+        }
 
         @Override
         public MapObject createLootBag(String itemId, int x, int y, int z, int amount) {
@@ -124,7 +132,9 @@ class SpawnManagerTest {
         int createNpcCallCount = 0;
         String lastCreatedId;
 
-        public FakeNpcFactory() { super(null, null, null); }
+        public FakeNpcFactory() {
+            super(null, null, null);
+        }
 
         @Override
         public Npc createNpc(String id, int x, int y, int z, String mapId) {
@@ -135,13 +145,11 @@ class SpawnManagerTest {
     }
 
     private static class FakeNpcTable extends NpcTable {
-        private List<NpcTemplate> definitions = new ArrayList<>();
         private final Map<String, NpcTemplate> templates = new HashMap<>();
+        private List<NpcTemplate> definitions = new ArrayList<>();
 
-        public FakeNpcTable() { super(); }
-
-        public void setDefinitions(List<NpcTemplate> definitions) {
-            this.definitions = definitions;
+        public FakeNpcTable() {
+            super();
         }
 
         public void addTemplate(String id, NpcTemplate template) {
@@ -153,6 +161,10 @@ class SpawnManagerTest {
             return definitions;
         }
 
+        public void setDefinitions(List<NpcTemplate> definitions) {
+            this.definitions = definitions;
+        }
+
         @Override
         public NpcTemplate getTemplate(String id) {
             return templates.get(id);
@@ -162,15 +174,17 @@ class SpawnManagerTest {
     private static class FakeItemTable extends ItemTable {
         private List<ItemTemplate> definitions = new ArrayList<>();
 
-        public FakeItemTable() { super(); }
-
-        public void setDefinitions(List<ItemTemplate> definitions) {
-            this.definitions = definitions;
+        public FakeItemTable() {
+            super();
         }
 
         @Override
         public List<ItemTemplate> getDefinitions() {
             return definitions;
+        }
+
+        public void setDefinitions(List<ItemTemplate> definitions) {
+            this.definitions = definitions;
         }
     }
 
@@ -187,10 +201,18 @@ class SpawnManagerTest {
         }
 
         @Override
-        public int getWidth() { return width; }
+        public int getWidth() {
+            return width;
+        }
+
         @Override
-        public int getHeight() { return height; }
+        public int getHeight() {
+            return height;
+        }
+
         @Override
-        public TileType getTileAt(int x, int y) { return defaultTile; }
+        public TileType getTileAt(int x, int y) {
+            return defaultTile;
+        }
     }
 }

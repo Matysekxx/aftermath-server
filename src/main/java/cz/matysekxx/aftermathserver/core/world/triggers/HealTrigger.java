@@ -12,7 +12,9 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class HealTrigger extends TileTrigger {
-    /** The amount of health to restore. */
+    /**
+     * The amount of health to restore.
+     */
     private int healAmount;
 
     @Override

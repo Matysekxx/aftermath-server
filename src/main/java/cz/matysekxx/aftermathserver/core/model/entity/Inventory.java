@@ -14,15 +14,22 @@ import java.util.Optional;
  * @author Matysekxx
  */
 public class Inventory {
-    /** Maximum number of slots in the inventory. */
+    /**
+     * Maximum number of slots in the inventory.
+     */
     private final int capacity;
-    /** Maximum total weight the inventory can hold. */
+    /**
+     * Maximum total weight the inventory can hold.
+     */
     private final double maxWeight;
-    /** Map of slot indices to items. */
+    /**
+     * Map of slot indices to items.
+     */
     private final Map<Integer, Item> slots = new HashMap<>();
 
     /**
      * Creates an inventory with specific limits.
+     *
      * @param capacity  Maximum number of slots.
      * @param maxWeight Maximum total weight allowed.
      */
@@ -40,6 +47,7 @@ public class Inventory {
 
     /**
      * Returns a read-only view of the inventory slots.
+     *
      * @return Unmodifiable map of slots and items.
      */
     public Map<Integer, Item> getSlots() {
@@ -48,6 +56,7 @@ public class Inventory {
 
     /**
      * Calculates the total weight of all items currently in the inventory.
+     *
      * @return Total weight.
      */
     public double getCurrentWeight() {

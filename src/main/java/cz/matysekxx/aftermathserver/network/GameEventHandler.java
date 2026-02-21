@@ -18,11 +18,14 @@ public abstract class GameEventHandler {
         this.networkService = networkService;
     }
 
-    /** @return The type of event this handler processes. */
+    /**
+     * @return The type of event this handler processes.
+     */
     public abstract EventType getType();
 
     /**
      * Processes the given event.
+     *
      * @param event The event to handle.
      */
     public abstract void handleEvent(GameEvent event);

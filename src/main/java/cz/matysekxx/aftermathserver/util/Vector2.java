@@ -7,7 +7,6 @@ package cz.matysekxx.aftermathserver.util;
  *
  * @param x The horizontal coordinate.
  * @param y The vertical coordinate.
- *
  * @author Matysekxx
  */
 public record Vector2(int x, int y) {

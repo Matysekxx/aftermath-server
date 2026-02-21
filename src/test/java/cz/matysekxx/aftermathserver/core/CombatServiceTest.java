@@ -41,7 +41,7 @@ class CombatServiceTest {
         config.setMaxHp(100);
         config.setInventoryCapacity(10);
         config.setMaxWeight(50.0);
-        player = new Player("player-1", "Hero", new Vector3(0,0,0), config, "letnany", "SOLDIER");
+        player = new Player("player-1", "Hero", new Vector3(0, 0, 0), config, "letnany", "SOLDIER");
         player.setEquippedWeaponSlot(null);
 
         combatService.handleAttack(player);
@@ -56,7 +56,7 @@ class CombatServiceTest {
         config.setMaxHp(100);
         config.setInventoryCapacity(10);
         config.setMaxWeight(50.0);
-        player = new Player("player-1", "Hero", new Vector3(0,0,0), config, "letnany", "SOLDIER");
+        player = new Player("player-1", "Hero", new Vector3(0, 0, 0), config, "letnany", "SOLDIER");
 
         final Item weapon = Item.builder()
                 .type(ItemType.WEAPON)
@@ -88,13 +88,27 @@ class CombatServiceTest {
 
     private static class FakeWorldManager extends WorldManager {
         private final Map<String, GameMapData> maps = new HashMap<>();
-        public FakeWorldManager() { super(null); }
-        public void addMap(GameMapData map) { maps.put(map.getId(), map); }
-        @Override public GameMapData getMap(String id) { return maps.get(id); }
+
+        public FakeWorldManager() {
+            super(null);
+        }
+
+        public void addMap(GameMapData map) {
+            maps.put(map.getId(), map);
+        }
+
+        @Override
+        public GameMapData getMap(String id) {
+            return maps.get(id);
+        }
     }
 
     private static class FakeGameEventQueue extends GameEventQueue {
         GameEvent lastEvent;
-        @Override public void enqueue(GameEvent event) { lastEvent = event; }
+
+        @Override
+        public void enqueue(GameEvent event) {
+            lastEvent = event;
+        }
     }
 }

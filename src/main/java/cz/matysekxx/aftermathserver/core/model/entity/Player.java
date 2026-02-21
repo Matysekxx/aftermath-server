@@ -16,25 +16,45 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Player extends Entity {
-    /** The player's inventory. */
+    /**
+     * The player's inventory.
+     */
     private Inventory inventory;
-    /** The player's role or class name. */
+    /**
+     * The player's role or class name.
+     */
     private String role;
-    /** Current radiation level of the player. */
+    /**
+     * Current radiation level of the player.
+     */
     private int rads = 0;
-    /** Radiation limit before the player starts taking damage. */
+    /**
+     * Radiation limit before the player starts taking damage.
+     */
     private int radsLimit;
-    /** Current credits balance of the player. */
+    /**
+     * Current credits balance of the player.
+     */
     private int credits;
-    /** Current debt of the player. */
+    /**
+     * Current debt of the player.
+     */
     private int debt;
-    /** Costs accumulated during the day to be added to debt. */
+    /**
+     * Costs accumulated during the day to be added to debt.
+     */
     private int pendingCosts;
-    /** Inventory slot index of the equipped weapon. */
+    /**
+     * Inventory slot index of the equipped weapon.
+     */
     private Integer equippedWeaponSlot;
-    /** Inventory slot index of the equipped mask. */
+    /**
+     * Inventory slot index of the equipped mask.
+     */
     private Integer equippedMaskSlot;
-    /** Timestamp of the last attack performed by the player. */
+    /**
+     * Timestamp of the last attack performed by the player.
+     */
     private long lastAttackTime;
 
     /**

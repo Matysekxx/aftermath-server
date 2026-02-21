@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class EquipRequest {
-    /** The inventory slot index of the item to equip. */
+    /**
+     * The inventory slot index of the item to equip.
+     */
     private int slotIndex;
 }

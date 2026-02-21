@@ -14,7 +14,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class OpenTradeUIEventHandler extends GameEventHandler {
 
-    /** Constructs the OpenTradeUIEventHandler. */
+    /**
+     * Constructs the OpenTradeUIEventHandler.
+     */
     public OpenTradeUIEventHandler(@Lazy NetworkService networkService) {
         super(networkService);
     }

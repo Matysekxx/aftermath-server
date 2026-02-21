@@ -38,7 +38,7 @@ game:
         dialogId: "the-merchant"
 
       - id: "doctor_mustek"
-        name: "Doctor (Můstek)"
+        name: "Doctor Můstek"
         type: "HUMAN"
         aggressive: false
         maxHp: 100

@@ -11,9 +11,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class WebSocketResponse {
-    /** The type of the response (e.g., MAP_LOAD, PLAYER_MOVED). */
+    /**
+     * The type of the response (e.g., MAP_LOAD, PLAYER_MOVED).
+     */
     private String type;
-    /** The payload of the response. */
+    /**
+     * The payload of the response.
+     */
     private Object payload;
 
     /**

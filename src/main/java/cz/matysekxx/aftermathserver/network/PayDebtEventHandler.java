@@ -29,7 +29,7 @@ public class PayDebtEventHandler extends GameEventHandler {
         try {
             final PayDebtRequest request = objectMapper.convertValue(event.payload(), PayDebtRequest.class);
             final Optional<Player> maybePlayer = gameEngine.getMaybePlayerById(event.targetSessionId());
-            
+
             maybePlayer.ifPresent(player -> {
                 if (player.getDebt() > 0) {
                     economyService.payPersonalDebt(player, request.getAmount());
@@ -37,7 +37,8 @@ public class PayDebtEventHandler extends GameEventHandler {
                     economyService.contributeToGlobalDebt(player, request.getAmount());
                 }
             });
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     @Override

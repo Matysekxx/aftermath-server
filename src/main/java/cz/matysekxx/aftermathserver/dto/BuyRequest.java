@@ -11,8 +11,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class BuyRequest {
-    /** The ID of the NPC trader. */
+    /**
+     * The ID of the NPC trader.
+     */
     private String npcId;
-    /** The index of the item in the NPC's shop list. */
+    /**
+     * The index of the item in the NPC's shop list.
+     */
     private int itemIndex;
 }
