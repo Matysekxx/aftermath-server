@@ -1,7 +1,7 @@
 {
   "id": "smichovske-nadrazi",
   "name": "Smíchovské nádraží",
-  "type": "HAZARD_ZONE",
+  "type": "SAFE_ZONE",
   "difficulty": 2,
   "layout": {
     "0": "assets/maps_b/map_smichovske_nadrazi.txt"
@@ -15,5 +15,8 @@
   },
   "spawnMarkers": {
     "@": "line_b"
+  },
+  "npcMarkers": {
+    "C": "commander_andel"
   }
 }

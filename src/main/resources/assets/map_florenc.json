@@ -47,5 +47,9 @@
   "spawnMarkers": {
     "@": "line_b",
     "$": "line_c"
+  },
+  "npcMarkers": {
+    "B": "bartender_florenc",
+    "G": "smuggler_florenc"
   }
 }

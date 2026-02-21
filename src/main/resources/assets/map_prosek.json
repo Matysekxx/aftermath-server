@@ -25,5 +25,8 @@
   ],
   "spawnMarkers": {
     "@": "line_c"
+  },
+  "npcMarkers": {
+    "K": "pan_cibulka"
   }
 }

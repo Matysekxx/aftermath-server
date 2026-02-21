@@ -18,5 +18,9 @@
   "spawnMarkers": {
     "@": "line_a",
     "$": "line_b"
+  },
+  "npcMarkers": {
+    "A": "administrator_mustek",
+    "D": "doctor_mustek"
   }
 }

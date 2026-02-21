@@ -16,5 +16,8 @@
   "links": [],
   "spawnMarkers": {
     "@": "line_c"
+  },
+  "npcMarkers": {
+    "P": "pendulum_cultist"
   }
 }

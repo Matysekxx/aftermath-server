@@ -16,4 +16,8 @@
   "spawnMarkers": {
     "@": "line_b"
   }
+,
+  "npcMarkers": {
+    "E": "engineer_malesice"
+  }
 }

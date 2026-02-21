@@ -38,5 +38,8 @@
   "spawnMarkers": {
     "@": "line_c",
     "$": "line_a"
+  },
+  "npcMarkers": {
+    "H": "historian_muzeum"
   }
 }

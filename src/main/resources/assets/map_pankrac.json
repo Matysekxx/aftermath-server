@@ -19,6 +19,8 @@
     "@": "line_c",
     "$": "line_d"
   },
-  "npcMarkers": {},
+  "npcMarkers": {
+    "S": "scout_pankrac"
+  },
   "objectMarkers": {}
 }

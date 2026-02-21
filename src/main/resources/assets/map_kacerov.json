@@ -15,6 +15,8 @@
   "spawnMarkers": {
     "@": "line_c"
   },
-  "npcMarkers": {},
+  "npcMarkers": {
+    "D": "old_man_vysehrad"
+  },
   "objectMarkers": {}
 }

@@ -33,5 +33,8 @@
   ],
   "spawnMarkers": {
     "@": "line_c"
+  },
+  "npcMarkers": {
+    "M": "merchant_budejovicka"
   }
 }

@@ -25,5 +25,8 @@
   ],
   "spawnMarkers": {
     "@": "line_a"
+  },
+  "npcMarkers": {
+    "V": "aviatik_ruzyne"
   }
 }
