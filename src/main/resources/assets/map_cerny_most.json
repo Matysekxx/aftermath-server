@@ -1,0 +1,18 @@
+{
+  "id": "cerny-most",
+  "name": "Černý Most",
+  "type": "HAZARD_ZONE",
+  "difficulty": 1,
+  "layout": {
+    "0": "assets/maps_b/map_cerny_most.txt"
+  },
+  "objects": [],
+  "tileTriggers": {
+    "-": {
+      "lineId": "line_b"
+    }
+  },
+  "spawnMarkers": {
+    "@": "line_b"
+  }
+}
