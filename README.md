@@ -11,8 +11,6 @@
 <br/>
 The Aftermath Server is the authoritative backend for a real-time multiplayer TUI RPG set in the grim future of the Prague metro. Players must survive, manage debt, and fight for resources in a ruthless underground system.
 
-[Report Bug](https://github.com/Matysekxx/aftermath_server/issues) · [Request Feature](https://github.com/Matysekxx/aftermath_server/issues)
-
 </div>
 
 ---
@@ -71,7 +69,7 @@ Follow these steps to host your own instance of the Prague Metro and invite your
 
 2.  **Connect:** Open your terminal and run the client with the host's WebSocket URL:
     ```powershell
-    aftermath-client.exe ws://<HOST_IP>:8080/game
+    aftermath_client.exe ws://<HOST_IP>:8080/game
     ```
     *(Replace `<HOST_IP>` with the address provided by the server host, e.g., `192.168.100.244`)*
 
@@ -132,8 +130,8 @@ This repository contains the server-side core of The Aftermath. To set up the de
 
 Your feedback and contributions are highly valued! Whether you've found a bug, have a feature idea, or just want to discuss the project, please don't hesitate to reach out.
 
-*   **Report Bugs:** If you encounter any issues, please open an issue on GitHub: Report Bug
-*   **Request Features:** Have an idea for a new feature or improvement? Let us know: Request Feature
+*   **Report Bugs:** If you encounter any issues, please open an issue on GitHub
+*   **Request Features:** Have an idea for a new feature or improvement? Let us know
 *   **Contribute Code:** Feel free to fork the repository and submit pull requests. All contributions are welcome!
 
 ---
